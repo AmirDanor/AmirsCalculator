@@ -27,14 +27,13 @@ class ConsoleMessageHandler(MessageHandler):
     def __init__(self):
         """
         Initialize the first message when creating a new instance of MessageHandler class.
-        :param prompt: A message for the user
-        :type prompt: str
         """
         self._prompt = MESSAGE_TO_DISPLAY[0]
 
-    def display_message(self):
+    def display_input_message(self):
         """
-        Responsible for printing a message before user enters input (changes the text after the creation of the class
+        Displays a console message before user enters input
+        (changes the text after the creation of the class
         which means - for the first time, the output is different).
         """
         print(self._prompt)
@@ -42,7 +41,17 @@ class ConsoleMessageHandler(MessageHandler):
             self._prompt = MESSAGE_TO_DISPLAY[1]
 
     def display_custom_message(self, message: str):
+        """
+        Displays a custom message in console.
+        :param message: Custom message to display
+        :type message: str
+        """
         print(message)
 
     def display_error_message(self, error_message: str):
+        """
+        Displays an error message in console.
+        :param error_message: Error message to display
+        :type error_message: str
+        """
         print(ERROR_FORMAT_START + error_message + ERROR_FORMAT_END)

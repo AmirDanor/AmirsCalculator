@@ -25,21 +25,12 @@ class Main:
         self.message_handler = message_handler
         self.input_handler = input_handler
         self.input_validator = input_validator
-        """
-        Attributes:
-            expression (str): User's input.
-            iie (InvalidInputException): Exception for inserting forbidden chars.
-        Raises:
-            InvalidInputException:  When user's input contains forbidden chars.
-        """
     def run(self):
         """
-        TODO: finish documentation in this file (original one above ^^)
-        :a
-        :raise: InvalidInputException:  When user's input contains forbidden chars
-        :exception: InvalidInputException
+        Runs the program as intended.
+        :raises InvalidInputException: If user's input contains forbidden chars.
         """
-        self.message_handler.display_message()
+        self.message_handler.display_input_message()
         expression = self.input_handler.get_input()
         while expression != QUIT_STR:
             try:
@@ -47,13 +38,10 @@ class Main:
                     raise InvalidInputException(expression)
             except InvalidInputException as iie:
                 self.message_handler.display_custom_message(iie)  # Catch and print the InvalidInput exception
-            self.message_handler.display_message()
+            self.message_handler.display_input_message()
             expression = self.input_handler.get_input()
         self.message_handler.display_error_message(QUIT_MSG)
 
-"""
-Used to run program correctly.
-"""
 if __name__ == "__main__":
     main = Main(
         message_handler = ConsoleMessageHandler(),

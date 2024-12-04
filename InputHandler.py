@@ -6,4 +6,7 @@ class InputHandler(ABC):
     """
     @abstractmethod
     def get_input(self):
+        """
+        Method to get input from the user.
+        """
         pass

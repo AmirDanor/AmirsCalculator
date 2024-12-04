@@ -19,6 +19,7 @@ class InputValidator:
     def validate_input(expression: str) -> bool:
         """
         Checks if there are forbidden chars in the user input
+
         :param expression: Mathematical expression which needed to get validated
         :type expression: str
         :return: Whether expression contains forbidden chars or not
