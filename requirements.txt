@@ -1,1 +1,2 @@
-# No external requirements for this project
+pytest==6.2.0
+# Might add colorama later...
