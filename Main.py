@@ -2,8 +2,9 @@ import InputHandler
 from ConsoleInputHandler import ConsoleInputHandler
 import MessageHandler
 from ConsoleMessageHandler import ConsoleMessageHandler
-import Validator
+import InputValidator
 from Exceptions import InvalidInputException
+
 
 QUIT_STR = 'quit' # string which user has to enter to end program.
 QUIT_MSG = 'Program Ended.' # string which get displayed to user after program ends.
@@ -13,7 +14,7 @@ class Main:
     """
     Class responsible for calling other functions from other classes.
     """
-    def __init__(self, message_handler: MessageHandler, input_handler: InputHandler, input_validator: Validator):
+    def __init__(self, message_handler: MessageHandler, input_handler: InputHandler, input_validator: InputValidator):
         """
         :param message_handler: An instance of the MessageHandler class to display prompts and messages
         :type message_handler: MessageHandler
@@ -25,6 +26,7 @@ class Main:
         self.message_handler = message_handler
         self.input_handler = input_handler
         self.input_validator = input_validator
+
     def run(self):
         """
         Runs the program as intended.
@@ -46,6 +48,6 @@ if __name__ == "__main__":
     main = Main(
         message_handler = ConsoleMessageHandler(),
         input_handler = ConsoleInputHandler(),
-        input_validator = Validator.InputValidator()
+        input_validator = InputValidator.InputValidator()
     )
     main.run()

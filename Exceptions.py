@@ -1,4 +1,4 @@
-from Validator import SET_VALID_CHARACTERS_IN_INPUT
+from InputValidator import SET_VALID_CHARACTERS_IN_INPUT
 
 class InvalidInputException(Exception):
     def __init__(self, string):
