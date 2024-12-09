@@ -14,7 +14,8 @@ MESSAGE_TO_DISPLAY = {
                             •  The only valid form of brackets is () (Parentheses / Round Brackets).
                             •  Use negation correctly by placing ~ (Tilda) directly before a number.
                         To stop the program from running, simply type "quit".
-                        Start calculating by typing a mathematical expression below, then press enter to send input to program. Enjoy!
+                        Start calculating by typing a mathematical expression below, then press enter to send input to program.
+                        Enjoy! :)
         \033[00m
         ''',
     1: 'Please enter an input:'

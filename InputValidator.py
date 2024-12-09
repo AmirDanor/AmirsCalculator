@@ -1,4 +1,4 @@
-SET_VALID_CHARACTERS_IN_INPUT = {
+SET_VALID_CHARACTERS_IN_INPUT = { # TODO: avoid dup with EquationSolver.py
     '0', '1', '2',
     '3', '4', '5',
     '6', '7', '8',
