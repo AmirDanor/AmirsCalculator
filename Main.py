@@ -1,3 +1,5 @@
+# File contains prints for dev tests
+
 import InputHandler
 from ConsoleInputHandler import ConsoleInputHandler
 import MessageHandler

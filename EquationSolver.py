@@ -1,3 +1,5 @@
+# File contains prints for dev tests
+
 operator_strength = { # TODO: avoid dup with InputValidator.py
     '+': 1,
     '-': 1,
@@ -9,9 +11,7 @@ operator_strength = { # TODO: avoid dup with InputValidator.py
     '&': 5,
     '@': 5,
     '~': 6,
-    '!': 6,
-    '(': 7,
-    ')': 7
+    '!': 6
 }
 
 class EquationSolver:
@@ -41,7 +41,7 @@ class EquationSolver:
 
     def tokenize(self):
         """
-        Converts the str equation into a list of tokens, handling numbers, operators, and parentheses.
+        Converts the str equation into a list of tokens.
         """
         tokens = []
         number = ''
@@ -57,34 +57,48 @@ class EquationSolver:
         if number != '':
             tokens.append(number)
         self.tokens = tokens
+        print(self.tokens)
 
-    def strength(op):
+    def strength(self, op):
         return operator_strength.get(op, -1)
 
     def infix_to_prefix(self):
         """
         Converts the tokenized infix equation to a prefix stack.
         """
+        #TODO: fix
+        reversed_tokens = []
+        for token in reversed(self.tokens):
+            if token == '(':
+                reversed_tokens.append(')')
+            elif token == ')':
+                reversed_tokens.append('(')
+            else:
+                reversed_tokens.append(token)
 
         stack = []
         prefix = []
-        for token in reversed(self.tokens):
+
+        for token in reversed_tokens:
             if token.isdigit() or '.' in token:  # Operand
                 prefix.append(token)
-            elif token == ')':
-                stack.append(token)
             elif token == '(':
-                while stack and stack[-1] != ')':
+                stack.append(token)
+            elif token == ')':
+                while stack and stack[-1] != '(':
                     prefix.append(stack.pop())
-                stack.pop()
+                if stack and stack[-1] == '(':
+                    stack.pop()  # Pops '('
             else:  # Operator
-                while len(stack) != 0 and self.strength(token) < self.strength(stack[-1]):
+                while stack and stack[-1] != '(' and self.strength(token) <= self.strength(stack[-1]):
                     prefix.append(stack.pop())
                 stack.append(token)
-        while len(stack) != 0:
+
+        while stack:
             prefix.append(stack.pop())
+
         self.prefix_stack = prefix[::-1]
-        print(self.prefix_stack) # For testing
+        print(f"Prefix stack: {self.prefix_stack}")  # For testing
 
     def solve_prefix(self):
         """
