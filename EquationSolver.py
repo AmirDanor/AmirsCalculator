@@ -35,8 +35,8 @@ class EquationSolver:
         :rtype: float
         """
         self.tokenize()
-        self.infix_to_prefix()
-        self.solve_prefix()
+        self.infix_to_postfix()
+        self.solve_postfix()
         return self.result
 
     def tokenize(self):
@@ -52,7 +52,7 @@ class EquationSolver:
                 if number != '':
                     tokens.append(number)
                     number = ''
-                if character in operator_strength:
+                if character in operator_strength or character in '()':
                     tokens.append(character)
         if number != '':
             tokens.append(number)
@@ -62,56 +62,45 @@ class EquationSolver:
     def strength(self, op):
         return operator_strength.get(op, -1)
 
-    def infix_to_prefix(self):
+    def infix_to_postfix(self):
         """
-        Converts the tokenized infix equation to a prefix stack.
+        Converts the tokenized infix equation to a postfix stack.
         """
-        #TODO: fix
-        reversed_tokens = []
-        for token in reversed(self.tokens):
-            if token == '(':
-                reversed_tokens.append(')')
-            elif token == ')':
-                reversed_tokens.append('(')
-            else:
-                reversed_tokens.append(token)
-
         stack = []
-        prefix = []
+        postfix = []
 
-        for token in reversed_tokens:
+        for token in self.tokens:
             if token.isdigit() or '.' in token:  # Operand
-                prefix.append(token)
+                postfix.append(token)
             elif token == '(':
                 stack.append(token)
             elif token == ')':
-                while stack and stack[-1] != '(':
-                    prefix.append(stack.pop())
-                if stack and stack[-1] == '(':
-                    stack.pop()  # Pops '('
+                while stack[-1] != '(':
+                    postfix.append(stack.pop())
+                stack.pop()
             else:  # Operator
-                while stack and stack[-1] != '(' and self.strength(token) <= self.strength(stack[-1]):
-                    prefix.append(stack.pop())
+                while stack and self.strength(token) <= self.strength(stack[-1]):
+                    postfix.append(stack.pop())
                 stack.append(token)
 
         while stack:
-            prefix.append(stack.pop())
+            postfix.append(stack.pop())
 
-        self.prefix_stack = prefix[::-1]
+        self.prefix_stack = postfix
         print(f"Prefix stack: {self.prefix_stack}")  # For testing
 
-    def solve_prefix(self):
+    def solve_postfix(self):
         """
-        Solves the equation represented by prefix stack and updates the result.
+        Solves the equation represented by postfix stack and updates the result.
         """
 
         stack = []
-        for token in reversed(self.prefix_stack):
+        for token in (self.prefix_stack):
             if token.isdigit() or '.' in token:  # Operand
                 stack.append(float(token))
             else:
-                a = stack.pop()
                 b = stack.pop()
+                a = stack.pop()
                 # Temp implementation.
                 # TODO: improve. avoid messy if-elif-else struct.
                 if token == '+':
