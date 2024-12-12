@@ -44,9 +44,8 @@ class Main:
             else:
                 string_formatter = StringFormatter(expression)
                 expression = string_formatter.fix_format()
-                print(expression)
+                #print(expression)
                 equation_solver = EquationSolver(expression)
-                equation_solver.tokenize()
                 print(equation_solver.solve())
             self.message_handler.display_input_message()
             expression = self.input_handler.get_input()

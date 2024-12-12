@@ -8,6 +8,7 @@ class StringFormatter:
         """
         self.equation = equation
 
+
     def fix_format(self):
         """
         Fixes format of user's input.

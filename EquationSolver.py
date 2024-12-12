@@ -1,18 +1,10 @@
 # File contains prints for dev tests
+from OperatorsFactory import OperatorFactory
 
-operator_strength = { # TODO: avoid dup with InputValidator.py
-    '+': 1,
-    '-': 1,
-    '*': 2,
-    '/': 2,
-    '^': 3,
-    '%': 4,
-    '$': 5,
-    '&': 5,
-    '@': 5,
-    '~': 6,
-    '!': 6
-}
+operator_factory = OperatorFactory()
+unary_operators_dict = operator_factory.get_unary_operators()
+binary_operators_dict = operator_factory.get_binary_operators()
+operators_dict = {**unary_operators_dict, **binary_operators_dict} # Merges both dictionaries into a single dictionary
 
 class EquationSolver:
     def __init__(self, equation: str):
@@ -39,7 +31,7 @@ class EquationSolver:
         self.solve_postfix()
         return self.result
 
-    def tokenize(self):
+    def tokenize(self): # TODO: check theres a maximum one . (dot) in operand.
         """
         Converts the str equation into a list of tokens.
         """
@@ -52,15 +44,15 @@ class EquationSolver:
                 if number != '':
                     tokens.append(number)
                     number = ''
-                if character in operator_strength or character in '()':
+                if character in operators_dict or character in '()':
                     tokens.append(character)
         if number != '':
             tokens.append(number)
         self.tokens = tokens
-        print(self.tokens)
+        # print(self.tokens) # For testing
 
-    def strength(self, op):
-        return operator_strength.get(op, -1)
+    def precedence(self, operator):
+        return operator_factory.get_precedence(operator)
 
     def infix_to_postfix(self):
         """
@@ -79,7 +71,7 @@ class EquationSolver:
                     postfix.append(stack.pop())
                 stack.pop()
             else:  # Operator
-                while stack and self.strength(token) <= self.strength(stack[-1]):
+                while stack and stack[-1] != '(' and self.precedence(token) <= self.precedence(stack[-1]):
                     postfix.append(stack.pop())
                 stack.append(token)
 
@@ -87,7 +79,7 @@ class EquationSolver:
             postfix.append(stack.pop())
 
         self.prefix_stack = postfix
-        print(f"Prefix stack: {self.prefix_stack}")  # For testing
+        # print(f"Prefix stack: {self.prefix_stack}")  # For testing
 
     def solve_postfix(self):
         """
@@ -99,26 +91,14 @@ class EquationSolver:
             if token.isdigit() or '.' in token:  # Operand
                 stack.append(float(token))
             else:
-                b = stack.pop()
-                a = stack.pop()
+                operand1 = stack.pop()
                 # Temp implementation.
                 # TODO: improve. avoid messy if-elif-else struct.
-                if token == '+':
-                    stack.append(a + b)
-                elif token == '-':
-                    stack.append(a - b)
-                elif token == '*':
-                    stack.append(a * b)
-                elif token == '/':
-                    stack.append(a / b)
-                elif token == '^':
-                    stack.append(a ** b)
-                elif token == '%':
-                    stack.append(a % b)
-                elif token == '$':
-                    stack.append(max(a, b))
-                elif token == '&':
-                    stack.append(min(a, b))
-                elif token == '@':
-                    stack.append((a + b)/2)
+                if token in unary_operators_dict:
+                    unary_result = unary_operators_dict.get(token).solve(operand1)
+                    stack.append(unary_result)
+                elif token in binary_operators_dict:
+                    operand2 = stack.pop()
+                    binary_result = binary_operators_dict.get(token).solve(operand2, operand1)
+                    stack.append(binary_result)
         self.result = stack[0] if stack else None

@@ -1,14 +1,9 @@
-SET_VALID_CHARACTERS_IN_INPUT = { # TODO: avoid dup with EquationSolver.py
-    '0', '1', '2',
-    '3', '4', '5',
-    '6', '7', '8',
-    '9', '+', '-',
-    '*', '/', '^',
-    '@', '$', '&',
-    '%', '~', '!',
-    '(', ')', '.',
-    ' ', '\t'
-}
+from OperatorsFactory import OperatorFactory
+
+operator_factory = OperatorFactory()
+SET_VALID_CHARACTERS_IN_INPUT = ({str(i) for i in range(10)}
+                                 .union({ '(', ')', '.', ' ', '\t'})
+                                 .union(operator_factory.get_all_operator_symbols()))
 
 class InputValidator:
     """
