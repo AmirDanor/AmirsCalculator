@@ -8,13 +8,16 @@ MESSAGE_TO_DISPLAY = {
         \033[92m
                 Welcome to Amir's Advanced Calculator!
                         This program simulates an improved calculator, which means it supports a wide range of operations, including:
-                            •  Basic arithmetic: +, -, *, /.
-                            •  Advanced functions: factorial (!), modulo (%), negation (~), minimum ($), maximum (&), and average (@).
+                            •  Basic arithmetic (includes unary minus): +, -, *, /.
+                            •  Advanced functions: sum (#), factorial (!), modulo (%), negation (~), minimum ($), maximum (&), and average (@).
+                            •  All unary operators should be used as follows: unary minus [-operand], sum [operand#], factorial [operand!], and negation [~operand].
+                            •  The rest of the operators are binary. Every binary operator should be placed between two operands.
                         Make sure to follow the rules when inserting mathematical expressions:
                             •  The only valid form of brackets is () (Parentheses / Round Brackets).
                             •  Use negation correctly by placing ~ (Tilda) directly before a number.
                         To stop the program from running, simply type "quit".
-                        Start calculating by typing a mathematical expression below, then press enter to send input to program. Enjoy!
+                        Start calculating by typing a mathematical expression below, then press enter to send input to program.
+                        Enjoy! :)
         \033[00m
         ''',
     1: 'Please enter an input:'
