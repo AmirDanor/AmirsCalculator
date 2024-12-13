@@ -133,8 +133,10 @@ class EquationSolver:
             elif token == '(':
                 stack.append(token)
             elif token == ')':
-                while stack[-1] != '(': # add '-('
+                while stack[-1] != '(' and stack[-1] != SIGN_NUMBER_MINUS+'(':
                     postfix.append(stack.pop())
+                if (stack[-1] != SIGN_NUMBER_MINUS+'('):
+                    pass # Insert negative value of result in brackets...
                 stack.pop()
             else:  # Operator
                 while stack and stack[-1] != '(' and self.precedence(token) <= self.precedence(stack[-1]): # add '-('
