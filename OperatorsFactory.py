@@ -1,4 +1,4 @@
-from Operators import Add, Sub, Mul, Div, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
+from Operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
 
 class OperatorFactory:
     """
@@ -9,6 +9,7 @@ class OperatorFactory:
     def __init__(self):
         """Initialize the operator dictionaries (separated by unary / binary) with default binary and unary operators."""
         self._unary_operators_funcs = {
+            ';': UMin(),
             '~': Neg(),
             '!': Fac(),
             '#': Sum()
@@ -50,4 +51,9 @@ class OperatorFactory:
             return self._unary_operators_funcs.get(operator).get_precedence()
         elif operator in self._binary_operators_funcs:
             return self._binary_operators_funcs.get(operator).get_precedence()
+        return None
+
+    def is_left_unary_operator(self, operator):
+        if operator in self._unary_operators_funcs:
+            return self._unary_operators_funcs.get(operator).is_left()
         return None

@@ -21,6 +21,13 @@ class UnaryOperator(Operator):
         Method to solve the mathematical unary expression.
         """
         pass
+    @abstractmethod
+    def is_left(self) -> bool:
+        """
+        :return: if unary operator should be placed to the left of the operand (True) / to the right (False)
+        :rtype: bool
+        """
+        pass
 
 class BinaryOperator(Operator):
     """
@@ -87,15 +94,27 @@ class Avg(BinaryOperator):
     def solve(self, operand1, operand2):
         return (operand1 + operand2) / 2
 
+class UMin(UnaryOperator):
+    def get_precedence(self):
+        return 2.5
+    def is_left(self):
+        return True
+    def solve(self, operand):
+        return -operand
+
 class Neg(UnaryOperator):
     def get_precedence(self):
         return 6
+    def is_left(self):
+        return True
     def solve(self, operand):
         return -operand
 
 class Fac(UnaryOperator):
     def get_precedence(self):
         return 6
+    def is_left(self):
+        return False
     def solve(self, operand): # TODO: Make sure operand is not negative. Throw a relevant exception if needed.
         operand = int(operand)
         result = 1
@@ -106,6 +125,8 @@ class Fac(UnaryOperator):
 class Sum(UnaryOperator):
     def get_precedence(self):
         return 6
+    def is_left(self):
+        return False
     def solve(self, operand): # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [EquationSolver.py] (in final version)!
         operand_as_str = str(operand).replace('.', '') # TODO: change/delete this line after optimizing tokenizer [EquationSolver.py]
         result = 0.0
