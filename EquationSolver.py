@@ -2,6 +2,9 @@
 from Operators import UnaryOperator
 from OperatorsFactory import OperatorFactory
 
+SIGN_NUMBER_MINUS = '_'
+SIGN_UNARY_MINUS = ';'
+
 operator_factory = OperatorFactory()
 unary_operators_dict = operator_factory.get_unary_operators()
 binary_operators_dict = operator_factory.get_binary_operators()
@@ -28,8 +31,9 @@ class EquationSolver:
         :rtype: float
         """
         self.tokenize()
-        self.delete_extra_unary_minuses()
-        self.join_unary_minuses()
+        self.delete_extra_minuses()
+        self.join_number_minuses()
+        self.replace_unary_minuses()
         self.infix_to_postfix()
         self.solve_postfix()
         return self.result
@@ -52,12 +56,12 @@ class EquationSolver:
         if number != '':
             tokens.append(number)
         self.tokens = tokens
-        print(self.tokens) # For testing
+        # print(self.tokens) # For testing
 
-    def delete_extra_unary_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
+    def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
         """
-        Delete multiple unary minuses from self.tokens
-        After end of function, there are no more than 2 minuses in a row in self.tokens
+        Delete multiple appearances of minus in a row from self.tokens.
+        After end of function, there are no more than 2 minuses in a row in self.tokens.
         """
         tokens = []
         number = ''
@@ -70,21 +74,36 @@ class EquationSolver:
                     del self.tokens[index]
                     del self.tokens[index - 1]
                     index -= 1
-        print(f" after delete_extra_unary_minuses: {self.tokens}") # For testing
+        # print(f" after delete_extra_unary_minuses: {self.tokens}") # For testing
 
-    def join_unary_minuses(self):
+
+    def join_number_minuses(self):
         """
-        Joins unary minuses with next operand or open bracket (self.tokens)
-        Represents unary minuses as ';' for easier recognition
+        Joins number minuses directly to numbers.
         """
-        tokens = []
-        number = ''
-        for index in range ( 0, len(self.tokens)-1, 1):
-            if self.tokens[index] == '-' and (index == 0 or self.tokens[index - 1] in operators_dict):
-                self.tokens[index] = ';'
-        print(f" after join_unary_minuses: {self.tokens}") # For testing
+        for index in range(2, len(self.tokens)-1, 1):
+            if self.tokens[index] == '-' and ((self.tokens[index-1] in operators_dict and self.tokens[index-1] != '-') or (self.tokens[index-1] == '-' and index-2 >= 0 and (self.tokens[index-2].isdigit() or '.' in self.tokens[index-2] or '_' in self.tokens[index-2]))):
+                self.tokens[index + 1] = SIGN_NUMBER_MINUS + self.tokens[index+1]
+                del self.tokens[index]
+                index -= 1 # not sure...
+        # print(f" after join_number_minuses: {self.tokens}")  # For testing
+
+    def replace_unary_minuses(self):
+        """
+        Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';']
+        """
+        for index in range(0, len(self.tokens)-1, 1):
+            if self.tokens[index] == '-' and index == 0 or self.tokens[index-1] == '(':
+                self.tokens[index] = SIGN_UNARY_MINUS
+        # print(f" after replace_unary_minus: {self.tokens}")  # For testing
 
     def precedence(self, operator):
+        """
+        :param operator: representation of operator
+        :type operator: str
+        :return: operator's precedence
+        :rtype: int
+        """
         return operator_factory.get_precedence(operator)
 
     def infix_to_postfix(self):
@@ -95,7 +114,7 @@ class EquationSolver:
         postfix = []
         index = 0
         for token in self.tokens:
-            if token.isdigit() or '.' in token in token:  # Operand
+            if token.isdigit() or '.' in token or SIGN_NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
                 if operator_factory.is_left_unary_operator(token):  # Push left-sided unary operator
@@ -121,17 +140,16 @@ class EquationSolver:
             postfix.append(stack.pop())
 
         self.postfix_stack = postfix
-        print(f"Postfix stack: {self.postfix_stack}")  # For testing
+        # print(f"Postfix stack: {self.postfix_stack}")  # For testing
 
     def solve_postfix(self):
         """
         Solves the equation represented by postfix stack and updates the result.
         """
-
         stack = []
         for token in (self.postfix_stack):
-            if token.isdigit() or '.' in token:  # Operand
-                stack.append(float(token))
+            if token.isdigit() or '.' in token or SIGN_NUMBER_MINUS in token:  # Operand
+                stack.append(float(token.replace(SIGN_NUMBER_MINUS, '-')))
             else:
                 operand1 = stack.pop()
                 # Temp implementation.
@@ -143,4 +161,4 @@ class EquationSolver:
                     operand2 = stack.pop()
                     binary_result = binary_operators_dict.get(token).solve(operand2, operand1)
                     stack.append(binary_result)
-        self.result = stack[0] if stack else None
+        self.result = stack[0] if stack else "Nothing to calculate."

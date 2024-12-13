@@ -66,37 +66,37 @@ class Div(BinaryOperator): # TODO: Make sure operand2 is not negative. Throw a r
 
 class Pow(BinaryOperator): # TODO: Make sure result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
     def get_precedence(self):
-        return 3
+        return 4
     def solve(self, operand1, operand2):
         return operand1 ** operand2
 
 class Mod(BinaryOperator):
     def get_precedence(self):
-        return 4
+        return 5
     def solve(self, operand1, operand2):
         return operand1 % operand2
 
 class Max(BinaryOperator):
     def get_precedence(self):
-        return 5
+        return 6
     def solve(self, operand1, operand2):
         return max(operand1, operand2)
 
 class Min(BinaryOperator):
     def get_precedence(self):
-        return 5
+        return 6
     def solve(self, operand1, operand2):
         return min(operand1, operand2)
 
 class Avg(BinaryOperator):
     def get_precedence(self):
-        return 5
+        return 6
     def solve(self, operand1, operand2):
         return (operand1 + operand2) / 2
 
 class UMin(UnaryOperator):
     def get_precedence(self):
-        return 2.5
+        return 3
     def is_left(self):
         return True
     def solve(self, operand):
@@ -104,7 +104,7 @@ class UMin(UnaryOperator):
 
 class Neg(UnaryOperator):
     def get_precedence(self):
-        return 6
+        return 7
     def is_left(self):
         return True
     def solve(self, operand):
@@ -112,7 +112,7 @@ class Neg(UnaryOperator):
 
 class Fac(UnaryOperator):
     def get_precedence(self):
-        return 6
+        return 7
     def is_left(self):
         return False
     def solve(self, operand): # TODO: Make sure operand is not negative. Throw a relevant exception if needed.
@@ -124,7 +124,7 @@ class Fac(UnaryOperator):
 
 class Sum(UnaryOperator):
     def get_precedence(self):
-        return 6
+        return 7
     def is_left(self):
         return False
     def solve(self, operand): # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [EquationSolver.py] (in final version)!
