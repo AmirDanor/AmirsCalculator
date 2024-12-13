@@ -36,7 +36,22 @@ class EquationSolver:
         self.replace_unary_minuses()
         self.infix_to_postfix()
         self.solve_postfix()
+        if self.result == -0.0:
+            self.result = 0.0
         return self.result
+
+
+    def precedence(self, operator):
+        """
+        :param operator: representation of operator
+        :type operator: str
+        :return: operator's precedence
+        :rtype: int
+        """
+        return operator_factory.get_precedence(operator)
+
+    def is_operand(self, string: str) -> bool:
+        return string.isdigit() or '.' in string
 
     def tokenize(self): # TODO: check theres a maximum one . (dot) in operand.
         """
@@ -68,8 +83,8 @@ class EquationSolver:
         for index in range ( len(self.tokens)-2, 0, -1): #Make sure vars are correct... -2... 0...
             if self.tokens[index] == '-' and self.tokens[index - 1] == '-':
                 # Check for context: number/bracket to the right, operator to the left
-                if  ((self.tokens[index + 1].isdigit() or self.tokens[index + 1] == '(') and
-                        (index - 2 < 0 or self.tokens[index - 2] in operators_dict)):
+                if  ((self.is_operand(self.tokens[index+1]) or self.tokens[index + 1] == '(') and
+                        (index - 2 < 0 or self.tokens[index - 2] in operators_dict or self.tokens[index - 2] == '(')):
                     # Remove the two minuses
                     del self.tokens[index]
                     del self.tokens[index - 1]
@@ -81,7 +96,7 @@ class EquationSolver:
         """
         Joins number minuses directly to numbers.
         """
-        for index in range(2, len(self.tokens)-1, 1):
+        for index in range(1, len(self.tokens)-1, 1):
             if self.tokens[index] == '-' and ((self.tokens[index-1] in operators_dict and self.tokens[index-1] != '-') or (self.tokens[index-1] == '-' and index-2 >= 0 and (self.tokens[index-2].isdigit() or '.' in self.tokens[index-2] or '_' in self.tokens[index-2]))):
                 self.tokens[index + 1] = SIGN_NUMBER_MINUS + self.tokens[index+1]
                 del self.tokens[index]
@@ -93,18 +108,9 @@ class EquationSolver:
         Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';']
         """
         for index in range(0, len(self.tokens)-1, 1):
-            if self.tokens[index] == '-' and index == 0 or self.tokens[index-1] == '(':
+            if self.tokens[index] == '-' and (index == 0 or self.tokens[index-1] == '('):
                 self.tokens[index] = SIGN_UNARY_MINUS
         # print(f" after replace_unary_minus: {self.tokens}")  # For testing
-
-    def precedence(self, operator):
-        """
-        :param operator: representation of operator
-        :type operator: str
-        :return: operator's precedence
-        :rtype: int
-        """
-        return operator_factory.get_precedence(operator)
 
     def infix_to_postfix(self):
         """
@@ -114,13 +120,13 @@ class EquationSolver:
         postfix = []
         index = 0
         for token in self.tokens:
-            if token.isdigit() or '.' in token or SIGN_NUMBER_MINUS in token:  # Operand
+            if self.is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
                 if operator_factory.is_left_unary_operator(token):  # Push left-sided unary operator
                     stack.append(token)
                 else:  # Right-sided unary operators
-                    if index > 0 and (self.tokens[index - 1].isdigit() or '.' in self.tokens[index - 1]):
+                    if index > 0 and self.is_operand(self.tokens[index - 1]):
                         postfix.append(token)
                     else:
                         stack.append(token)
@@ -148,7 +154,7 @@ class EquationSolver:
         """
         stack = []
         for token in (self.postfix_stack):
-            if token.isdigit() or '.' in token or SIGN_NUMBER_MINUS in token:  # Operand
+            if self.is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
                 stack.append(float(token.replace(SIGN_NUMBER_MINUS, '-')))
             else:
                 operand1 = stack.pop()
@@ -161,4 +167,4 @@ class EquationSolver:
                     operand2 = stack.pop()
                     binary_result = binary_operators_dict.get(token).solve(operand2, operand1)
                     stack.append(binary_result)
-        self.result = stack[0] if stack else "Nothing to calculate."
+        self.result = stack[0] if stack  else "Nothing to calculate."
