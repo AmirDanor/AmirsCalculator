@@ -71,7 +71,7 @@ class EquationSolver:
         if number != '':
             tokens.append(number)
         self.tokens = tokens
-        # print(self.tokens) # For testing
+        print(self.tokens) # For testing
 
     def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
         """
@@ -89,7 +89,7 @@ class EquationSolver:
                     del self.tokens[index]
                     del self.tokens[index - 1]
                     index -= 1
-        # print(f" after delete_extra_unary_minuses: {self.tokens}") # For testing
+        print(f" after delete_extra_unary_minuses: {self.tokens}") # For testing
 
 
     def join_number_minuses(self):
@@ -98,19 +98,44 @@ class EquationSolver:
         """
         for index in range(1, len(self.tokens)-1, 1):
             if self.tokens[index] == '-' and ((self.tokens[index-1] in operators_dict and self.tokens[index-1] != '-') or (self.tokens[index-1] == '-' and index-2 >= 0 and (self.tokens[index-2].isdigit() or '.' in self.tokens[index-2] or '_' in self.tokens[index-2]))):
-                self.tokens[index + 1] = SIGN_NUMBER_MINUS + self.tokens[index+1]
-                del self.tokens[index]
-                index -= 1 # not sure...
-        # print(f" after join_number_minuses: {self.tokens}")  # For testing
+                if ('(' in self.tokens[index + 1]):
+                    self.minus_brackets_handle(index)
+                else:
+                    self.tokens[index + 1] = SIGN_NUMBER_MINUS + self.tokens[index+1]
+                    del self.tokens[index]
+                    index -= 1 # not sure...
+        print(f" after join_number_minuses: {self.tokens}")  # For testing
+
+    def minus_brackets_handle(self, index: int): # Assuming brackets are valid
+        """
+        :param index: index of minus in self.tokens
+        :type index: int
+        """
+        self.tokens.insert(index, '(')
+        print(f"og: {self.tokens}")
+        index+=3
+        print(f"in index: {index} = {self.tokens[index]}")
+        track_brackets = ['(']
+        while track_brackets:
+            print(f"tracking: {track_brackets}")
+            if (self.tokens[index] == '('):
+                track_brackets.append('(')
+            if (self.tokens[index] == ')'):
+                if track_brackets:
+                    self.tokens.insert(index, ')')
+                    return
+                else:
+                    track_brackets.pop()
+            index+=1
 
     def replace_unary_minuses(self):
         """
         Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';']
         """
         for index in range(0, len(self.tokens)-1, 1):
-            if self.tokens[index] == '-' and (index == 0 or self.tokens[index-1] == '('):
+            if self.tokens[index] == '-' and (index == 0 or '(' in self.tokens[index-1] ):
                 self.tokens[index] = SIGN_UNARY_MINUS
-        # print(f" after replace_unary_minus: {self.tokens}")  # For testing
+        print(f" after replace_unary_minus: {self.tokens}")  # For testing
 
     def infix_to_postfix(self):
         """
@@ -148,7 +173,7 @@ class EquationSolver:
             postfix.append(stack.pop())
 
         self.postfix_stack = postfix
-        # print(f"Postfix stack: {self.postfix_stack}")  # For testing
+        print(f"Postfix stack: {self.postfix_stack}")  # For testing
 
     def solve_postfix(self):
         """
@@ -165,6 +190,7 @@ class EquationSolver:
                 if token in unary_operators_dict:
                     unary_result = unary_operators_dict.get(token).solve(operand1)
                     stack.append(unary_result)
+                    print(stack)
                 elif token in binary_operators_dict:
                     operand2 = stack.pop()
                     binary_result = binary_operators_dict.get(token).solve(operand2, operand1)
