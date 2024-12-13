@@ -33,16 +33,19 @@ class Main:
         :raises InvalidInputException: If user's input contains forbidden chars.
         """
         self.message_handler.display_input_message()
-        expression = self.input_handler.get_input()
-        while expression != QUIT_STR:
-            try:
-                if not self.input_validator.validate_input(expression):
-                    raise InvalidInputException(expression)
-            except InvalidInputException as iie:
-                self.message_handler.display_custom_message(iie)  # Catch and print the InvalidInput exception
-            self.message_handler.display_input_message()
+        try:
             expression = self.input_handler.get_input()
-        self.message_handler.display_error_message(QUIT_MSG)
+            while expression != QUIT_STR:
+                try:
+                    if not self.input_validator.validate_input(expression):
+                        raise InvalidInputException(expression)
+                except InvalidInputException as iie:
+                    self.message_handler.display_custom_message(iie)  # Catch and print the InvalidInput exception
+                self.message_handler.display_input_message()
+                expression = self.input_handler.get_input()
+            self.message_handler.display_error_message(QUIT_MSG)
+        except KeyboardInterrupt as kie:
+            print("\nProgram Ended")
 
 if __name__ == "__main__":
     main = Main(
