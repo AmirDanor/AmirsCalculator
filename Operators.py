@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+from Exceptions import NegativeFactorial
+
+
 class Operator(ABC):
     """
     Abstract class for operator
@@ -98,9 +101,11 @@ class Fac(UnaryOperator):
         return 6
     def solve(self, operand): # TODO: Make sure operand is not negative. Throw a relevant exception if needed.
         operand = int(operand)
+        if (operand < 0):
+            raise NegativeFactorial(operand)
         result = 1
-        for i in range(1, operand + 1):
-            result = result * i
+        for index in range(1, operand + 1):
+            result = result * index
         return result
 
 class Sum(UnaryOperator):

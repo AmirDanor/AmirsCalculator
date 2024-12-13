@@ -1,9 +1,4 @@
-from OperatorsFactory import OperatorFactory
-
-operator_factory = OperatorFactory()
-SET_VALID_CHARACTERS_IN_INPUT = ({str(i) for i in range(10)}
-                                 .union({ '(', ')', '.', ' ', '\t'})
-                                 .union(operator_factory.get_all_operator_symbols()))
+import ValidCharacters
 
 class InputValidator:
     """
@@ -20,4 +15,4 @@ class InputValidator:
         :return: Whether expression contains forbidden chars or not
         :rtype: bool
         """
-        return set(expression).issubset(SET_VALID_CHARACTERS_IN_INPUT)
+        return set(expression).issubset(ValidCharacters.VALID_INPUT_CHARACTERS)
