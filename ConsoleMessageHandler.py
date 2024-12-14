@@ -1,9 +1,6 @@
-ERROR_FORMAT_START='\033[31m\033[44m' # SETS COLORS FOR ERROR MESSAGES
-ERROR_FORMAT_END='\033[0m\033[49m'    # SETS COLORS AFTER ERROR MESSAGES
-
 from MessageHandler import MessageHandler
 
-MESSAGE_TO_DISPLAY = {
+MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text..
     0: '''
         \033[92m
                 Welcome to Amir's Advanced Calculator!
@@ -57,4 +54,4 @@ class ConsoleMessageHandler(MessageHandler):
         :param error_message: Error message to display
         :type error_message: str
         """
-        print(ERROR_FORMAT_START + error_message + ERROR_FORMAT_END)
+        print(error_message)
