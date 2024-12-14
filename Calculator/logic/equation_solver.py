@@ -5,21 +5,20 @@ from Calculator.logic.operators import UnaryOperator
 SIGN_NUMBER_MINUS = '_'
 SIGN_UNARY_MINUS = ';'
 
-operator_registery = OperatorRegistry()
-unary_operators_dict = operator_registery.get_unary_operators()
-binary_operators_dict = operator_registery.get_binary_operators()
-operators_dict = {**unary_operators_dict, **binary_operators_dict} # Merges both dictionaries into a single dictionary
+OPERATOR_REGISTRY = OperatorRegistry()
+UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
+BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
+operators_dict = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
 
 class EquationSolver:
-    def __init__(self, equation: str):
+    def __init__(self, equation: list):
         """
         Solves the equation.
 
         :param equation: User's input.
-        :type equation: str
+        :type equation: list
         """
-        self.equation = equation
-        self.tokens = []
+        self.tokens = equation
         self.postfix_stack = []
         self.result = None
 
@@ -30,7 +29,7 @@ class EquationSolver:
         :return: Solution to equation
         :rtype: float
         """
-        self.tokenize()
+        #self.tokenize()
         self.delete_extra_minuses()
         self.join_number_minuses()
         self.replace_unary_minuses()
@@ -48,30 +47,10 @@ class EquationSolver:
         :return: operator's precedence
         :rtype: int
         """
-        return operator_registery.get_precedence_for_operator(operator)
+        return OPERATOR_REGISTRY.get_precedence_for_operator(operator)
 
     def is_operand(self, string: str) -> bool:
         return string.isdigit() or '.' in string
-
-    def tokenize(self): # TODO: check theres a maximum one . (dot) in operand.
-        """
-        Converts the str equation into a list of tokens.
-        """
-        tokens = []
-        number = ''
-        for character in self.equation:
-            if character.isdigit() or character == '.':
-                number += character
-            else:
-                if number != '':
-                    tokens.append(number)
-                    number = ''
-                if character in operators_dict or character in '()':
-                    tokens.append(character)
-        if number != '':
-            tokens.append(number)
-        self.tokens = tokens
-        # print(self.tokens) # For testing
 
     def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
         """
@@ -148,7 +127,7 @@ class EquationSolver:
             if self.is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
-                if operator_registery.is_left_unary_operator(token):  # Push left-sided unary operator
+                if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Push left-sided unary operator
                     stack.append(token)
                 else:  # Right-sided unary operators
                     if index > 0 and self.is_operand(self.tokens[index - 1]):
@@ -187,11 +166,11 @@ class EquationSolver:
                 operand1 = stack.pop()
                 # Temp implementation.
                 # TODO: improve. avoid messy if-elif-else struct.
-                if token in unary_operators_dict:
-                    unary_result = unary_operators_dict.get(token).solve(operand1)
+                if token in UNARY_OPERATORS_DICT:
+                    unary_result = UNARY_OPERATORS_DICT.get(token).solve(operand1)
                     stack.append(unary_result)
-                elif token in binary_operators_dict:
+                elif token in BINARY_OPERATORS_DICT:
                     operand2 = stack.pop()
-                    binary_result = binary_operators_dict.get(token).solve(operand2, operand1)
+                    binary_result = BINARY_OPERATORS_DICT.get(token).solve(operand2, operand1)
                     stack.append(binary_result)
         self.result = stack[0] if stack  else "Nothing to calculate."
