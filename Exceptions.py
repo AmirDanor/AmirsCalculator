@@ -1,4 +1,3 @@
-import ValidCharacters
 from ValidCharacters import VALID_INPUT_CHARACTERS
 
 

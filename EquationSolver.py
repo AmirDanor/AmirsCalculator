@@ -1,13 +1,13 @@
 # File contains prints for dev tests
+from OperatorRegistry import OperatorRegistry
 from Operators import UnaryOperator
-from OperatorsFactory import OperatorFactory
 
 SIGN_NUMBER_MINUS = '_'
 SIGN_UNARY_MINUS = ';'
 
-operator_factory = OperatorFactory()
-unary_operators_dict = operator_factory.get_unary_operators()
-binary_operators_dict = operator_factory.get_binary_operators()
+operator_registery = OperatorRegistry()
+unary_operators_dict = operator_registery.get_unary_operators()
+binary_operators_dict = operator_registery.get_binary_operators()
 operators_dict = {**unary_operators_dict, **binary_operators_dict} # Merges both dictionaries into a single dictionary
 
 class EquationSolver:
@@ -48,7 +48,7 @@ class EquationSolver:
         :return: operator's precedence
         :rtype: int
         """
-        return operator_factory.get_precedence(operator)
+        return operator_registery.get_precedence_for_operator(operator)
 
     def is_operand(self, string: str) -> bool:
         return string.isdigit() or '.' in string
@@ -148,7 +148,7 @@ class EquationSolver:
             if self.is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
-                if operator_factory.is_left_unary_operator(token):  # Push left-sided unary operator
+                if operator_registery.is_left_unary_operator(token):  # Push left-sided unary operator
                     stack.append(token)
                 else:  # Right-sided unary operators
                     if index > 0 and self.is_operand(self.tokens[index - 1]):
