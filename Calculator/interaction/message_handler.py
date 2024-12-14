@@ -29,9 +29,20 @@ class MessageHandler(ABC):
         """
         pass
 
+class ConsoleMessageHandler(MessageHandler):
+    """
+    Class responsible for displaying console messages to user before entering an input.
+    """
+    def __init__(self, quit: str):
+        """
+        Initialize the first message when creating a new instance of MessageHandler class.
+        :param quit: User's input to stop input loop.
+        :type quit: str
+        """
 
-MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text..
-    0: '''
+        self._quit = quit
+        self._MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text..
+    0: f'''
         \033[92m
                 Welcome to Amir's Advanced Calculator!
                         This program simulates an improved calculator, which means it supports a wide range of operations, including:
@@ -42,23 +53,14 @@ MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text
                         Make sure to follow the rules when inserting mathematical expressions:
                             •  The only valid form of brackets is () (Parentheses / Round Brackets).
                             •  Use negation correctly by placing ~ (Tilda) directly before a number.
-                        To stop the program from running, simply type "quit".
+                        To stop the program from running, simply type "{self._quit}".
                         Start calculating by typing a mathematical expression below, then press enter to send input to program.
                         Enjoy! :)
         \033[00m
         ''',
     1: 'Please enter an input:'
 }
-
-class ConsoleMessageHandler(MessageHandler):
-    """
-    Class responsible for displaying console messages to user before entering an input.
-    """
-    def __init__(self):
-        """
-        Initialize the first message when creating a new instance of MessageHandler class.
-        """
-        self._prompt = MESSAGE_TO_DISPLAY[0]
+        self._prompt = self._MESSAGE_TO_DISPLAY[0]
 
     def display_input_message(self):
         """
@@ -67,8 +69,8 @@ class ConsoleMessageHandler(MessageHandler):
         which means - for the first time, the output is different).
         """
         print(self._prompt)
-        if self._prompt != MESSAGE_TO_DISPLAY[1]:
-            self._prompt = MESSAGE_TO_DISPLAY[1]
+        if self._prompt != self._MESSAGE_TO_DISPLAY[1]:
+            self._prompt = self._MESSAGE_TO_DISPLAY[1]
 
     def display_custom_message(self, message: str):
         """

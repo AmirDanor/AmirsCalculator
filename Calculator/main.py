@@ -40,12 +40,12 @@ class Main:
                     if not self.input_validator.validate_input(expression):
                         raise InvalidInputException(expression)
                 except InvalidInputException as iie:
-                    self.message_handler.display_custom_message(iie)  # Catch and print the InvalidInput exception
+                    self.message_handler.display_custom_message(str(iie))  # Catch and print the InvalidInput exception
                 else:
                     string_formatter = StringFormatter(expression)
                     expression = string_formatter.fix_format()
                     equation_solver = EquationSolver(expression)
-                    self.message_handler.display_custom_message(equation_solver.solve())
+                    self.message_handler.display_custom_message(str(equation_solver.solve()))
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)
@@ -54,7 +54,7 @@ class Main:
 
 if __name__ == "__main__":
     main = Main(
-        message_handler = ConsoleMessageHandler(),
+        message_handler = ConsoleMessageHandler(QUIT_STR),
         input_handler = ConsoleInputHandler(),
     )
     main.run()
