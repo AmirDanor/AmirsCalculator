@@ -1,4 +1,4 @@
-import ValidCharacters
+from Calculator.logic import valid_characters
 
 class InputValidator:
     """
@@ -15,4 +15,4 @@ class InputValidator:
         :return: Whether expression contains forbidden chars or not
         :rtype: bool
         """
-        return set(expression).issubset(ValidCharacters.VALID_INPUT_CHARACTERS)
+        return set(expression).issubset(valid_characters.VALID_INPUT_CHARACTERS)

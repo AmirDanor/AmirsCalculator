@@ -1,4 +1,4 @@
-from ValidCharacters import VALID_INPUT_CHARACTERS
+from Calculator.logic.valid_characters import VALID_INPUT_CHARACTERS
 
 
 class InvalidInputException(Exception):

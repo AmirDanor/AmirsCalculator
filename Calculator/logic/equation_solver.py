@@ -1,6 +1,6 @@
 # File contains prints for dev tests
-from OperatorRegistry import OperatorRegistry
-from Operators import UnaryOperator
+from Calculator.logic.operator_registry import OperatorRegistry
+from Calculator.logic.operators import UnaryOperator
 
 SIGN_NUMBER_MINUS = '_'
 SIGN_UNARY_MINUS = ';'

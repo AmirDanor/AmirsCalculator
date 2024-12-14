@@ -127,8 +127,8 @@ class Sum(UnaryOperator):
         return 7
     def is_left(self):
         return False
-    def solve(self, operand): # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [EquationSolver.py] (in final version)!
-        operand_as_str = str(operand).replace('.', '') # TODO: change/delete this line after optimizing tokenizer [EquationSolver.py]
+    def solve(self, operand): # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [equation_solver.py] (in final version)!
+        operand_as_str = str(operand).replace('.', '') # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
         result = 0.0
 
         for char in operand_as_str:

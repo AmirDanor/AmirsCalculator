@@ -1,4 +1,4 @@
-from Operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
+from Calculator.logic.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
 
 class OperatorRegistry:
     """
