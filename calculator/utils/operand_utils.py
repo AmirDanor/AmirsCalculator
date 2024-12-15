@@ -1,5 +1,11 @@
 # Constants
-from calculator.logic.operator_registry import OperatorRegistry # temp implementation. TODO: delete later to avoid high coupling.
+from calculator.utils.operator_registry import OperatorRegistry # temp implementation. TODO: delete later to avoid high coupling.
+
+operator_registry = OperatorRegistry() #todo: change ??? because its a var in module...
+
+SIGN_NUMBER_MINUS = '_'
+
+SIGN_UNARY_MINUS = ';'
 
 VALID_INPUT_CHARACTERS = ({str(i) for i in range(10)} # int numbers 0 - 9 as str
                                  .union({ '+',
@@ -20,9 +26,14 @@ VALID_INPUT_CHARACTERS = ({str(i) for i in range(10)} # int numbers 0 - 9 as str
                                           ' ',
                                           '\t'})
                           )
-SIGN_NUMBER_MINUS = '_'
 
-SIGN_UNARY_MINUS = ';'
+ALLOWED_BEFORE_RIGHT_UNARY = ({str(i) for i in range(10)} # int numbers 0 - 9 as str
+                                 .union({ ')', '!', '#'}) #TODO: link with actual set. make it more modular
+                          )
+ALLOWED_AFTER_RIGHT_UNARY = (set(operator_registry.get_right_unary_operators())
+                             .union(operator_registry.get_binary_operators())
+                             .union({')'}))
+
 
 # Methods
 def is_operand(string: str) -> bool:
@@ -33,7 +44,7 @@ def is_operand(string: str) -> bool:
     :return: True if string is operand, else return False
     :rtype: bool
     """
-    return string.isdigit() or '.' in string
+    return string.isdigit() or '.' in string or '_' in string
 
 def precedence(operator):
     """

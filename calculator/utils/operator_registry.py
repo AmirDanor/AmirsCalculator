@@ -1,4 +1,4 @@
-from calculator.logic.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
+from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
 
 
 class OperatorRegistry:
@@ -9,9 +9,11 @@ class OperatorRegistry:
 
     def __init__(self):
         """Initialize the operator dictionaries (separated by unary / binary) with default binary and unary operators."""
-        self._unary_operators_funcs = {
+        self._left_unary_operators_funcs = {
             ';': UMin(),
-            '~': Neg(),
+            '~': Neg()
+        }
+        self._right_unary_operators_funcs = {
             '!': Fac(),
             '#': Sum()
         }
@@ -34,7 +36,8 @@ class OperatorRegistry:
         :return: all operator symbols
         :rtype: set
         """
-        return (set(self._unary_operators_funcs.keys())
+        return (set(self._left_unary_operators_funcs.keys())
+                .union(self._right_unary_operators_funcs.keys())
                 .union(self._binary_operators_funcs.keys()))
 
     def get_unary_operators(self):
@@ -42,16 +45,35 @@ class OperatorRegistry:
         Get all unary operators str symbol representation as set
 
         :return: all unary operator symbols
-        :rtype: set
+        :rtype: dict
         """
-        return self._unary_operators_funcs
+        merged_unaries_dict = {**self._left_unary_operators_funcs, **self._right_unary_operators_funcs}
+        return merged_unaries_dict
+
+    def get_left_unary_operators(self):
+        """
+        Get all left unary operators str symbol representation as set
+
+        :return: all left unary operator symbols
+        :rtype: dict
+        """
+        return self._left_unary_operators_funcs
+
+    def get_right_unary_operators(self):
+        """
+        Get all right unary operators str symbol representation as set
+
+        :return: all right unary operator symbols
+        :rtype: dict
+        """
+        return self._right_unary_operators_funcs
 
     def get_binary_operators(self):
         """
         Get all binary operators str symbol representation as set
 
         :return: all binary operator symbols
-        :rtype: set
+        :rtype: dict
         """
         return self._binary_operators_funcs
 
@@ -60,23 +82,23 @@ class OperatorRegistry:
         :param operator: a valid operator
         :type operator: str
         :return: precedence of operator
-        :rtype:
+        :rtype: int | None #TODO review rtype..
         """
-        if operator in self._unary_operators_funcs:
-            return self._unary_operators_funcs.get(operator).get_precedence()
+        if operator in self._left_unary_operators_funcs:
+            return self._left_unary_operators_funcs.get(operator).get_precedence()
+        if operator in self._right_unary_operators_funcs:
+            return self._right_unary_operators_funcs.get(operator).get_precedence()
         elif operator in self._binary_operators_funcs:
             return self._binary_operators_funcs.get(operator).get_precedence()
         return None
 
-    def is_left_unary_operator(self, operator: str):
+    def is_left_unary_operator(self, operator: str) -> bool: # TODO: change func to check if in _left_unary_operators_funcs
         """
         Check if the given operator is a left unary operator.
 
         :param operator: a mathematical operator
         :type operator: str
-        :return: True if operator is a left unary operator, False if operator is a right unary operator. otherwise: None
-        :rtype: Any
+        :return: True if operator is a left unary operator, otherwise False.
+        :rtype: bool
         """
-        if operator in self._unary_operators_funcs:
-            return self._unary_operators_funcs.get(operator).is_left()
-        return None
+        return operator in self._left_unary_operators_funcs

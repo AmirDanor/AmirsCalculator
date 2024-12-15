@@ -1,7 +1,7 @@
 # File contains prints for dev tests
 
-from calculator.logic.operator_registry import OperatorRegistry
-from calculator.logic.operators import UnaryOperator
+from calculator.utils.operator_registry import OperatorRegistry
+from calculator.utils.operators import UnaryOperator
 from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, is_operand, precedence
 
 OPERATOR_REGISTRY = OperatorRegistry()

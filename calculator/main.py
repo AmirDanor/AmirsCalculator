@@ -4,7 +4,7 @@ from calculator.interaction import input_handler, message_handler
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic import input_validator, token_processor
-from calculator.logic.exceptions import InvalidInputException
+from calculator.logic.exceptions import InvalidInputException, UnaryError
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.string_formatter import StringFormatter
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
@@ -51,10 +51,13 @@ class Main:
                         expression = string_formatter.fix_format()
                         tokenized_equation = self.tokenizer.tokenize(expression)
                         processed_tokenized_equation = self.token_processor.process(tokenized_equation)
+                        #print(self.token_processor.validate())
                         equation_solver = EquationSolver(processed_tokenized_equation)
                         solution = equation_solver.solve()
                         if solution: # if solution is not None
                             self.message_handler.display_custom_message(str(solution))
+                    except UnaryError as ue:
+                        self.message_handler.display_error_message(ue)  # TODO: change text displayed
                     except IndexError as ie:
                         self.message_handler.display_error_message(ie) # TODO: change text displayed
                 self.message_handler.display_input_message()

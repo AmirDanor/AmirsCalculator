@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 
-from calculator.logic.operator_registry import OperatorRegistry
-from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, SIGN_UNARY_MINUS, is_operand
+from calculator.logic.exceptions import UnaryError
+from calculator.utils.operator_registry import OperatorRegistry
+from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, SIGN_UNARY_MINUS, is_operand, ALLOWED_BEFORE_RIGHT_UNARY, \
+    ALLOWED_AFTER_RIGHT_UNARY
 
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
-operators_dict = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
+OPERATORS_DICT = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
 
 
 class TokenProcessor(ABC):
@@ -43,6 +45,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         self.delete_extra_minuses()
         self.join_number_minuses()
         self.replace_unary_minuses()
+        self.validate()
         return self._tokens
 
     def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
@@ -56,7 +59,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
             if self._tokens[index] == '-' and self._tokens[index - 1] == '-':
                 # Check for context: number/bracket to the right, operator to the left
                 if  ((is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == '(') and
-                        (index - 2 < 0 or self._tokens[index - 2] in operators_dict or self._tokens[index - 2] == '(')):
+                        (index - 2 < 0 or self._tokens[index - 2] in OPERATORS_DICT or self._tokens[index - 2] == '(')):
                     # Remove the two minuses
                     del self._tokens[index]
                     del self._tokens[index - 1]
@@ -70,7 +73,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         for index in range(1, len(self._tokens) - 1, 1):
             if (self._tokens[index] == '-'  # TODO: Simplify this complicated statement
-                    and ((self._tokens[index - 1] in operators_dict
+                    and ((self._tokens[index - 1] in OPERATORS_DICT
                           and self._tokens[index - 1] != '-')
                          or (self._tokens[index - 1] == '-'
                              and index - 2 >= 0
@@ -115,3 +118,32 @@ class ArithmeticTokenProcessor(TokenProcessor):
             if self._tokens[index] == '-' and (index == 0 or '(' in self._tokens[index - 1]):
                 self._tokens[index] = SIGN_UNARY_MINUS
         # print(f" after replace_unary_minus: {self._tokens}")  # For testing
+
+    def validate(self):
+        """
+        Checks for errors in tokenized equation.
+        """ # add info about exception it raises and when it is being raised
+        index = 0
+        for token in self._tokens:
+            if token in UNARY_OPERATORS_DICT:
+                if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Left unary operator
+                    if (index > 0  # Check token to the left
+                            and self._tokens[index-1] not in BINARY_OPERATORS_DICT
+                            and self._tokens[index-1] != '('):
+                        #print(f"before: {index}")
+                        raise UnaryError(token)
+                    if (index < len(self._tokens) - 1 # Check token to the right
+                            and not is_operand(self._tokens[index + 1])):
+                        #print(f"after: {index}")
+                        raise UnaryError(token)
+                else: # Left unary operator
+                    if (index > 0 # Check token to the left
+                            and not is_operand(self._tokens[index-1])
+                            and self._tokens[index-1] not in ALLOWED_BEFORE_RIGHT_UNARY):
+                        #print(f"before: {index}")
+                        raise UnaryError(token)
+                    if (index < len(self._tokens) - 1 # Check token to the right
+                            and self._tokens[index+1] not in ALLOWED_AFTER_RIGHT_UNARY):
+                        #print(f"after: {index}")
+                        raise UnaryError(token)
+            index += 1

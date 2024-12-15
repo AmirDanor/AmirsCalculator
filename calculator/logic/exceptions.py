@@ -17,15 +17,29 @@ class InvalidInputException(Exception):
         return f'Error! Your input contains forbidden characters: {forbidden_chars_from_string}'
 
 class NegativeFactorial(Exception):
-    def init(self, number):
+    def __init__(self, number):
         """
         :param number: Negative number which raised the exception
         :type number: float
         """
         self._number = number
-    def str(self):
+    def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f'Error! Cannot calculate factorial for negative number: {self._number}'
+
+class UnaryError(Exception):
+    def __init__(self, sign: str):
+        """
+        :param sign: Sign representation of invalid unary operator
+        :type sign: str
+        """
+        self._sign = sign
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f'Error! Wrong usage of unary operator: {self._sign}' #todo: maybe add index too?
