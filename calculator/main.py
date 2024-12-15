@@ -1,13 +1,14 @@
 # File contains prints for dev tests
 
-from Calculator.interaction import input_handler, message_handler
-from Calculator.interaction.input_handler import ConsoleInputHandler
-from Calculator.interaction.message_handler import ConsoleMessageHandler
-from Calculator.logic import input_validator, tokenizer
-from Calculator.logic.exceptions import InvalidInputException
-from Calculator.logic.equation_solver import EquationSolver
-from Calculator.logic.string_formatter import StringFormatter
-from Calculator.logic.tokenizer import Tokenizer, ArithmeticTokenizer
+from calculator.interaction import input_handler, message_handler
+from calculator.interaction.input_handler import ConsoleInputHandler
+from calculator.interaction.message_handler import ConsoleMessageHandler
+from calculator.logic import input_validator, token_processor
+from calculator.logic.exceptions import InvalidInputException
+from calculator.logic.equation_solver import EquationSolver
+from calculator.logic.string_formatter import StringFormatter
+from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
+from calculator.logic.tokenizer import Tokenizer, ArithmeticTokenizer
 
 QUIT_STR = 'quit' # string which user has to enter to end program.
 QUIT_MSG = 'Program Ended.' # string which get displayed to user after program ends.
@@ -17,7 +18,7 @@ class Main:
     """
     Class responsible for calling other functions from other classes.
     """
-    def __init__(self, message_handler: message_handler.MessageHandler, input_handler: input_handler.InputHandler, tokenizer: Tokenizer):
+    def __init__(self, message_handler: message_handler.MessageHandler, input_handler: input_handler.InputHandler, tokenizer: Tokenizer, token_processor: TokenProcessor):
         """
         :param message_handler: An instance of the MessageHandler class to display prompts and messages
         :type message_handler: message_handler
@@ -28,6 +29,7 @@ class Main:
         self.input_handler = input_handler
         self.input_validator = input_validator.InputValidator()
         self.tokenizer = tokenizer
+        self.token_processor = token_processor
 
     def run(self):
         """
@@ -47,7 +49,8 @@ class Main:
                     string_formatter = StringFormatter(expression)
                     expression = string_formatter.fix_format()
                     tokenized_equation = self.tokenizer.tokenize(expression)
-                    equation_solver = EquationSolver(tokenized_equation)
+                    processed_tokenized_equation = self.token_processor.process(tokenized_equation)
+                    equation_solver = EquationSolver(processed_tokenized_equation)
                     self.message_handler.display_custom_message(str(equation_solver.solve()))
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
@@ -59,6 +62,7 @@ if __name__ == "__main__":
     main = Main(
         message_handler = ConsoleMessageHandler(QUIT_STR),
         input_handler = ConsoleInputHandler(),
-        tokenizer = ArithmeticTokenizer()
+        tokenizer = ArithmeticTokenizer(),
+        token_processor = ArithmeticTokenProcessor()
     )
     main.run()

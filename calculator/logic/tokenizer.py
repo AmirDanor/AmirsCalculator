@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Calculator.logic.equation_solver import operators_dict
+
 
 class Tokenizer(ABC):
     """
@@ -14,7 +14,7 @@ class Tokenizer(ABC):
 class ArithmeticTokenizer(Tokenizer):
     def tokenize(self, equation: str) -> list:
         """
-        Tokenizes basic arithmetic equations into a list of tokens.
+        Tokenizes basic arithmetic equations into a list of _tokens.
 
         :param equation: arithmetic equation
         :type equation: str

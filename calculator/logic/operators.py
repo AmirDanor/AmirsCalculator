@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+#from calculator.logic.exceptions import NegativeFactorial
+
+
 class Operator(ABC):
     """
     Abstract class for operator
@@ -64,7 +67,7 @@ class Div(BinaryOperator): # TODO: Make sure operand2 is not negative. Throw a r
     def solve(self, operand1, operand2):
         return operand1 / operand2
 
-class Pow(BinaryOperator): # TODO: Make sure result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
+class Pow(BinaryOperator): # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
     def get_precedence(self):
         return 4
     def solve(self, operand1, operand2):
@@ -117,6 +120,8 @@ class Fac(UnaryOperator):
         return False
     def solve(self, operand): # TODO: Make sure operand is a positive int. Throw a relevant exception if needed (different one for each case).
         operand = int(operand)
+        #if operand < 0:
+        #    raise NegativeFactorial(operand)
         result = 1
         for index in range(1, operand + 1):
             result = result * index
