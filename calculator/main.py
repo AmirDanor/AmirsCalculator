@@ -46,17 +46,22 @@ class Main:
                 except InvalidInputException as iie:
                     self.message_handler.display_custom_message(str(iie))  # Catch and print the InvalidInput exception
                 else:
-                    string_formatter = StringFormatter(expression)
-                    expression = string_formatter.fix_format()
-                    tokenized_equation = self.tokenizer.tokenize(expression)
-                    processed_tokenized_equation = self.token_processor.process(tokenized_equation)
-                    equation_solver = EquationSolver(processed_tokenized_equation)
-                    self.message_handler.display_custom_message(str(equation_solver.solve()))
+                    try:
+                        string_formatter = StringFormatter(expression)
+                        expression = string_formatter.fix_format()
+                        tokenized_equation = self.tokenizer.tokenize(expression)
+                        processed_tokenized_equation = self.token_processor.process(tokenized_equation)
+                        equation_solver = EquationSolver(processed_tokenized_equation)
+                        solution = equation_solver.solve()
+                        if solution: # if solution is not None
+                            self.message_handler.display_custom_message(str(solution))
+                    except IndexError as ie:
+                        self.message_handler.display_error_message(ie) # TODO: change text displayed
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)
         except KeyboardInterrupt as kie:
-            print("\nProgram Ended")
+            self.message_handler.display_error_message("\nProgram Ended")
 
 if __name__ == "__main__":
     main = Main(

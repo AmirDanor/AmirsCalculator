@@ -84,9 +84,19 @@ class EquationSolver:
         stack = []
         for token in (self._postfix_stack):
             if is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
-                stack.append(float(token.replace(SIGN_NUMBER_MINUS, '-')))
+                fixed_token = token.replace(SIGN_NUMBER_MINUS, '-')
+                try:
+                    token_as_number = float(fixed_token)
+                    stack.append(token_as_number)
+                except ValueError as ve:
+                    print(ve)
+                    return None
             else:
+                #try:
                 operand1 = stack.pop()
+                #except IndexError as ie:
+                #    print(ie)
+                #    return None
                 # Temp implementation.
                 # TODO: improve. avoid messy if-elif-else struct.
                 if token in UNARY_OPERATORS_DICT:
