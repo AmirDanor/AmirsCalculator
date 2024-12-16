@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, EmptyParenthesesError
+from calculator.utils import operand_utils, operator_utils
 from calculator.utils.operator_registry import OperatorRegistry
-from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, SIGN_UNARY_MINUS, is_operand, ALLOWED_BEFORE_RIGHT_UNARY, \
-    ALLOWED_AFTER_RIGHT_UNARY
 
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
@@ -58,7 +57,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         for index in range (len(self._tokens) - 2, 0, -1): #Make sure vars are correct... -2... 0...
             if self._tokens[index] == '-' and self._tokens[index - 1] == '-':
                 # Check for context: number/bracket to the right, operator to the left
-                if  ((is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == '(') and
+                if  ((operand_utils.is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == '(') and
                         (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] == '(')):
                     # Remove the two minuses
                     del self._tokens[index]
@@ -85,7 +84,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                 if ('(' in self._tokens[index + 1]):
                     self.minus_brackets_handle(index)
                 else:
-                    self._tokens[index + 1] = SIGN_NUMBER_MINUS + self._tokens[index + 1]
+                    self._tokens[index + 1] = operator_utils.SIGN_NUMBER_MINUS + self._tokens[index + 1]
                     del self._tokens[index]
                     index -= 1 # not sure...
         # print(f" after join_number_minuses: {self._tokens}")  # For testing
@@ -118,7 +117,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         for index in range(0, len(self._tokens) - 1, 1):
             if self._tokens[index] == '-' and (index == 0 or '(' in self._tokens[index - 1]):
-                self._tokens[index] = SIGN_UNARY_MINUS
+                self._tokens[index] = operator_utils.SIGN_UNARY_MINUS
         # print(f" after replace_unary_minus: {self._tokens}")  # For testing
 
     def validate(self):
@@ -135,18 +134,18 @@ class ArithmeticTokenProcessor(TokenProcessor):
                         #print(f"before: {index}")
                         raise UnaryError(token)
                     if (index < len(self._tokens) - 1 # Check token to the right
-                            and (not is_operand(self._tokens[index + 1])
+                            and (not operand_utils.is_operand(self._tokens[index + 1])
                                  and self._tokens[index + 1] != '(')):
                         #print(f"after: {index}")
                         raise UnaryError(token)
                 else: # Right unary operator
                     if (index > 0 # Check token to the left
-                            and not is_operand(self._tokens[index-1])
-                            and self._tokens[index-1] not in ALLOWED_BEFORE_RIGHT_UNARY):
+                            and not operand_utils.is_operand(self._tokens[index-1])
+                            and self._tokens[index-1] not in operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
                         #print(f"before: {index}")
                         raise UnaryError(token)
                     if (index < len(self._tokens) - 1 # Check token to the right
-                            and self._tokens[index+1] not in ALLOWED_AFTER_RIGHT_UNARY):
+                            and self._tokens[index+1] not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
                         #print(f"after: {index}")
                         raise UnaryError(token)
             elif token == '(':

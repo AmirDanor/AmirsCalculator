@@ -60,9 +60,13 @@ class Main:
                         self.message_handler.display_error_message(epe) # TODO: change text displayed
                     except UnaryError as ue:
                         self.message_handler.display_error_message(ue)  # TODO: change text displayed
+                    except ZeroDivisionError as zde:
+                        self.message_handler.display_error_message(zde)
                     except IndexError as ie:
                         self.message_handler.display_error_message('Error: Missing operands') # TODO: change text displayed
                         # triggered by (((6)
+                    except OverflowError as oe:
+                        self.message_handler.display_error_message(oe)
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)

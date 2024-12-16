@@ -1,8 +1,7 @@
 # File contains prints for dev tests
-
+from calculator.utils import operator_utils, operand_utils
 from calculator.utils.operator_registry import OperatorRegistry
 from calculator.utils.operators import UnaryOperator
-from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, is_operand, precedence
 
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
@@ -47,26 +46,26 @@ class EquationSolver:
         postfix = []
         index = 0
         for token in self._tokens:
-            if is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
+            if operand_utils.is_operand(token) or operator_utils.SIGN_NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
                 if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Push left-sided unary operator
                     stack.append(token)
                 else:  # Right-sided unary operators
-                    if index > 0 and is_operand(self._tokens[index - 1]):
+                    if index > 0 and operand_utils.is_operand(self._tokens[index - 1]):
                         postfix.append(token)
                     else:
                         stack.append(token)
             elif token == '(':
                 stack.append(token)
             elif token == ')':
-                while stack[-1] != '(' and stack[-1] != SIGN_NUMBER_MINUS+'(':
+                while stack[-1] != '(' and stack[-1] != operator_utils.SIGN_NUMBER_MINUS+'(':
                     postfix.append(stack.pop())
-                if stack[-1] != SIGN_NUMBER_MINUS+'(':
+                if stack[-1] != operator_utils.SIGN_NUMBER_MINUS+'(':
                     pass # Insert negative value of _result in brackets...
                 stack.pop()
             else:  # Operator
-                while stack and stack[-1] != '(' and precedence(token) <= precedence(stack[-1]): # add '-('
+                while stack and stack[-1] != '(' and operand_utils.precedence(token) <= operand_utils.precedence(stack[-1]): # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
             index+=1
@@ -83,12 +82,13 @@ class EquationSolver:
         """
         stack = []
         for token in (self._postfix_stack):
-            if is_operand(token) or SIGN_NUMBER_MINUS in token:  # Operand
-                fixed_token = token.replace(SIGN_NUMBER_MINUS, '-')
+            if operand_utils.is_operand(token) or operator_utils.SIGN_NUMBER_MINUS in token:  # Operand
+                fixed_token = token.replace(operator_utils.SIGN_NUMBER_MINUS, '-')
                 try:
                     token_as_number = float(fixed_token)
                     stack.append(token_as_number)
                 except ValueError as ve:
+                    print("Error with sign minus:")
                     print(ve)
                     return None
             else:

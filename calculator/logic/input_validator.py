@@ -1,4 +1,4 @@
-from calculator.utils import operand_utils
+from calculator.utils import operator_utils
 
 
 class InputValidator:
@@ -16,4 +16,4 @@ class InputValidator:
         :return: Whether expression contains forbidden chars or not
         :rtype: bool
         """
-        return set(expression).issubset(operand_utils.VALID_INPUT_CHARACTERS)
+        return set(expression).issubset(operator_utils.VALID_INPUT_CHARACTERS)
