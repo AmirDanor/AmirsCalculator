@@ -22,10 +22,12 @@ class TokenProcessor(ABC):
         :type tokens: list
         """
     @abstractmethod
-    def process(self) -> list:
+    def process(self, tokens: list) -> list:
         """
-        Abstract method for processing a list of _tokens.
-        :return: processed list of _tokens
+        Abstract method for processing a list of tokens.
+        :param tokens: tokenized sequence
+        :type tokens: list
+        :return: processed list of tokens
         :rtype: list
         """
 

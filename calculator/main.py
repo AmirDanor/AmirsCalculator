@@ -4,7 +4,8 @@ from calculator.interaction import input_handler, message_handler
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic import input_validator, token_processor
-from calculator.logic.exceptions import InvalidInputError, UnaryError, EmptyParenthesesError
+from calculator.logic.exceptions import InvalidInputError, UnaryError, EmptyParenthesesError, NegativeFactorialError, \
+    LargeFactorialError, LargeSumError, NegativeSumError
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.string_formatter import StringFormatter
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
@@ -57,16 +58,24 @@ class Main:
                         if solution is not None: # if solution is not None
                             self.message_handler.display_custom_message(str(solution))
                     except EmptyParenthesesError as epe:
-                        self.message_handler.display_error_message(epe) # TODO: change text displayed
+                        self.message_handler.display_error_message(epe.__str__()) # TODO: change text displayed
                     except UnaryError as ue:
-                        self.message_handler.display_error_message(ue)  # TODO: change text displayed
+                        self.message_handler.display_error_message(ue.__str__())  # TODO: change text displayed
                     except ZeroDivisionError as zde:
-                        self.message_handler.display_error_message(zde)
+                        self.message_handler.display_error_message(zde.__str__())
+                    except NegativeFactorialError as nfe:
+                        self.message_handler.display_error_message(nfe.__str__())
+                    except LargeFactorialError as lfe:
+                        self.message_handler.display_error_message(lfe.__str__())
+                    except NegativeSumError as nse:
+                        self.message_handler.display_error_message(nse.__str__())
+                    except LargeSumError as lse:
+                        self.message_handler.display_error_message(lse.__str__())
                     except IndexError as ie:
-                        self.message_handler.display_error_message('Error: Missing operands') # TODO: change text displayed
+                        self.message_handler.display_error_message(ie.__str__()) # TODO: change text displayed
                         # triggered by (((6)
                     except OverflowError as oe:
-                        self.message_handler.display_error_message(oe)
+                        self.message_handler.display_error_message(f"Error! {oe.args[-1]}") # oe.args[-1] = error message
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)

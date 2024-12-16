@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-#from calculator.logic.exceptions import NegativeFactorialError
+from calculator.logic.exceptions import NegativeFactorialError, LargeFactorialError, LargeSumError, NegativeSumError
 
 
 class Operator(ABC):
@@ -120,8 +120,10 @@ class Fac(UnaryOperator):
         return False
     def solve(self, operand): # TODO: Make sure operand is a positive int. Throw a relevant exception if needed (different one for each case).
         operand = int(operand)
-        #if operand < 0:
-        #    raise NegativeFactorialError(operand)
+        if operand < 0:
+            raise NegativeFactorialError(operand)
+        elif operand > 8000:
+            raise LargeFactorialError(operand)
         result = 1
         for index in range(1, operand + 1):
             result = result * index
@@ -133,6 +135,10 @@ class Sum(UnaryOperator):
     def is_left(self):
         return False
     def solve(self, operand): # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [equation_solver.py] (in final version)!
+        if operand < 0:
+            raise NegativeSumError(operand)
+        if operand > 9999999999999999:
+            raise LargeSumError(operand)
         operand_as_str = str(operand).replace('.', '') # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
         result = 0.0
 
