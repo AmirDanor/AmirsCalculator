@@ -73,7 +73,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         for index in range(1, len(self._tokens) - 1, 1):
             if (self._tokens[index] == '-'  # TODO: Simplify this complicated statement
-                    and ((self._tokens[index - 1] in OPERATORS_DICT
+                    and ((self._tokens[index - 1] in BINARY_OPERATORS_DICT
                           and self._tokens[index - 1] != '-')
                          or (self._tokens[index - 1] == '-'
                              and index - 2 >= 0
