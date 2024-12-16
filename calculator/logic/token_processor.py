@@ -135,7 +135,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
                         #print(f"before: {index}")
                         raise UnaryError(token)
                     if (index < len(self._tokens) - 1 # Check token to the right
-                            and not is_operand(self._tokens[index + 1])):
+                            and (not is_operand(self._tokens[index + 1])
+                                 and self._tokens[index + 1] != '(')):
                         #print(f"after: {index}")
                         raise UnaryError(token)
                 else: # Right unary operator
