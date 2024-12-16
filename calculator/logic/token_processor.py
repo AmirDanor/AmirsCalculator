@@ -9,7 +9,7 @@ OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
 OPERATORS_DICT = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
-
+RIGHT_UNARY_OPERATORTS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
 
 class TokenProcessor(ABC):
     """
@@ -59,7 +59,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
             if self._tokens[index] == '-' and self._tokens[index - 1] == '-':
                 # Check for context: number/bracket to the right, operator to the left
                 if  ((is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == '(') and
-                        (index - 2 < 0 or self._tokens[index - 2] in OPERATORS_DICT or self._tokens[index - 2] == '(')):
+                        (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] == '(')):
                     # Remove the two minuses
                     del self._tokens[index]
                     del self._tokens[index - 1]
@@ -77,9 +77,11 @@ class ArithmeticTokenProcessor(TokenProcessor):
                           and self._tokens[index - 1] != '-')
                          or (self._tokens[index - 1] == '-'
                              and index - 2 >= 0
-                             and (self._tokens[index - 2].isdigit()
+                             and (self._tokens[index - 2].isdigit() #TODO: place in module
                                   or '.' in self._tokens[index - 2]
-                                  or '_' in self._tokens[index - 2])))):
+                                  or '_' in self._tokens[index - 2]
+                                  or ')' == self._tokens[index - 2]
+                                  or self._tokens[index - 2] in RIGHT_UNARY_OPERATORTS_DICT)))):
                 if ('(' in self._tokens[index + 1]):
                     self.minus_brackets_handle(index)
                 else:
