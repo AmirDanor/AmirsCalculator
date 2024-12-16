@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from calculator.logic.exceptions import UnaryError
+from calculator.logic.exceptions import UnaryError, EmptyParenthesesError
 from calculator.utils.operator_registry import OperatorRegistry
 from calculator.utils.operand_utils import SIGN_NUMBER_MINUS, SIGN_UNARY_MINUS, is_operand, ALLOWED_BEFORE_RIGHT_UNARY, \
     ALLOWED_AFTER_RIGHT_UNARY
@@ -136,7 +136,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                             and not is_operand(self._tokens[index + 1])):
                         #print(f"after: {index}")
                         raise UnaryError(token)
-                else: # Left unary operator
+                else: # Right unary operator
                     if (index > 0 # Check token to the left
                             and not is_operand(self._tokens[index-1])
                             and self._tokens[index-1] not in ALLOWED_BEFORE_RIGHT_UNARY):
@@ -146,4 +146,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                             and self._tokens[index+1] not in ALLOWED_AFTER_RIGHT_UNARY):
                         #print(f"after: {index}")
                         raise UnaryError(token)
+            elif token == '(':
+                if index < len(self._tokens) - 1 and self._tokens[index+1] == ')':
+                    raise EmptyParenthesesError()
             index += 1

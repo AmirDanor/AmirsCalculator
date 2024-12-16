@@ -62,7 +62,7 @@ class EquationSolver:
             elif token == ')':
                 while stack[-1] != '(' and stack[-1] != SIGN_NUMBER_MINUS+'(':
                     postfix.append(stack.pop())
-                if (stack[-1] != SIGN_NUMBER_MINUS+'('):
+                if stack[-1] != SIGN_NUMBER_MINUS+'(':
                     pass # Insert negative value of _result in brackets...
                 stack.pop()
             else:  # Operator
@@ -106,4 +106,7 @@ class EquationSolver:
                     operand2 = stack.pop()
                     binary_result = BINARY_OPERATORS_DICT.get(token).solve(operand2, operand1)
                     stack.append(binary_result)
-        self._result = stack[0] if stack  else "Nothing to calculate."
+        if len(stack) >= 2:
+            self._result = "Wrong usage of parentheses" #todo: change str
+        else:
+            self._result = stack[0] if stack  else "Nothing to calculate."

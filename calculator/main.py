@@ -4,7 +4,7 @@ from calculator.interaction import input_handler, message_handler
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic import input_validator, token_processor
-from calculator.logic.exceptions import InvalidInputException, UnaryError
+from calculator.logic.exceptions import InvalidInputError, UnaryError, EmptyParenthesesError
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.string_formatter import StringFormatter
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
@@ -34,7 +34,7 @@ class Main:
     def run(self):
         """
         Runs the program as intended.
-        :raises InvalidInputException: If user's input contains forbidden chars.
+        :raises InvalidInputError: If user's input contains forbidden chars.
         """
         self.message_handler.display_input_message()
         try:
@@ -42,8 +42,8 @@ class Main:
             while expression != QUIT_STR:
                 try:
                     if not self.input_validator.validate_input(expression):
-                        raise InvalidInputException(expression)
-                except InvalidInputException as iie:
+                        raise InvalidInputError(expression)
+                except InvalidInputError as iie:
                     self.message_handler.display_custom_message(str(iie))  # Catch and print the InvalidInput exception
                 else:
                     try:
@@ -54,12 +54,15 @@ class Main:
                         #print(self.token_processor.validate())
                         equation_solver = EquationSolver(processed_tokenized_equation)
                         solution = equation_solver.solve()
-                        if solution: # if solution is not None
+                        if solution is not None: # if solution is not None
                             self.message_handler.display_custom_message(str(solution))
+                    except EmptyParenthesesError as epe:
+                        self.message_handler.display_error_message(epe) # TODO: change text displayed
                     except UnaryError as ue:
                         self.message_handler.display_error_message(ue)  # TODO: change text displayed
                     except IndexError as ie:
-                        self.message_handler.display_error_message(ie) # TODO: change text displayed
+                        self.message_handler.display_error_message('Error: Missing operands') # TODO: change text displayed
+                        # triggered by (((6)
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)
