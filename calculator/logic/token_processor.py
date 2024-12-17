@@ -1,3 +1,5 @@
+#todo: disable 1234. support
+
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, EmptyParenthesesError
@@ -9,6 +11,7 @@ UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
 OPERATORS_DICT = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
 RIGHT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
+LEFT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_left_unary_operators()
 
 class TokenProcessor(ABC):
     """
@@ -43,11 +46,18 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def process(self, tokens: list = None) -> list:
         if tokens is not None:
             self._tokens = tokens
+        #self.handle_points()
         self.delete_extra_minuses()
         self.join_number_minuses()
         self.replace_unary_minuses()
+        print(tokens)
         self.validate()
         return self._tokens
+
+    #def handle_points(self):
+        #for token in self._tokens:
+        #    if token.count('.') > 1:
+        #        raise MultiplePointsError(token):
 
     def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
         """
@@ -60,7 +70,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
             if self._tokens[index] == operator_utils.MINUS and self._tokens[index - 1] == operator_utils.MINUS:
                 # Check for context: number/bracket to the right, operator to the left
                 if  ((operand_utils.is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == general_utils.OPEN_BRACKETS) and
-                        (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] == general_utils.OPEN_BRACKETS)):
+                        (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] in LEFT_UNARY_OPERATORS_DICT or self._tokens[index - 2] == general_utils.OPEN_BRACKETS)):
                     # Remove the two minuses
                     del self._tokens[index]
                     del self._tokens[index - 1]
@@ -74,7 +84,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         for index in range(1, len(self._tokens) - 1, 1):
             if (self._tokens[index] == '-'  # TODO: Simplify this complicated statement
-                    and ((self._tokens[index - 1] in BINARY_OPERATORS_DICT
+                    and (((self._tokens[index - 1] in BINARY_OPERATORS_DICT or self._tokens[index - 1] in LEFT_UNARY_OPERATORS_DICT)
                           and self._tokens[index - 1] != operator_utils.MINUS)
                          or (self._tokens[index - 1] == operator_utils.MINUS
                              and index - 2 >= 0

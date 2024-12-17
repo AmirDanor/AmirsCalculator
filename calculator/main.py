@@ -7,8 +7,10 @@ from calculator.logic import input_validator
 
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, NegativeFactorialError, LargeFactorialError, \
-    NegativeSumError, LargeSumError
-from calculator.logic.string_formatter import StringFormatter
+    NegativeSumError, LargeSumError, InvalidInputError, UnmatchedOpeningParenthesesError, NonIntFactorialError, \
+    UnmatchedClosingParenthesesError
+from calculator.logic.string_preprocessor import StringPreprocessor
+from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
 from calculator.logic.tokenizer import Tokenizer, ArithmeticTokenizer
 
@@ -49,8 +51,10 @@ class Main:
                     self.message_handler.display_custom_message(str(iie))  # Catch and print the InvalidInput exception
                 else:
                     try:
-                        string_formatter = StringFormatter(expression)
-                        expression = string_formatter.fix_format()
+                        string_preprocessor = StringPreprocessor(expression)
+                        string_preprocessor.preprocess()
+                        string_processor = StringProcessor(expression)
+                        expression = string_processor.process()
                         tokenized_equation = self.tokenizer.tokenize(expression)
                         processed_tokenized_equation = self.token_processor.process(tokenized_equation)
                         #print(self.token_processor.validate())
@@ -58,6 +62,12 @@ class Main:
                         solution = equation_solver.solve()
                         if solution is not None: # if solution is not None
                             self.message_handler.display_custom_message(str(solution))
+                    except NonIntFactorialError as nife:
+                        self.message_handler.display_error_message(nife.__str__())
+                    except UnmatchedOpeningParenthesesError as uope:
+                        self.message_handler.display_error_message(uope.__str__())
+                    except UnmatchedClosingParenthesesError as ucpe:
+                        self.message_handler.display_error_message(ucpe.__str__())
                     except EmptyParenthesesError as epe:
                         self.message_handler.display_error_message(epe.__str__()) # TODO: change text displayed
                     except UnaryError as ue:

@@ -1,29 +1,29 @@
 from calculator.utils import general_utils
 
 
-class StringFormatter:
+class StringProcessor:
     def __init__(self, equation: str):
         """
-        Reformats users' input.
+        Process (reformat) users' input.
 
         :param equation: User's input (equation)
         :type equation: str
         """
-        self.equation = equation
+        self._equation = equation
 
 
-    def fix_format(self):
+    def process(self):
         """
-        Fixes format of user's input.
+        Process (fix format) of user's input.
 
-        :return: User's input (equation) with fixed format
+        :return: Processed user's input (equation with fixed format)
         :rtype: str
         """
         self.remove_white_spaces()
-        return self.equation
+        return self._equation
 
     def remove_white_spaces(self):
         """
         Removes white spaces from str equation.
         """
-        self.equation = ''.join(c for c in self.equation if c not in general_utils.EMPTY_CHARACTERS)
+        self._equation = ''.join(c for c in self._equation if c not in general_utils.EMPTY_CHARACTERS)

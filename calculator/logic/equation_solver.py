@@ -76,7 +76,7 @@ class EquationSolver:
         Solves the equation represented by postfix stack and updates the _result.
         """
         stack = []
-        for token in (self._postfix_stack):
+        for token in self._postfix_stack:
             if operand_utils.is_operand(token) or operator_utils.NUMBER_MINUS in token:  # Operand
                 fixed_token = token.replace(operator_utils.NUMBER_MINUS, operator_utils.MINUS)
                 try:
