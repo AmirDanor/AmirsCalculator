@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from calculator.logic.exceptions import NegativeFactorialError, LargeFactorialError, LargeSumError, NegativeSumError
+from calculator.logic.exceptions import NegativeFactorialError, NegativeSumError, LargeSumError
 
 
 class Operator(ABC):

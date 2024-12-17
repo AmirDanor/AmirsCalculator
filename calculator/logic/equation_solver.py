@@ -1,5 +1,4 @@
-# File contains prints for dev tests
-from calculator.utils import operator_utils, operand_utils
+from calculator.utils import operator_utils, operand_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 from calculator.utils.operators import UnaryOperator
 
@@ -28,10 +27,6 @@ class EquationSolver:
         :return: Solution to equation
         :rtype: float
         """
-        #self.tokenize()
-        #self.delete_extra_minuses()
-        #self.join_number_minuses()
-        #self.replace_unary_minuses()
         self.infix_to_postfix()
         self.solve_postfix()
         #if self._result == -0.0:
@@ -46,7 +41,7 @@ class EquationSolver:
         postfix = []
         index = 0
         for token in self._tokens:
-            if operand_utils.is_operand(token) or operator_utils.SIGN_NUMBER_MINUS in token:  # Operand
+            if operand_utils.is_operand(token) or operator_utils.NUMBER_MINUS in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
                 if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Push left-sided unary operator
@@ -56,16 +51,16 @@ class EquationSolver:
                         postfix.append(token)
                     else:
                         stack.append(token)
-            elif token == '(':
+            elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
-            elif token == ')':
-                while stack[-1] != '(' and stack[-1] != operator_utils.SIGN_NUMBER_MINUS+'(':
+            elif token == general_utils.CLOSE_BRACKETS:
+                while stack[-1] != general_utils.OPEN_BRACKETS and stack[-1] != operator_utils.NUMBER_MINUS+general_utils.OPEN_BRACKETS:
                     postfix.append(stack.pop())
-                if stack[-1] != operator_utils.SIGN_NUMBER_MINUS+'(':
+                if stack[-1] != operator_utils.NUMBER_MINUS+general_utils.OPEN_BRACKETS:
                     pass # Insert negative value of _result in brackets...
                 stack.pop()
             else:  # Operator
-                while stack and stack[-1] != '(' and operand_utils.precedence(token) <= operand_utils.precedence(stack[-1]): # add '-('
+                while stack and stack[-1] != general_utils.OPEN_BRACKETS and operand_utils.precedence(token) <= operand_utils.precedence(stack[-1]): # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
             index+=1
@@ -82,8 +77,8 @@ class EquationSolver:
         """
         stack = []
         for token in (self._postfix_stack):
-            if operand_utils.is_operand(token) or operator_utils.SIGN_NUMBER_MINUS in token:  # Operand
-                fixed_token = token.replace(operator_utils.SIGN_NUMBER_MINUS, '-')
+            if operand_utils.is_operand(token) or operator_utils.NUMBER_MINUS in token:  # Operand
+                fixed_token = token.replace(operator_utils.NUMBER_MINUS, operator_utils.MINUS)
                 try:
                     token_as_number = float(fixed_token)
                     stack.append(token_as_number)

@@ -4,9 +4,10 @@ from calculator.interaction import input_handler, message_handler
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic import input_validator
-from calculator.logic.exceptions import InvalidInputError, UnaryError, EmptyParenthesesError, NegativeFactorialError, \
-    LargeFactorialError, LargeSumError, NegativeSumError
+
 from calculator.logic.equation_solver import EquationSolver
+from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, NegativeFactorialError, LargeFactorialError, \
+    NegativeSumError, LargeSumError
 from calculator.logic.string_formatter import StringFormatter
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
 from calculator.logic.tokenizer import Tokenizer, ArithmeticTokenizer
