@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, EmptyParenthesesError
-from calculator.utils import operand_utils, operator_utils
+from calculator.utils import operand_utils, operator_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
 OPERATORS_DICT = {**UNARY_OPERATORS_DICT, **BINARY_OPERATORS_DICT} # Merges both dictionaries into a single dictionary
-RIGHT_UNARY_OPERATORTS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
+RIGHT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
 
 class TokenProcessor(ABC):
     """
@@ -39,7 +39,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         self._tokens = tokens
 
     def process(self, tokens: list = None) -> list:
-        if tokens != None:
+        if tokens is not None:
             self._tokens = tokens
         self.delete_extra_minuses()
         self.join_number_minuses()
@@ -54,11 +54,11 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         tokens = []
         number = ''
-        for index in range (len(self._tokens) - 2, 0, -1): #Make sure vars are correct... -2... 0...
-            if self._tokens[index] == '-' and self._tokens[index - 1] == '-':
+        for index in range (len(self._tokens) - 2, 0, -1):
+            if self._tokens[index] == operator_utils.MINUS and self._tokens[index - 1] == operator_utils.MINUS:
                 # Check for context: number/bracket to the right, operator to the left
-                if  ((operand_utils.is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == '(') and
-                        (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] == '(')):
+                if  ((operand_utils.is_operand(self._tokens[index + 1]) or self._tokens[index + 1] == general_utils.OPEN_BRACKETS) and
+                        (index - 2 < 0 or self._tokens[index - 2] in BINARY_OPERATORS_DICT or self._tokens[index - 2] == general_utils.OPEN_BRACKETS)):
                     # Remove the two minuses
                     del self._tokens[index]
                     del self._tokens[index - 1]
@@ -73,18 +73,18 @@ class ArithmeticTokenProcessor(TokenProcessor):
         for index in range(1, len(self._tokens) - 1, 1):
             if (self._tokens[index] == '-'  # TODO: Simplify this complicated statement
                     and ((self._tokens[index - 1] in BINARY_OPERATORS_DICT
-                          and self._tokens[index - 1] != '-')
-                         or (self._tokens[index - 1] == '-'
+                          and self._tokens[index - 1] != operator_utils.MINUS)
+                         or (self._tokens[index - 1] == operator_utils.MINUS
                              and index - 2 >= 0
                              and (self._tokens[index - 2].isdigit() #TODO: place in module
                                   or '.' in self._tokens[index - 2]
                                   or '_' in self._tokens[index - 2]
-                                  or ')' == self._tokens[index - 2]
-                                  or self._tokens[index - 2] in RIGHT_UNARY_OPERATORTS_DICT)))):
-                if ('(' in self._tokens[index + 1]):
+                                  or general_utils.CLOSE_BRACKETS == self._tokens[index - 2]
+                                  or self._tokens[index - 2] in RIGHT_UNARY_OPERATORS_DICT)))):
+                if general_utils.OPEN_BRACKETS in self._tokens[index + 1]:
                     self.minus_brackets_handle(index)
                 else:
-                    self._tokens[index + 1] = operator_utils.SIGN_NUMBER_MINUS + self._tokens[index + 1]
+                    self._tokens[index + 1] = operator_utils.NUMBER_MINUS + self._tokens[index + 1]
                     del self._tokens[index]
                     index -= 1 # not sure...
         # print(f" after join_number_minuses: {self._tokens}")  # For testing
@@ -94,18 +94,18 @@ class ArithmeticTokenProcessor(TokenProcessor):
         :param index: index of minus in self._tokens
         :type index: int
         """
-        self._tokens.insert(index, '(')
+        self._tokens.insert(index, general_utils.OPEN_BRACKETS)
         # print(f"og: {self._tokens}")
         index+=3
         # print(f"in index: {index} = {self._tokens[index]}")
-        track_brackets = ['(']
+        track_brackets = [general_utils.OPEN_BRACKETS]
         while track_brackets:
             # print(f"tracking: {track_brackets}")
-            if (self._tokens[index] == '('):
-                track_brackets.append('(')
-            if (self._tokens[index] == ')'):
+            if self._tokens[index] == general_utils.OPEN_BRACKETS:
+                track_brackets.append(general_utils.OPEN_BRACKETS)
+            if self._tokens[index] == general_utils.CLOSE_BRACKETS:
                 if track_brackets:
-                    self._tokens.insert(index, ')')
+                    self._tokens.insert(index, general_utils.CLOSE_BRACKETS)
                     return
                 else:
                     track_brackets.pop()
@@ -116,8 +116,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
         Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';']
         """
         for index in range(0, len(self._tokens) - 1, 1):
-            if self._tokens[index] == '-' and (index == 0 or '(' in self._tokens[index - 1]):
-                self._tokens[index] = operator_utils.SIGN_UNARY_MINUS
+            if self._tokens[index] == '-' and (index == 0 or general_utils.OPEN_BRACKETS in self._tokens[index - 1]):
+                self._tokens[index] = operator_utils.UNARY_MINUS
         # print(f" after replace_unary_minus: {self._tokens}")  # For testing
 
     def validate(self):
@@ -130,12 +130,12 @@ class ArithmeticTokenProcessor(TokenProcessor):
                 if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Left unary operator
                     if (index > 0  # Check token to the left
                             and self._tokens[index-1] not in BINARY_OPERATORS_DICT
-                            and self._tokens[index-1] != '('):
+                            and self._tokens[index-1] != general_utils.OPEN_BRACKETS):
                         #print(f"before: {index}")
                         raise UnaryError(token)
                     if (index < len(self._tokens) - 1 # Check token to the right
                             and (not operand_utils.is_operand(self._tokens[index + 1])
-                                 and self._tokens[index + 1] != '(')):
+                                 and self._tokens[index + 1] != general_utils.OPEN_BRACKETS)):
                         #print(f"after: {index}")
                         raise UnaryError(token)
                 else: # Right unary operator
@@ -148,7 +148,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                             and self._tokens[index+1] not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
                         #print(f"after: {index}")
                         raise UnaryError(token)
-            elif token == '(':
-                if index < len(self._tokens) - 1 and self._tokens[index+1] == ')':
+            elif token == general_utils.OPEN_BRACKETS:
+                if index < len(self._tokens) - 1 and self._tokens[index+1] == general_utils.CLOSE_BRACKETS:
                     raise EmptyParenthesesError()
             index += 1

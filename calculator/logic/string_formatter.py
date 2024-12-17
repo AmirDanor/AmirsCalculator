@@ -1,3 +1,6 @@
+from calculator.utils import general_utils
+
+
 class StringFormatter:
     def __init__(self, equation: str):
         """
@@ -23,4 +26,4 @@ class StringFormatter:
         """
         Removes white spaces from str equation.
         """
-        self.equation = self.equation.replace(' ', '')
+        self.equation = ''.join(c for c in self.equation if c not in general_utils.EMPTY_CHARACTERS)

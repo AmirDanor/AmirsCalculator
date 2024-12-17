@@ -1,4 +1,4 @@
-from calculator.utils import operator_utils
+from calculator.utils import operator_utils, general_utils
 
 
 class InvalidInputError(Exception):
@@ -13,7 +13,7 @@ class InvalidInputError(Exception):
         :return: Detailed message about the forbidden chars used in users input
         :rtype: str
         """
-        forbidden_chars_from_string = {char for char in self._string if char not in operator_utils.VALID_INPUT_CHARACTERS}
+        forbidden_chars_from_string = {char for char in self._string if char not in general_utils.VALID_INPUT_CHARACTERS}
         return f'Error! Your input contains forbidden characters: {forbidden_chars_from_string}'
 
 class NegativeFactorialError(Exception):
@@ -36,7 +36,7 @@ class UnaryError(Exception):
         :param sign: Sign representation of invalid unary operator
         :type sign: str
         """
-        if sign == operand_utils.SIGN_UNARY_MINUS:
+        if sign == operator_utils.UNARY_MINUS:
             sign = '-'
         self._sign = sign
     def __str__(self):
