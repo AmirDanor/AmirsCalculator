@@ -8,7 +8,8 @@ from calculator.logic import input_validator
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, NegativeFactorialError, LargeFactorialError, \
     NegativeSumError, LargeSumError, InvalidInputError, UnmatchedOpeningParenthesesError, NonIntFactorialError, \
-    UnmatchedClosingParenthesesError
+    UnmatchedClosingParenthesesError, NegativeRootError, ZeroBaseNegExError, MultipleDotsError, \
+    MultipleDotsOperandError, SingleDotError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor, TokenProcessor
@@ -70,10 +71,20 @@ class Main:
                         self.message_handler.display_error_message(ucpe.__str__())
                     except EmptyParenthesesError as epe:
                         self.message_handler.display_error_message(epe.__str__()) # TODO: change text displayed
+                    except SingleDotError as sde:
+                        self.message_handler.display_error_message(sde.__str__())
+                    except MultipleDotsError as mde:
+                        self.message_handler.display_error_message(mde.__str__())
+                    except MultipleDotsOperandError as mdoe:
+                        self.message_handler.display_error_message(mdoe.__str__())
                     except UnaryError as ue:
                         self.message_handler.display_error_message(ue.__str__())  # TODO: change text displayed
                     except ZeroDivisionError as zde:
                         self.message_handler.display_error_message(zde.__str__())
+                    except ZeroBaseNegExError as zbnee:
+                        self.message_handler.display_error_message(zbnee.__str__())
+                    except NegativeRootError as nre:
+                        self.message_handler.display_error_message(nre.__str__())
                     except NegativeFactorialError as nfe:
                         self.message_handler.display_error_message(nfe.__str__())
                     except LargeFactorialError as lfe:
@@ -84,6 +95,7 @@ class Main:
                         self.message_handler.display_error_message(lse.__str__())
                     except IndexError as ie:
                         self.message_handler.display_error_message(ie.__str__()) # TODO: change text displayed
+                        # triggered by 6-
                         # triggered by (((6)
                     except OverflowError as oe:
                         self.message_handler.display_error_message(f"Error! {oe.args[-1]}") # oe.args[-1] = error message

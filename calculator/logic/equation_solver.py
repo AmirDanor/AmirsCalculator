@@ -83,7 +83,6 @@ class EquationSolver:
                     token_as_number = float(fixed_token)
                     stack.append(token_as_number)
                 except ValueError as ve:
-                    print("Error with sign minus:")
                     print(ve)
                     return None
             else:
@@ -104,4 +103,4 @@ class EquationSolver:
         if len(stack) >= 2:
             self._result = "Wrong usage of parentheses" #todo: change str
         else:
-            self._result = stack[0] if stack  else "Nothing to calculate."
+            self._result = stack[0] if stack else "Nothing to calculate."

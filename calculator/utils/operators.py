@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 import math
 
 from calculator.logic.exceptions import NegativeFactorialError, NegativeSumError, LargeSumError, LargeFactorialError, \
-    NonIntFactorialError
+    NonIntFactorialError, NegativeRootError, ZeroBaseNegExError
+from calculator.utils import general_utils
 
 
 class Operator(ABC):
@@ -72,12 +73,12 @@ class Div(BinaryOperator): # TODO: Make sure operand2 is not negative. Throw a r
 class Pow(BinaryOperator): # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
     def get_precedence(self):
         return 4
-    def solve(self, operand1, operand2):
-        if operand1 == 0 and operand2 < 0:
-            pass #todo: implement for 0^(negative)
-
-        # todo: catch error for 0^(fraction)
-        return math.pow(operand1, operand2)
+    def solve(self, base, exponent):
+        if base == 0 and exponent < 0:
+            raise ZeroBaseNegExError(exponent)
+        elif base < 0 and not exponent.is_integer():
+            raise NegativeRootError(base, exponent)
+        return math.pow(base, exponent)
 
 class Mod(BinaryOperator):
     def get_precedence(self):
@@ -125,12 +126,12 @@ class Fac(UnaryOperator):
     def is_left(self):
         return False
     def solve(self, operand): # TODO: Make sure operand is a positive int. Throw a relevant exception if needed (different one for each case).
-        if not operand.is_integer():
-            raise NonIntFactorialError(operand)
         if operand < 0:
             raise NegativeFactorialError(operand)
-        elif operand > 8000:
+        elif operand > general_utils.FACTORICAL_MAX_OPERAND:
             raise LargeFactorialError(operand)
+        elif not operand.is_integer():
+            raise NonIntFactorialError(operand)
         result = 1
         for index in range(1, int(operand) + 1):
             result = result * index

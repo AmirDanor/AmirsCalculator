@@ -1,3 +1,7 @@
+# Constants
+
+FACTORICAL_MAX_OPERAND = 800
+
 OPEN_BRACKETS = '('
 
 CLOSE_BRACKETS = ')'

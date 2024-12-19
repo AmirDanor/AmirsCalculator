@@ -86,6 +86,20 @@ class LargeSumError(Exception):
         """
         return f"Error! Operand {self._operand} is too large for sum calculation"
 
+class ZeroBaseNegExError(Exception):
+    def __init__(self, exponent: float):
+        """
+        :param exponent: Negative exponent which raised the exception
+        :type exponent: float
+        """
+        self._exponent = exponent
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f"Error! Can't calculate negative exponent for zero base: 0{operator_utils.POWER}{self._exponent}"
+
 class NegativeRootError(Exception):
     def __init__(self, base: float, exponent: float):
         """
@@ -101,7 +115,7 @@ class NegativeRootError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Number {self._base} is too large for sum calculation"
+        return f"Error! Can't calculate negative root: {general_utils.OPEN_BRACKETS}{self._base}{general_utils.CLOSE_BRACKETS}{operator_utils.POWER}{self._exponent}"
 
 class UnaryError(Exception):
     def __init__(self, sign: str):
@@ -147,3 +161,42 @@ class EmptyParenthesesError(Exception):
         :rtype: str
         """
         return 'Error! Equation contains empty Parentheses' #todo: maybe add index too?
+
+class SingleDotError(Exception):
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f'Error! Could not evaluate a single dot'
+
+class MultipleDotsError(Exception):
+    def __init__(self, dot_amount: int):
+        """
+        :param dot_amount: Amount of dots in a row, in invalid token
+        :type dot_amount: int
+        """
+        self._dot_amount = dot_amount
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f'Error! Could not evaluate {self._dot_amount} dots in a row'
+
+class MultipleDotsOperandError(Exception):
+    def __init__(self, token: str, dot_amount: int):
+        """
+        :param token: Invalid tokenized 'operand' which contains multiple points
+        :type token: str
+        :param dot_amount: Amount of dots in invalid token
+        :type dot_amount: int
+        """
+        self._token = token
+        self._dot_amount = dot_amount
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f'Error! Could not refer to {self._token} as operand since it contains {self._dot_amount} dots'

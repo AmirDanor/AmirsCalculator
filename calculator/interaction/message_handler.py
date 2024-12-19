@@ -55,9 +55,8 @@ class ConsoleMessageHandler(MessageHandler):
                             •  Use negation correctly by placing ~ (Tilda) directly before a number.
                         To stop the program from running, simply type "{self._quit}".
                         Start calculating by typing a mathematical expression below, then press enter to send input to program.
-                        Enjoy! :)
-        \033[00m
-        ''',
+                        Enjoy! :)\033[00m
+''',
     1: 'Please enter an input:'
 }
         self._prompt = self._MESSAGE_TO_DISPLAY[0]

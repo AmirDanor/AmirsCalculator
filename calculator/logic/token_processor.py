@@ -2,7 +2,8 @@
 
 from abc import ABC, abstractmethod
 
-from calculator.logic.exceptions import UnaryError, EmptyParenthesesError
+from calculator.logic.exceptions import UnaryError, EmptyParenthesesError, MultipleDotsError, MultipleDotsOperandError, \
+    SingleDotError
 from calculator.utils import operand_utils, operator_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 
@@ -46,18 +47,25 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def process(self, tokens: list = None) -> list:
         if tokens is not None:
             self._tokens = tokens
-        #self.handle_points()
+        self.handle_dots()
         self.delete_extra_minuses()
         self.join_number_minuses()
         self.replace_unary_minuses()
-        print(tokens)
         self.validate()
         return self._tokens
 
-    #def handle_points(self):
-        #for token in self._tokens:
-        #    if token.count('.') > 1:
-        #        raise MultiplePointsError(token):
+    def handle_dots(self):
+        """
+        Validates tokens which include dots, raises exceptions if needed.
+        """
+        for token in self._tokens:
+            if token == '.':
+                raise SingleDotError()
+            dot_count = token.count('.')
+            if token.count('.') > 1:
+                if not any(char.isdigit() for char in token):
+                    raise MultipleDotsError(dot_count)
+                raise MultipleDotsOperandError(token, dot_count)
 
     def delete_extra_minuses(self): # TODO: check theres a maximum one . (dot) in operand.
         """
@@ -139,28 +147,35 @@ class ArithmeticTokenProcessor(TokenProcessor):
         index = 0
         for token in self._tokens:
             if token in UNARY_OPERATORS_DICT:
-                if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Left unary operator
-                    if (index > 0  # Check token to the left
-                            and self._tokens[index-1] not in BINARY_OPERATORS_DICT
-                            and self._tokens[index-1] != general_utils.OPEN_BRACKETS):
-                        #print(f"before: {index}")
-                        raise UnaryError(token)
-                    if (index < len(self._tokens) - 1 # Check token to the right
-                            and (not operand_utils.is_operand(self._tokens[index + 1])
-                                 and self._tokens[index + 1] != general_utils.OPEN_BRACKETS)):
-                        #print(f"after: {index}")
-                        raise UnaryError(token)
-                else: # Right unary operator
-                    if (index > 0 # Check token to the left
-                            and not operand_utils.is_operand(self._tokens[index-1])
-                            and self._tokens[index-1] not in operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
-                        #print(f"before: {index}")
-                        raise UnaryError(token)
-                    if (index < len(self._tokens) - 1 # Check token to the right
-                            and self._tokens[index+1] not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
-                        #print(f"after: {index}")
-                        raise UnaryError(token)
+                self.validate_unary_operator(token, index)
             elif token == general_utils.OPEN_BRACKETS:
                 if index < len(self._tokens) - 1 and self._tokens[index+1] == general_utils.CLOSE_BRACKETS:
                     raise EmptyParenthesesError()
             index += 1
+
+    def validate_unary_operator(self, token, index):
+        if OPERATOR_REGISTRY.is_left_unary_operator(token):  # Left unary operator
+            self.validate_left_unary_operator(token, index)
+        else:  # Right unary operator
+            self.validate_right_unary_operator(token, index)
+
+    def validate_left_unary_operator(self, token, index):
+        if (index > 0  # Check token to the left
+                and self._tokens[index - 1] not in BINARY_OPERATORS_DICT
+                and self._tokens[index - 1] != general_utils.OPEN_BRACKETS):
+            # print(f"before: {index}")
+            raise UnaryError(token)
+        if (index < len(self._tokens) - 1  # Check token to the right
+                and (not operand_utils.is_operand(self._tokens[index + 1])
+                     and self._tokens[index + 1] != general_utils.OPEN_BRACKETS)):
+            # print(f"after: {index}")
+            raise UnaryError(token)
+
+    def validate_right_unary_operator(self, token, index):
+        if (index > 0  # Check token to the left
+                and not operand_utils.is_operand(self._tokens[index - 1])
+                and self._tokens[index - 1] not in operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
+            raise UnaryError(token)
+        if (index < len(self._tokens) - 1  # Check token to the right
+                and self._tokens[index + 1] not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
+            raise UnaryError(token)
