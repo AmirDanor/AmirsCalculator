@@ -9,10 +9,11 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
 
 
 @pytest.mark.parametrize("expression, expected_result", [
-    "",      # Empty string
-    "   ",   # Whitespaces
-    "\t\t",  # Tabs
-
+    ("2 +      3       ", 5),
+    ("10       /2  ", 5),
+    ("     4       * 5  ", 20),
+    ("10-7", 3),
+    ("1+2*3", 7)
 ])
 def test_multiple_expressions(expression, expected_result):
     tokenizer = ArithmeticTokenizer()

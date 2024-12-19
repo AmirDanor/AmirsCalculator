@@ -1,5 +1,4 @@
 # File contains prints for dev tests
-
 from calculator.interaction import input_handler, message_handler
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
