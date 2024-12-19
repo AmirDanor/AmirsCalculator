@@ -5,11 +5,13 @@ class Tokenizer(ABC):
     """
     Abstract class for tokenizing str.
     """
+
     @abstractmethod
     def tokenize(self, string: str) -> list:
         """
         Abstract method for tokenizing a string.
         """
+
 
 class ArithmeticTokenizer(Tokenizer):
     def tokenize(self, equation: str) -> list:
@@ -21,7 +23,7 @@ class ArithmeticTokenizer(Tokenizer):
         :return: tokenized arithmetic equation
         :rtype: list
         """
-        tokens:[str] = []
+        tokens: [str] = []
         number = ''
         for char in equation:
             if char.isdigit() or char == '.':

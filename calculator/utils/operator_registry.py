@@ -1,4 +1,5 @@
-from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, Min, Avg, Neg, Fac, Sum
+from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, \
+    Min, Avg, Neg, Fac, Sum
 
 
 class OperatorRegistry:
@@ -47,7 +48,8 @@ class OperatorRegistry:
         :return: all unary operator symbols
         :rtype: dict
         """
-        merged_unaries_dict = {**self._left_unary_operators_funcs, **self._right_unary_operators_funcs}
+        merged_unaries_dict = {**self._left_unary_operators_funcs,
+                               **self._right_unary_operators_funcs}
         return merged_unaries_dict
 
     def get_left_unary_operators(self):
@@ -85,14 +87,17 @@ class OperatorRegistry:
         :rtype: int | None #TODO review rtype..
         """
         if operator in self._left_unary_operators_funcs:
-            return self._left_unary_operators_funcs.get(operator).get_precedence()
+            return self._left_unary_operators_funcs.get(
+                operator).get_precedence()
         if operator in self._right_unary_operators_funcs:
-            return self._right_unary_operators_funcs.get(operator).get_precedence()
+            return self._right_unary_operators_funcs.get(
+                operator).get_precedence()
         elif operator in self._binary_operators_funcs:
             return self._binary_operators_funcs.get(operator).get_precedence()
         return None
 
-    def is_left_unary_operator(self, operator: str) -> bool: # TODO: change func to check if in _left_unary_operators_funcs
+    def is_left_unary_operator(self,
+                               operator: str) -> bool:  # TODO: change func to check if in _left_unary_operators_funcs
         """
         Check if the given operator is a left unary operator.
 

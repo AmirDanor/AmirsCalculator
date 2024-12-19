@@ -8,13 +8,16 @@ class InvalidInputError(Exception):
         :type string: str
         """
         self._string = string
+
     def __str__(self):
         """
         :return: Detailed message about the forbidden chars used in users input
         :rtype: str
         """
-        forbidden_chars_from_string = {char for char in self._string if char not in general_utils.VALID_INPUT_CHARACTERS}
+        forbidden_chars_from_string = {char for char in self._string if
+                                       char not in general_utils.VALID_INPUT_CHARACTERS}
         return f'Error! Your input contains forbidden characters: {forbidden_chars_from_string}'
+
 
 class NonIntFactorialError(Exception):
     def __init__(self, operand: float):
@@ -23,12 +26,14 @@ class NonIntFactorialError(Exception):
         :type operand: float
         """
         self._operand = operand
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Can't calculate factorial for non-integer operand: {self._operand}"
+
 
 class NegativeFactorialError(Exception):
     def __init__(self, operand: float):
@@ -37,12 +42,14 @@ class NegativeFactorialError(Exception):
         :type operand: float
         """
         self._operand = operand
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Can't calculate factorial for negative operand: {self._operand}"
+
 
 class LargeFactorialError(Exception):
     def __init__(self, operand: float):
@@ -51,12 +58,14 @@ class LargeFactorialError(Exception):
         :type operand: float
         """
         self._operand = operand
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Operand {self._operand} is too large for factorial calculation"
+
 
 class NegativeSumError(Exception):
     def __init__(self, operand: float):
@@ -65,12 +74,14 @@ class NegativeSumError(Exception):
         :type operand: float
         """
         self._operand = operand
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Can't calculate sum for negative operand: {self._operand}"
+
 
 class LargeSumError(Exception):
     def __init__(self, operand: float):
@@ -79,12 +90,14 @@ class LargeSumError(Exception):
         :type operand: float
         """
         self._operand = operand
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Operand {self._operand} is too large for sum calculation"
+
 
 class ZeroBaseNegExError(Exception):
     def __init__(self, exponent: float):
@@ -93,12 +106,14 @@ class ZeroBaseNegExError(Exception):
         :type exponent: float
         """
         self._exponent = exponent
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Can't calculate negative exponent for zero base: 0{operator_utils.POWER}{self._exponent}"
+
 
 class NegativeRootError(Exception):
     def __init__(self, base: float, exponent: float):
@@ -110,12 +125,14 @@ class NegativeRootError(Exception):
         """
         self._base = base
         self._exponent = exponent
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f"Error! Can't calculate negative root: {general_utils.OPEN_BRACKETS}{self._base}{general_utils.CLOSE_BRACKETS}{operator_utils.POWER}{self._exponent}"
+
 
 class UnaryError(Exception):
     def __init__(self, sign: str):
@@ -126,6 +143,7 @@ class UnaryError(Exception):
         if sign == operator_utils.UNARY_MINUS:
             sign = operator_utils.MINUS
         self._sign = sign
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
@@ -133,9 +151,11 @@ class UnaryError(Exception):
         """
         return f'Error! Wrong usage of unary operator: {self._sign}'
 
+
 class UnmatchedOpeningParenthesesError(Exception):
     def __init__(self, index: int):
         self._index = index
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
@@ -143,9 +163,11 @@ class UnmatchedOpeningParenthesesError(Exception):
         """
         return f"Error! Unmatched opening parenthesis for '{general_utils.OPEN_BRACKETS}' at index {self._index}"
 
+
 class UnmatchedClosingParenthesesError(Exception):
     def __init__(self, index: int):
         self._index = index
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
@@ -153,14 +175,16 @@ class UnmatchedClosingParenthesesError(Exception):
         """
         return f"Error! Unmatched closing parenthesis for '{general_utils.CLOSE_BRACKETS}' at index {self._index}"
 
+
 class EmptyParenthesesError(Exception):
-       # todo: maybe define init
+    # todo: maybe define init
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return 'Error! Equation contains empty Parentheses' #todo: maybe add index too?
+        return 'Error! Equation contains empty Parentheses'  # todo: maybe add index too?
+
 
 class SingleDotError(Exception):
     def __str__(self):
@@ -170,6 +194,7 @@ class SingleDotError(Exception):
         """
         return f'Error! Could not evaluate a single dot'
 
+
 class MultipleDotsError(Exception):
     def __init__(self, dot_amount: int):
         """
@@ -177,12 +202,14 @@ class MultipleDotsError(Exception):
         :type dot_amount: int
         """
         self._dot_amount = dot_amount
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
         return f'Error! Could not evaluate {self._dot_amount} dots in a row'
+
 
 class MultipleDotsOperandError(Exception):
     def __init__(self, token: str, dot_amount: int):
@@ -194,6 +221,7 @@ class MultipleDotsOperandError(Exception):
         """
         self._token = token
         self._dot_amount = dot_amount
+
     def __str__(self):
         """
         :return: Message about the cause of the exception

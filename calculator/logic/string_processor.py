@@ -11,7 +11,6 @@ class StringProcessor:
         """
         self._equation = equation
 
-
     def process(self):
         """
         Process (fix format) of user's input.
@@ -26,4 +25,5 @@ class StringProcessor:
         """
         Removes white spaces from str equation.
         """
-        self._equation = ''.join(c for c in self._equation if c not in general_utils.EMPTY_CHARACTERS)
+        self._equation = ''.join(c for c in self._equation if
+                                 c not in general_utils.EMPTY_CHARACTERS)

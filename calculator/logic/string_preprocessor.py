@@ -1,4 +1,5 @@
-from calculator.logic.exceptions import UnmatchedOpeningParenthesesError, UnmatchedClosingParenthesesError
+from calculator.logic.exceptions import UnmatchedOpeningParenthesesError, \
+    UnmatchedClosingParenthesesError
 from calculator.utils import general_utils
 
 

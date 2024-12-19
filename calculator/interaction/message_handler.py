@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 
+
 class MessageHandler(ABC):
     """
     Abstract class for displaying messages to user.
     """
+
     @abstractmethod
     def display_input_message(self):
         """
@@ -12,7 +14,7 @@ class MessageHandler(ABC):
         pass
 
     @abstractmethod
-    def display_custom_message(self, message:str):
+    def display_custom_message(self, message: str):
         """
         Displays a custom message.
         :param message: Custom message to display
@@ -21,7 +23,7 @@ class MessageHandler(ABC):
         pass
 
     @abstractmethod
-    def display_error_message(self, error_message:str):
+    def display_error_message(self, error_message: str):
         """
         Displays an error message.
         :param error_message: Error message to display
@@ -29,10 +31,12 @@ class MessageHandler(ABC):
         """
         pass
 
+
 class ConsoleMessageHandler(MessageHandler):
     """
     Class responsible for displaying console messages to user before entering an input.
     """
+
     def __init__(self, quit: str):
         """
         Initialize the first message when creating a new instance of MessageHandler class.
@@ -41,8 +45,9 @@ class ConsoleMessageHandler(MessageHandler):
         """
 
         self._quit = quit
-        self._MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text..
-    0: f'''
+        self._MESSAGE_TO_DISPLAY = {
+            # TODO: use something like colorama to color console text..
+            0: f'''
         \033[92m
                 Welcome to Amir's Advanced Calculator!
                         This program simulates an improved calculator, which means it supports a wide range of operations, including:
@@ -57,8 +62,8 @@ class ConsoleMessageHandler(MessageHandler):
                         Start calculating by typing a mathematical expression below, then press enter to send input to program.
                         Enjoy! :)\033[00m
 ''',
-    1: 'Please enter an input:'
-}
+            1: 'Please enter an input:'
+        }
         self._prompt = self._MESSAGE_TO_DISPLAY[0]
 
     def display_input_message(self):

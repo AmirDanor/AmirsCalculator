@@ -12,6 +12,7 @@ def is_operand(string: str) -> bool:
     """
     return string.isdigit() or '.' in string or '_' in string
 
+
 def precedence(operator):
     """
     Gets operand's precedence
@@ -20,4 +21,5 @@ def precedence(operator):
     :return: operator's precedence
     :rtype: int
     """
-    return OperatorRegistry().get_precedence_for_operator(operator) # temp implementation. TODO: delete later to avoid high coupling.
+    return OperatorRegistry().get_precedence_for_operator(
+        operator)  # temp implementation. TODO: delete later to avoid high coupling.
