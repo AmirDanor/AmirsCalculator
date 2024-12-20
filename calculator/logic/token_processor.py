@@ -68,10 +68,10 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
 
         for token in self._tokens:
-            if token == '.':
+            if token == general_utils.DOT:
                 raise SingleDotError()
-            dot_count = token.count('.')
-            if token.count('.') > 1:
+            dot_count = token.count(general_utils.DOT)
+            if token.count(general_utils.DOT) > 1:
                 if not any(char.isdigit() for char in token):
                     raise MultipleDotsError(dot_count)
                 raise MultipleDotsOperandError(token, dot_count)
@@ -87,8 +87,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
         tokens = []
         number = ''
         for index in range(len(self._tokens) - 2, 0, -1):
-            if (self._tokens[index] == operator_utils.MINUS and
-                    self._tokens[index - 1] == operator_utils.MINUS):
+            if (self._tokens[index] == operator_utils.SUB_SYMBOL and
+                    self._tokens[index - 1] == operator_utils.SUB_SYMBOL):
                 # Check for context: number/bracket to the right, operator
                 # to the left
                 if ((operand_utils.is_operand(self._tokens[index + 1]) or
@@ -111,32 +111,57 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
 
         for index in range(1, len(self._tokens) - 1, 1):
-            if (self._tokens[
-                index] == operator_utils.SUB_SYMBOL  # TODO: Simplify this complicated statement
-                    and (((self._tokens[index - 1] in BINARY_OPERATORS_DICT or
-                           self._tokens[
-                               index - 1] in LEFT_UNARY_OPERATORS_DICT)
-                          and self._tokens[index - 1] !=
-                          operator_utils.SUB_SYMBOL)
-                         or (self._tokens[index - 1] ==
-                             operator_utils.SUB_SYMBOL
-                             and index - 2 >= 0
-                             and (self._tokens[index - 2].isdigit()
-                                  or general_utils.DOT in self._tokens[
-                                      index - 2]
-                                  or operator_utils.SIGN_MINUS_SYMBOL in
-                                  self._tokens[index - 2]
-                                  or general_utils.CLOSE_BRACKETS ==
-                                  self._tokens[index - 2]
-                                  or self._tokens[index - 2]
-                                  in RIGHT_UNARY_OPERATORS_DICT)))):
-                if general_utils.OPEN_BRACKETS in self._tokens[index + 1]:
+            if (self._tokens[index] == operator_utils.SUB_SYMBOL
+                    and (self.prev_token_is_a_non_minus_valid_operand(index)
+                         or self.prev_token_is_a_valid_minus_operand(index))):
+                if general_utils.OPEN_BRACKETS == self._tokens[index + 1]:
+                    # NOTE: replaced in with ==
+                    #  If an opening bracket comes after current unary minus
                     self.minus_brackets_handle(index)
                 else:
                     self._tokens[index + 1] = (operator_utils.SIGN_MINUS_SYMBOL
                                                + self._tokens[index + 1])
                     del self._tokens[index]
                     index -= 1
+
+    def prev_token_is_a_non_minus_valid_operand(self, index: int) -> bool:
+        """
+        checks if previous token is valid to appear before a sign minus
+        (other than a minus)
+        :param index: index of relevant token in tokens list
+        :type index: str
+        :return: if previous token is a valid to appear before a sign minus
+        :rtype: bool
+        """
+
+        prev_token = self._tokens[index - 1]
+        return ((prev_token in BINARY_OPERATORS_DICT or
+                 prev_token in LEFT_UNARY_OPERATORS_DICT)
+                and prev_token != operator_utils.SUB_SYMBOL)
+
+    def prev_token_is_a_valid_minus_operand(self, index: int) -> bool:
+        """
+        checks if previous token is a minus, and if the token before that,
+        makes the token in current index a sign minus
+        :param index: index of relevant token in tokens list
+        :type index: str
+        :return: if previous token is a minus, and if the token before that,
+            makes the token in current index a sign minus
+        :rtype: bool
+        """
+
+        return (self._tokens[index - 1] ==
+                operator_utils.SUB_SYMBOL
+                and index - 2 >= 0
+                and (self._tokens[index - 2].isdigit()
+                     or general_utils.DOT in self._tokens[
+                         index - 2]
+                     or operator_utils.SIGN_MINUS_SYMBOL in
+                     self._tokens[index - 2]
+                     or general_utils.CLOSE_BRACKETS ==
+                     self._tokens[index - 2]
+                     or self._tokens[index - 2]
+                     in RIGHT_UNARY_OPERATORS_DICT))
 
     def minus_brackets_handle(self, index: int):  # Assuming brackets are valid
         """
@@ -172,14 +197,23 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def validate(self):
         """
         Checks for errors in tokenized equation.
-        """  # add info about exception it raises and when it is being raised
+        """
+
         index = 0
         for token in self._tokens:
             if token in UNARY_OPERATORS_DICT:
                 self.validate_unary_operator(token, index)
             index += 1
 
-    def validate_unary_operator(self, token, index):
+    def validate_unary_operator(self, token: str, index: int):
+        """
+        Validates unary operator as part of equation
+        :param token: unary operator's symbol
+        :type token: str
+        :param index: index of current token in tokens list
+        :type index: int
+        """
+
         if OPERATOR_REGISTRY.is_left_unary_operator(
                 token):  # Left unary operator
             self.validate_left_unary_operator(token, index)
@@ -187,6 +221,15 @@ class ArithmeticTokenProcessor(TokenProcessor):
             self.validate_right_unary_operator(token, index)
 
     def validate_left_unary_operator(self, token, index):
+        """
+        Validates left unary operator as part of equation
+        :param token: left unary operator's symbol
+        :type token: str
+        :param index: index of current token in tokens list
+        :type index: int
+        :raises UnaryError: if operator's usage is not valid
+        """
+
         if (index > 0  # Check token to the left
                 and self._tokens[index - 1] not in BINARY_OPERATORS_DICT
                 and self._tokens[index - 1] != general_utils.OPEN_BRACKETS):
@@ -200,12 +243,13 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def validate_right_unary_operator(self, token, index):
         """
         Validates right unary operator as part of equation
-        :param token: unary operator symbol
+        :param token: right unary operator's symbol
         :type token: str
         :param index: index of current token in tokens list
         :type index: int
-        :raises UnaryError:
+        :raises UnaryError:if operator's usage is not valid
         """
+
         if (index > 0  # Check token to the left
                 and not operand_utils.is_operand(self._tokens[index - 1])
                 and self._tokens[index - 1] not in

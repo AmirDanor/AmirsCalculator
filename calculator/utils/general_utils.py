@@ -8,6 +8,8 @@ CLOSE_BRACKETS = ')'
 
 DOT = '.'
 
+EMPTY_STR = ''
+
 EMPTY_CHARACTERS = {
     ' ',
     '\t'

@@ -32,5 +32,6 @@ ALLOWED_BEFORE_RIGHT_UNARY = (
     {str(i) for i in range(10)}  # int numbers 0 - 9 as str
     .union({')', '!', '#'})
 )
-ALLOWED_AFTER_RIGHT_UNARY = {'#', '!', '+', '-', '*', '/', '%', '^', '$', '@',
-                             ')'}
+
+ALLOWED_AFTER_RIGHT_UNARY = (RIGHT_UNARY_OPERATORS.union(BINARY_OPERATORS)
+                             .union({')'}))

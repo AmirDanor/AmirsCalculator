@@ -191,8 +191,8 @@ class Sum(UnaryOperator):
             raise NegativeSumError(operand)
         if 'e' in str(operand):
             raise LargeSumError(operand)
-        operand_as_str = str(operand).replace('.',
-                                              '')  # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
+        operand_as_str = str(operand).replace(general_utils.DOT,
+                                              general_utils.EMPTY_STR)  # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
         result = 0.0
 
         for char in operand_as_str:
