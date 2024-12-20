@@ -1,6 +1,11 @@
 from calculator.utils import operator_utils, general_utils
 
 
+class EmptyEquationError(Exception):
+    def __str__(self):
+        return "Nothing To Calculate!"
+
+
 class InvalidInputError(Exception):
     def __init__(self, string):
         """

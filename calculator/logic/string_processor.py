@@ -1,3 +1,4 @@
+from calculator.logic.exceptions import EmptyEquationError
 from calculator.utils import general_utils
 
 
@@ -19,6 +20,7 @@ class StringProcessor:
         :rtype: str
         """
         self.remove_white_spaces()
+        self.not_empty_validator()
         return self._equation
 
     def remove_white_spaces(self):
@@ -27,3 +29,11 @@ class StringProcessor:
         """
         self._equation = ''.join(c for c in self._equation if
                                  c not in general_utils.EMPTY_CHARACTERS)
+
+    def not_empty_validator(self):
+        """
+        Validates that user's input is not empty after removal of white spaces
+        :throws EmptyEquationError: if processed equation is empty
+        """
+        if self._equation == '':
+            raise EmptyEquationError()

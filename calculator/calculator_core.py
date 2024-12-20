@@ -11,7 +11,7 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     UnmatchedClosingParenthesesError, NegativeRootError, ZeroBaseNegExError, \
     MultipleDotsError, \
     MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
-    OperatorUsageError, ModuloByZeroError
+    OperatorUsageError, ModuloByZeroError, EmptyEquationError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
@@ -77,6 +77,9 @@ class CalculatorCore:
                     if solution is not None:  # if solution is not None
                         self.message_handler.display_custom_message(
                             str(solution))
+                except EmptyEquationError as eee:
+                    self.message_handler.display_error_message(
+                        eee.__str__())
                 except NonIntFactorialError as nife:
                     self.message_handler.display_error_message(
                         nife.__str__())
