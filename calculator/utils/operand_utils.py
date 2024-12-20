@@ -1,7 +1,7 @@
-from calculator.utils.operator_registry import OperatorRegistry
-
-
 # Methods
+from calculator.utils import general_utils, operator_utils
+
+
 def is_operand(string: str) -> bool:
     """
     Checks if string is operand
@@ -10,16 +10,5 @@ def is_operand(string: str) -> bool:
     :return: True if string is operand, else return False
     :rtype: bool
     """
-    return string.isdigit() or '.' in string or '_' in string
-
-
-def precedence(operator):
-    """
-    Gets operand's precedence
-    :param operator: representation of operator
-    :type operator: str
-    :return: operator's precedence
-    :rtype: int
-    """
-    return OperatorRegistry().get_precedence_for_operator(
-        operator)  # temp implementation. TODO: delete later to avoid high coupling.
+    return (string.isdigit() or general_utils.DOT in string
+            or operator_utils.SIGN_MINUS_SYMBOL in string)

@@ -44,36 +44,20 @@ class EquationSolver:
         postfix = []
         index = 0
         for token in self._tokens:
-            if operand_utils.is_operand(
-                    token) or operator_utils.NUMBER_MINUS in token:  # Operand
+            if operand_utils.is_operand(token):  # Operand
+                #  removed: or operator_utils.SIGN_MINUS_SYMBOL in token
                 postfix.append(token)
             elif token is UnaryOperator:
-                if OPERATOR_REGISTRY.is_left_unary_operator(
-                        token):  # Push left-sided unary operator
-                    stack.append(token)
-                else:  # Right-sided unary operators
-                    if index > 0 and operand_utils.is_operand(
-                            self._tokens[index - 1]):
-                        postfix.append(token)
-                    else:
-                        stack.append(token)
+                self.unary_operator_to_postfix(token, index, stack, postfix)
             elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
             elif token == general_utils.CLOSE_BRACKETS:
-                while (stack[-1] != general_utils.OPEN_BRACKETS and stack[-1]
-                       != operator_utils.NUMBER_MINUS
-                       + general_utils.OPEN_BRACKETS):
-                    postfix.append(stack.pop())
-                if (stack[-1]
-                        != operator_utils.NUMBER_MINUS
-                        + general_utils.OPEN_BRACKETS):
-                    pass  # Insert negative value of _result in brackets...
-                stack.pop()
+                self.close_bracket_to_postfix(token, index, stack, postfix)
             else:  # Operator
                 while (stack and stack[-1]
                        != general_utils.OPEN_BRACKETS
-                       and operand_utils.precedence(
-                            token) <= operand_utils.precedence(
+                       and OPERATOR_REGISTRY.get_precedence(
+                            token) <= OPERATOR_REGISTRY.get_precedence(
                             stack[-1])):  # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
@@ -84,6 +68,72 @@ class EquationSolver:
 
         self._postfix_stack = postfix
 
+    def unary_operator_to_postfix(self, token: str, index: int, stack: list,
+                                  postfix: list):
+        """
+        handles unary operators when converting infix equation to postfix
+        :param token: symbol of operator
+        :type token: str
+        :param index: index of current token in self._tokens
+        :type index: int
+        :param stack: stack for equation convertion
+        :type stack: list
+        :param postfix: postfix representation of equation
+        :type postfix: list
+        """
+
+        if OPERATOR_REGISTRY.is_left_unary_operator(token):
+            # Push left-sided unary operator
+            stack.append(token)
+        else:  # Right-sided unary operators
+            if index > 0 and operand_utils.is_operand(
+                    self._tokens[index - 1]):
+                postfix.append(token)
+            else:
+                stack.append(token)
+
+    def close_bracket_to_postfix(self, token: str, index: int, stack: list,
+                                 postfix: list):
+        """
+        handles closing brackets when converting infix equation to postfix
+        :param token: symbol of closing bracket
+        :type token: str
+        :param index: index of current token in self._tokens
+        :type index: int
+        :param stack: stack for equation convertion
+        :type stack: list
+        :param postfix: postfix representation of equation
+        :type postfix: list
+        """
+
+        while (stack[-1] != general_utils.OPEN_BRACKETS and stack[-1]
+               != operator_utils.SIGN_MINUS_SYMBOL
+               + general_utils.OPEN_BRACKETS):
+            postfix.append(stack.pop())
+        stack.pop()
+
+    def operator_to_postfix(self, token: str, index: int, stack: list,
+                            postfix: list):
+        """
+        handles operators when converting infix equation to postfix
+        :param token: symbol of operator
+        :type token: str
+        :param index: index of current token in self._tokens
+        :type index: int
+        :param stack: stack for equation convertion
+        :type stack: list
+        :param postfix: postfix representation of equation
+        :type postfix: list
+        """
+
+        while (stack and stack[-1]
+               != general_utils.OPEN_BRACKETS
+               and OPERATOR_REGISTRY.get_precedence(
+                    token) <= OPERATOR_REGISTRY.get_precedence(
+                    stack[-1])):  # add '-('
+            postfix.append(stack.pop())
+        stack.append(token)
+
     def solve_postfix(self):
         """
         Solves the equation represented by postfix stack and updates the
@@ -92,9 +142,10 @@ class EquationSolver:
         stack = []
         for token in self._postfix_stack:
             if operand_utils.is_operand(
-                    token) or operator_utils.NUMBER_MINUS in token:  # Operand
-                fixed_token = token.replace(operator_utils.NUMBER_MINUS,
-                                            operator_utils.MINUS)
+                    token) or operator_utils.SIGN_MINUS_SYMBOL in token:
+                # Operand
+                fixed_token = token.replace(operator_utils.SIGN_MINUS_SYMBOL,
+                                            operator_utils.SUB_SYMBOL)
                 try:
                     token_as_number = float(fixed_token)
                     stack.append(token_as_number)
