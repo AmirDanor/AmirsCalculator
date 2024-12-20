@@ -148,9 +148,6 @@ class ArithmeticTokenProcessor(TokenProcessor):
         for token in self._tokens:
             if token in UNARY_OPERATORS_DICT:
                 self.validate_unary_operator(token, index)
-            elif token == general_utils.OPEN_BRACKETS:
-                if index < len(self._tokens) - 1 and self._tokens[index+1] == general_utils.CLOSE_BRACKETS:
-                    raise EmptyParenthesesError()
             index += 1
 
     def validate_unary_operator(self, token, index):
