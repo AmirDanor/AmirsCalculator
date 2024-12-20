@@ -80,7 +80,7 @@ class OperatorRegistry:
         """
         return self._binary_operators_funcs
 
-    def get_precedence_for_operator(self, operator):
+    def get_precedence(self, operator):
         """
         :param operator: a valid operator
         :type operator: str
@@ -108,3 +108,27 @@ class OperatorRegistry:
         :rtype: bool
         """
         return operator in self._left_unary_operators_funcs
+
+    def is_operand(string: str) -> bool:
+        """
+        Checks if string is operand
+        :param string: string to check
+        :type string: str
+        :return: True if string is operand, else return False
+        :rtype: bool
+        """
+        return string.isdigit() or '.' in string or '_' in string
+
+
+'''
+    def precedence(operator):
+        """
+        Gets operand's precedence
+        :param operator: representation of operator
+        :type operator: str
+        :return: operator's precedence
+        :rtype: int
+        """
+        return OperatorRegistry().get_precedence_for_operator(
+            operator) 
+            '''

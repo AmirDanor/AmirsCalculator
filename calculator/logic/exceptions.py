@@ -137,7 +137,7 @@ class ZeroBaseNegExError(Exception):
         :rtype: str
         """
         return (f"Error! Can't calculate negative exponent for zero base:"
-                f" 0{operator_utils.POWER}{self._exponent}")
+                f" 0{operator_utils.POW_SYMBOL}{self._exponent}")
 
 
 class NegativeRootError(Exception):
@@ -160,7 +160,7 @@ class NegativeRootError(Exception):
             f"Error! Can't calculate negative root: "
             f"{general_utils.OPEN_BRACKETS}{self._base}"
             f"{general_utils.CLOSE_BRACKETS}"
-            f"{operator_utils.POWER}{self._exponent}"
+            f"{operator_utils.POW_SYMBOL}{self._exponent}"
         )
 
 
@@ -186,8 +186,8 @@ class UnaryError(Exception):
         :param sign: Sign representation of invalid unary operator
         :type sign: str
         """
-        if sign == operator_utils.UNARY_MINUS:
-            sign = operator_utils.MINUS
+        if sign == operator_utils.UNARY_MINUS_SYMBOL:
+            sign = operator_utils.SUB_SYMBOL
         self._sign = sign
 
     def __str__(self):

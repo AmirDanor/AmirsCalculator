@@ -45,7 +45,7 @@ class EquationSolver:
         index = 0
         for token in self._tokens:
             if operand_utils.is_operand(
-                    token) or operator_utils.NUMBER_MINUS in token:  # Operand
+                    token) or operator_utils.SIGN_MINUS_SYMBOL in token:  # Operand
                 postfix.append(token)
             elif token is UnaryOperator:
                 if OPERATOR_REGISTRY.is_left_unary_operator(
@@ -61,19 +61,19 @@ class EquationSolver:
                 stack.append(token)
             elif token == general_utils.CLOSE_BRACKETS:
                 while (stack[-1] != general_utils.OPEN_BRACKETS and stack[-1]
-                       != operator_utils.NUMBER_MINUS
+                       != operator_utils.SIGN_MINUS_SYMBOL
                        + general_utils.OPEN_BRACKETS):
                     postfix.append(stack.pop())
                 if (stack[-1]
-                        != operator_utils.NUMBER_MINUS
+                        != operator_utils.SIGN_MINUS_SYMBOL
                         + general_utils.OPEN_BRACKETS):
                     pass  # Insert negative value of _result in brackets...
                 stack.pop()
             else:  # Operator
                 while (stack and stack[-1]
                        != general_utils.OPEN_BRACKETS
-                       and operand_utils.precedence(
-                            token) <= operand_utils.precedence(
+                       and OPERATOR_REGISTRY.get_precedence(
+                            token) <= OPERATOR_REGISTRY.get_precedence(
                             stack[-1])):  # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
@@ -92,9 +92,10 @@ class EquationSolver:
         stack = []
         for token in self._postfix_stack:
             if operand_utils.is_operand(
-                    token) or operator_utils.NUMBER_MINUS in token:  # Operand
-                fixed_token = token.replace(operator_utils.NUMBER_MINUS,
-                                            operator_utils.MINUS)
+                    token) or operator_utils.SIGN_MINUS_SYMBOL in token:
+                # Operand
+                fixed_token = token.replace(operator_utils.SIGN_MINUS_SYMBOL,
+                                            operator_utils.SUB_SYMBOL)
                 try:
                     token_as_number = float(fixed_token)
                     stack.append(token_as_number)

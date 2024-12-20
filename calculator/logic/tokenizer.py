@@ -14,6 +14,10 @@ class Tokenizer(ABC):
 
 
 class ArithmeticTokenizer(Tokenizer):
+    """
+    Class for arithmetic equations tokenization
+    """
+
     def tokenize(self, equation: str) -> list:
         """
         Tokenizes basic arithmetic equations into a list of _tokens.
@@ -23,6 +27,7 @@ class ArithmeticTokenizer(Tokenizer):
         :return: tokenized arithmetic equation
         :rtype: list
         """
+
         tokens: [str] = []
         number = ''
         for char in equation:
