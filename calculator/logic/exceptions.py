@@ -38,6 +38,24 @@ class DivisionByZeroError(Exception):
                 f" {self._operand} by zero")
 
 
+class ModuloByZeroError(Exception):
+    def __init__(self, operand: float):
+        """
+        :param operand: Operand which was attempted to be divided by 0 in
+            modulo operation
+        :type operand: float
+        """
+        self._operand = operand
+
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return (f"Error! Can't divide operand"
+                f" {self._operand} by zero in modulo operation")
+
+
 class NonIntFactorialError(Exception):
     def __init__(self, operand: float):
         """

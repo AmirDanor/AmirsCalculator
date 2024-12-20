@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from calculator.logic.exceptions import NegativeFactorialError, \
     NegativeSumError, LargeSumError, LargeFactorialError, \
     NonIntFactorialError, NegativeRootError, ZeroBaseNegExError, \
-    DivisionByZeroError
+    DivisionByZeroError, ModuloByZeroError
 from calculator.utils import general_utils
 
 
@@ -108,7 +108,10 @@ class Mod(BinaryOperator):
         return 5
 
     def solve(self, operand1, operand2):
-        return operand1 % operand2
+        try:
+            return operand1 % operand2
+        except ZeroDivisionError:
+            raise ModuloByZeroError(operand1)
 
 
 class Max(BinaryOperator):

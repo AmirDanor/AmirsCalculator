@@ -11,7 +11,7 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     UnmatchedClosingParenthesesError, NegativeRootError, ZeroBaseNegExError, \
     MultipleDotsError, \
     MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
-    OperatorUsageError
+    OperatorUsageError, ModuloByZeroError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
@@ -104,6 +104,9 @@ class CalculatorCore:
                 except DivisionByZeroError as dbze:
                     self.message_handler.display_error_message(
                         dbze.__str__())
+                except ModuloByZeroError as mbze:
+                    self.message_handler.display_error_message(
+                        mbze.__str__())
                 except ZeroBaseNegExError as zbnee:
                     self.message_handler.display_error_message(
                         zbnee.__str__())
