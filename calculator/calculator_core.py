@@ -17,7 +17,9 @@ from calculator.logic.token_processor import TokenProcessor
 from calculator.logic.tokenizer import Tokenizer
 
 QUIT_STR = 'quit'  # string which user has to enter to end program.
-QUIT_MSG = 'Program Ended.'  # string which get displayed to user after program ends.
+
+# string which get displayed to user after program ends.
+QUIT_MSG = 'Program Ended.'
 
 
 class CalculatorCore:
@@ -29,9 +31,11 @@ class CalculatorCore:
                  input_handler: input_handler.InputHandler,
                  tokenizer: Tokenizer, token_processor: TokenProcessor):
         """
-        :param message_handler: An instance of the MessageHandler class to display prompts and messages
+        :param message_handler: An instance of the MessageHandler class
+            to display prompts and messages
         :type message_handler: message_handler
-        :param input_handler: An instance of the InputHandler class to get user input
+        :param input_handler: An instance of the InputHandler class
+            to get user input
         :type input_handler: input_handler
         """
         self.message_handler = message_handler
@@ -63,8 +67,8 @@ class CalculatorCore:
                         expression = string_processor.process()
                         tokenized_equation = self.tokenizer.tokenize(
                             expression)
-                        processed_tokenized_equation = self.token_processor.process(
-                            tokenized_equation)
+                        processed_tokenized_equation = (
+                            self.token_processor.process(tokenized_equation))
                         # print(self.token_processor.validate())
                         equation_solver = EquationSolver(
                             processed_tokenized_equation)
@@ -124,7 +128,8 @@ class CalculatorCore:
                         # triggered by (((6)
                     except OverflowError as oe:
                         self.message_handler.display_error_message(
-                            f"Error! {oe.args[-1]}")  # oe.args[-1] = error message
+                            f"Error! {oe.args[-1]}")
+                        # oe.args[-1] = error message
                 self.message_handler.display_input_message()
                 expression = self.input_handler.get_input()
             self.message_handler.display_error_message(QUIT_MSG)

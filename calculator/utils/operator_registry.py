@@ -1,15 +1,16 @@
-from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, Max, \
-    Min, Avg, Neg, Fac, Sum
+from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, \
+    Max, Min, Avg, Neg, Fac, Sum
 
 
 class OperatorRegistry:
     """
-    A registry for mapping operator functions by string representation (Using Dictionaries).
-    Separate dictionaries for unary / binary operators.
+    A registry for mapping operator functions by string representation
+    (Using Dictionaries). Separate dictionaries for unary / binary operators.
     """
 
     def __init__(self):
-        """Initialize the operator dictionaries (separated by unary / binary) with default binary and unary operators."""
+        """Initialize the operator dictionaries (separated by unary /
+        binary) with default binary and unary operators."""
         self._left_unary_operators_funcs = {
             ';': UMin(),
             '~': Neg()
@@ -97,7 +98,7 @@ class OperatorRegistry:
         return None
 
     def is_left_unary_operator(self,
-                               operator: str) -> bool:  # TODO: change func to check if in _left_unary_operators_funcs
+                               operator: str) -> bool:
         """
         Check if the given operator is a left unary operator.
 

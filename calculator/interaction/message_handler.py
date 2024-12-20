@@ -34,13 +34,14 @@ class MessageHandler(ABC):
 
 class ConsoleMessageHandler(MessageHandler):
     """
-    Class responsible for displaying console messages to user before entering an input.
+    Class responsible for displaying console messages to user before
+    entering an input.
     """
 
     def __init__(self, quit: str):
         """
-        Initialize the first message when creating a new instance of MessageHandler class.
-        :param quit: User's input to stop input loop.
+        Initialize the first message when creating a new instance of
+        MessageHandler class. :param quit: User's input to stop input loop.
         :type quit: str
         """
 

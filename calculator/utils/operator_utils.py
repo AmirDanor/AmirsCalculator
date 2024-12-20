@@ -1,6 +1,7 @@
 # Constants
 from calculator.utils.operator_registry import \
-    OperatorRegistry  # temp implementation. TODO: delete later to avoid high coupling.
+    OperatorRegistry  # temp implementation. TODO: delete later to avoid
+# high coupling.
 
 operator_registry = OperatorRegistry()  # todo: change ??? because its a var in module...
 

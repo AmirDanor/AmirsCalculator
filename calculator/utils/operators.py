@@ -78,8 +78,7 @@ class Mul(BinaryOperator):
         return operand1 * operand2
 
 
-class Div(
-    BinaryOperator):  # TODO: Make sure operand2 is not negative. Throw a relevant exception if needed.
+class Div(BinaryOperator):
     def get_precedence(self):
         return 2
 
@@ -87,8 +86,7 @@ class Div(
         return operand1 / operand2
 
 
-class Pow(
-    BinaryOperator):  # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
+class Pow(BinaryOperator):  # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
     def get_precedence(self):
         return 4
 

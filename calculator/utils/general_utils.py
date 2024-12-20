@@ -6,6 +6,8 @@ OPEN_BRACKETS = '('
 
 CLOSE_BRACKETS = ')'
 
+DOT = '.'
+
 EMPTY_CHARACTERS = {
     ' ',
     '\t'

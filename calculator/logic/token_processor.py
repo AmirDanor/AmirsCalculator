@@ -11,8 +11,9 @@ from calculator.utils.operator_registry import OperatorRegistry
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
+# Merges both dictionaries into a single dictionary
 OPERATORS_DICT = {**UNARY_OPERATORS_DICT,
-                  **BINARY_OPERATORS_DICT}  # Merges both dictionaries into a single dictionary
+                  **BINARY_OPERATORS_DICT}
 RIGHT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
 LEFT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_left_unary_operators()
 
@@ -78,14 +79,16 @@ class ArithmeticTokenProcessor(TokenProcessor):
             self):  # TODO: check theres a maximum one . (dot) in operand.
         """
         Delete multiple appearances of minus in a row from self._tokens.
-        After end of function, there are no more than 2 minuses in a row in self._tokens.
+        After end of function, there are no more than 2 minuses in a row in
+        self._tokens.
         """
         tokens = []
         number = ''
         for index in range(len(self._tokens) - 2, 0, -1):
-            if self._tokens[index] == operator_utils.MINUS and self._tokens[
-                index - 1] == operator_utils.MINUS:
-                # Check for context: number/bracket to the right, operator to the left
+            if (self._tokens[index] == operator_utils.MINUS and
+                    self._tokens[index - 1] == operator_utils.MINUS):
+                # Check for context: number/bracket to the right, operator
+                # to the left
                 if ((operand_utils.is_operand(self._tokens[index + 1]) or
                      self._tokens[
                          index + 1] == general_utils.OPEN_BRACKETS) and
@@ -99,7 +102,6 @@ class ArithmeticTokenProcessor(TokenProcessor):
                     del self._tokens[index]
                     del self._tokens[index - 1]
                     index -= 1
-        # print(f" after delete_extra_unary_minuses: {self._tokens}") # For testing
 
     def join_number_minuses(self):
         """
@@ -114,14 +116,15 @@ class ArithmeticTokenProcessor(TokenProcessor):
                           and self._tokens[index - 1] != operator_utils.MINUS)
                          or (self._tokens[index - 1] == operator_utils.MINUS
                              and index - 2 >= 0
-                             and (self._tokens[
-                                      index - 2].isdigit()  # TODO: place in module
-                                  or '.' in self._tokens[index - 2]
-                                  or '_' in self._tokens[index - 2]
+                             and (self._tokens[index - 2].isdigit()
+                                  or general_utils.DOT in self._tokens[
+                                      index - 2]
+                                  or operator_utils.NUMBER_MINUS in
+                                  self._tokens[index - 2]
                                   or general_utils.CLOSE_BRACKETS ==
                                   self._tokens[index - 2]
-                                  or self._tokens[
-                                      index - 2] in RIGHT_UNARY_OPERATORS_DICT)))):
+                                  or self._tokens[index - 2]
+                                  in RIGHT_UNARY_OPERATORS_DICT)))):
                 if general_utils.OPEN_BRACKETS in self._tokens[index + 1]:
                     self.minus_brackets_handle(index)
                 else:
@@ -159,8 +162,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
         for index in range(0, len(self._tokens) - 1, 1):
             if self._tokens[index] == '-' and (
-                    index == 0 or general_utils.OPEN_BRACKETS in self._tokens[
-                index - 1]):
+                    index == 0 or
+                    general_utils.OPEN_BRACKETS in self._tokens[index - 1]):
                 self._tokens[index] = operator_utils.UNARY_MINUS
         # print(f" after replace_unary_minus: {self._tokens}")  # For testing
 
@@ -197,10 +200,10 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def validate_right_unary_operator(self, token, index):
         if (index > 0  # Check token to the left
                 and not operand_utils.is_operand(self._tokens[index - 1])
-                and self._tokens[
-                    index - 1] not in operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
+                and self._tokens[index - 1] not in
+                operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
             raise UnaryError(token)
         if (index < len(self._tokens) - 1  # Check token to the right
-                and self._tokens[
-                    index + 1] not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
+                and self._tokens[index + 1]
+                not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
             raise UnaryError(token)

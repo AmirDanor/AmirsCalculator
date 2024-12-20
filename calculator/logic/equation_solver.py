@@ -5,8 +5,9 @@ from calculator.utils.operators import UnaryOperator
 OPERATOR_REGISTRY = OperatorRegistry()
 UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
 BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
+# Merges both dictionaries into a single dictionary
 operators_dict = {**UNARY_OPERATORS_DICT,
-                  **BINARY_OPERATORS_DICT}  # Merges both dictionaries into a single dictionary
+                  **BINARY_OPERATORS_DICT}
 
 
 class EquationSolver:
@@ -58,18 +59,21 @@ class EquationSolver:
             elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
             elif token == general_utils.CLOSE_BRACKETS:
-                while stack[-1] != general_utils.OPEN_BRACKETS and stack[
-                    -1] != operator_utils.NUMBER_MINUS + general_utils.OPEN_BRACKETS:
+                while (stack[-1] != general_utils.OPEN_BRACKETS and stack[-1]
+                       != operator_utils.NUMBER_MINUS
+                       + general_utils.OPEN_BRACKETS):
                     postfix.append(stack.pop())
-                if stack[
-                    -1] != operator_utils.NUMBER_MINUS + general_utils.OPEN_BRACKETS:
+                if (stack[-1]
+                        != operator_utils.NUMBER_MINUS
+                        + general_utils.OPEN_BRACKETS):
                     pass  # Insert negative value of _result in brackets...
                 stack.pop()
             else:  # Operator
-                while stack and stack[
-                    -1] != general_utils.OPEN_BRACKETS and operand_utils.precedence(
+                while (stack and stack[-1]
+                       != general_utils.OPEN_BRACKETS
+                       and operand_utils.precedence(
                         token) <= operand_utils.precedence(
-                        stack[-1]):  # add '-('
+                        stack[-1])):  # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
             index += 1
@@ -82,7 +86,8 @@ class EquationSolver:
 
     def solve_postfix(self):
         """
-        Solves the equation represented by postfix stack and updates the _result.
+        Solves the equation represented by postfix stack and updates the
+        _result.
         """
         stack = []
         for token in self._postfix_stack:

@@ -14,9 +14,11 @@ class InvalidInputError(Exception):
         :return: Detailed message about the forbidden chars used in users input
         :rtype: str
         """
-        forbidden_chars_from_string = {char for char in self._string if
-                                       char not in general_utils.VALID_INPUT_CHARACTERS}
-        return f'Error! Your input contains forbidden characters: {forbidden_chars_from_string}'
+        forbidden_chars_from_string = {char for char in self._string
+                                       if char not in
+                                       general_utils.VALID_INPUT_CHARACTERS}
+        return (f'Error! Your input contains forbidden'
+                f' characters: {forbidden_chars_from_string}')
 
 
 class NonIntFactorialError(Exception):
@@ -32,7 +34,8 @@ class NonIntFactorialError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Can't calculate factorial for non-integer operand: {self._operand}"
+        return (f"Error! Can't calculate factorial for"
+                f" non-integer operand: {self._operand}")
 
 
 class NegativeFactorialError(Exception):
@@ -48,7 +51,8 @@ class NegativeFactorialError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Can't calculate factorial for negative operand: {self._operand}"
+        return (f"Error! Can't calculate factorial for"
+                f" negative operand: {self._operand}")
 
 
 class LargeFactorialError(Exception):
@@ -64,7 +68,8 @@ class LargeFactorialError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Operand {self._operand} is too large for factorial calculation"
+        return (f"Error! Operand {self._operand} is too"
+                f" large for factorial calculation")
 
 
 class NegativeSumError(Exception):
@@ -80,7 +85,8 @@ class NegativeSumError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Can't calculate sum for negative operand: {self._operand}"
+        return (f"Error! Can't calculate sum for"
+                f" negative operand: {self._operand}")
 
 
 class LargeSumError(Exception):
@@ -96,7 +102,8 @@ class LargeSumError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Operand {self._operand} is too large for sum calculation"
+        return (f"Error! Operand {self._operand}"
+                f" is too large for sum calculation")
 
 
 class ZeroBaseNegExError(Exception):
@@ -112,7 +119,8 @@ class ZeroBaseNegExError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Can't calculate negative exponent for zero base: 0{operator_utils.POWER}{self._exponent}"
+        return (f"Error! Can't calculate negative exponent for zero base:"
+                f" 0{operator_utils.POWER}{self._exponent}")
 
 
 class NegativeRootError(Exception):
@@ -134,7 +142,8 @@ class NegativeRootError(Exception):
         return (
             f"Error! Can't calculate negative root: "
             f"{general_utils.OPEN_BRACKETS}{self._base}"
-            f"{general_utils.CLOSE_BRACKETS}{operator_utils.POWER}{self._exponent}"
+            f"{general_utils.CLOSE_BRACKETS}"
+            f"{operator_utils.POWER}{self._exponent}"
         )
 
 
@@ -170,7 +179,8 @@ class UnmatchedOpeningParenthesesError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Unmatched opening parenthesis for '{general_utils.OPEN_BRACKETS}' at index {self._index}"
+        return (f"Error! Unmatched opening parenthesis for"
+                f" '{general_utils.OPEN_BRACKETS}' at index {self._index}")
 
 
 class UnmatchedClosingParenthesesError(Exception):
@@ -187,11 +197,12 @@ class UnmatchedClosingParenthesesError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Unmatched closing parenthesis for '{general_utils.CLOSE_BRACKETS}' at index {self._index}"
+        return (f"Error! Unmatched closing parenthesis for"
+                f"'{general_utils.CLOSE_BRACKETS}' at index {self._index}")
 
 
 class EmptyParenthesesError(Exception):
-    def __init__(self, opening_index:int, closing_index: int):
+    def __init__(self, opening_index: int, closing_index: int):
         """
         :param opening_index: index of opening parentheses
         :type opening_index: int
@@ -200,12 +211,15 @@ class EmptyParenthesesError(Exception):
         """
         self._closing_index = closing_index
         self._opening_index = opening_index
+
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f'Error! Equation contains empty Parentheses at indexes: {self._opening_index}, {self._closing_index}'
+        return (f'Error! Equation contains empty Parentheses at indexes: '
+                f'{self._opening_index}, {self._closing_index}')
+
 
 class SingleDotError(Exception):
     def __str__(self):
@@ -235,9 +249,11 @@ class MultipleDotsError(Exception):
 class MultipleDotsOperandError(Exception):
     def __init__(self, token: str, dot_amount: int):
         """
-        :param token: Invalid tokenized 'operand' which contains multiple points
+        :param token: Invalid tokenized 'operand' which contains multiple
+            points
         :type token: str
-        :param dot_amount: Amount of dots in invalid token
+        :param dot_amount: Amount of dots in invalid
+        token
         :type dot_amount: int
         """
         self._token = token
@@ -248,4 +264,5 @@ class MultipleDotsOperandError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f'Error! Could not refer to {self._token} as operand since it contains {self._dot_amount} dots'
+        return (f'Error! Could not refer to {self._token} as operand since it '
+                f'contains {self._dot_amount} dots')
