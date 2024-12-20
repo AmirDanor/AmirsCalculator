@@ -36,7 +36,8 @@ class UnaryOperator(Operator):
     @abstractmethod
     def is_left(self) -> bool:
         """
-        :return: if unary operator should be placed to the left of the operand (True) / to the right (False)
+        :return: if unary operator should be placed to the left of the
+            operand (True) / to the right (False)
         :rtype: bool
         """
         pass
@@ -188,7 +189,7 @@ class Sum(UnaryOperator):
               operand):  # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [equation_solver.py] (in final version)!
         if operand < 0:
             raise NegativeSumError(operand)
-        if operand > 9999999999999999 or 'e' in str(operand):
+        if 'e' in str(operand):
             raise LargeSumError(operand)
         operand_as_str = str(operand).replace('.',
                                               '')  # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
