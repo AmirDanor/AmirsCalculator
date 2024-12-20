@@ -131,7 +131,11 @@ class NegativeRootError(Exception):
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f"Error! Can't calculate negative root: {general_utils.OPEN_BRACKETS}{self._base}{general_utils.CLOSE_BRACKETS}{operator_utils.POWER}{self._exponent}"
+        return (
+            f"Error! Can't calculate negative root: "
+            f"{general_utils.OPEN_BRACKETS}{self._base}"
+            f"{general_utils.CLOSE_BRACKETS}{operator_utils.POWER}{self._exponent}"
+        )
 
 
 class UnaryError(Exception):
@@ -154,6 +158,11 @@ class UnaryError(Exception):
 
 class UnmatchedOpeningParenthesesError(Exception):
     def __init__(self, index: int):
+        """
+        :param index: Index of an opening parentheses with no matching
+        closing parentheses in user's input
+        :type index: int
+        """
         self._index = index
 
     def __str__(self):
@@ -166,6 +175,11 @@ class UnmatchedOpeningParenthesesError(Exception):
 
 class UnmatchedClosingParenthesesError(Exception):
     def __init__(self, index: int):
+        """
+        :param index: Index of a closing parentheses with no matching
+        opening parentheses in user's input
+        :type index: int
+        """
         self._index = index
 
     def __str__(self):
@@ -177,14 +191,21 @@ class UnmatchedClosingParenthesesError(Exception):
 
 
 class EmptyParenthesesError(Exception):
-    # todo: maybe define init
+    def __init__(self, opening_index:int, closing_index: int):
+        """
+        :param opening_index: index of opening parentheses
+        :type opening_index: int
+        :param closing_index: index of closing parentheses
+        :type closing_index: int
+        """
+        self._closing_index = closing_index
+        self._opening_index = opening_index
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return 'Error! Equation contains empty Parentheses'  # todo: maybe add index too?
-
+        return f'Error! Equation contains empty Parentheses at indexes: {self._opening_index}, {self._closing_index}'
 
 class SingleDotError(Exception):
     def __str__(self):
