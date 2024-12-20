@@ -37,7 +37,7 @@ class StringPreprocessor:
             elif char == general_utils.CLOSE_BRACKETS:
                 if stack:
                     if is_empty:
-                        raise EmptyParenthesesError(stack.pop(),index)
+                        raise EmptyParenthesesError(stack.pop(), index)
                     stack.pop()
                     is_empty = False
                 else:

@@ -1,9 +1,3 @@
-# Constants
-from calculator.utils.operator_registry import \
-    OperatorRegistry  # temp implementation. TODO: delete later to avoid
-# high coupling.
-
-operator_registry = OperatorRegistry()  # todo: change ??? because its a var in module...
 
 # Constants
 
@@ -20,6 +14,5 @@ ALLOWED_BEFORE_RIGHT_UNARY = (
     .union({')', '!', '#'})
     # TODO: link with actual set. make it more modular
 )
-ALLOWED_AFTER_RIGHT_UNARY = (set(operator_registry.get_right_unary_operators())
-                             .union(operator_registry.get_binary_operators())
-                             .union({')'}))
+ALLOWED_AFTER_RIGHT_UNARY = {'#', '!', '+', '-', '*', '/', '%', '^', '$', '@',
+                             ')'}

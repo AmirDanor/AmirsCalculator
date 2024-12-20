@@ -10,7 +10,8 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     UnmatchedOpeningParenthesesError, NonIntFactorialError, \
     UnmatchedClosingParenthesesError, NegativeRootError, ZeroBaseNegExError, \
     MultipleDotsError, \
-    MultipleDotsOperandError, SingleDotError
+    MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
+    OperatorUsageError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
@@ -49,89 +50,112 @@ class CalculatorCore:
         Runs the program as intended.
         :raises InvalidInputError: If user's input contains forbidden chars.
         """
-        self.message_handler.display_input_message()
-        try:
-            expression = self.input_handler.get_input()
-            while expression != QUIT_STR:
+
+        expression = self.get_input_loop()
+
+        while expression != QUIT_STR:
+            try:
+                if not self.input_validator.validate_input(expression):
+                    raise InvalidInputError(expression)
+            except InvalidInputError as iie:
+                self.message_handler.display_custom_message(
+                    str(iie))  # Catch and print the InvalidInput exception
+            else:
                 try:
-                    if not self.input_validator.validate_input(expression):
-                        raise InvalidInputError(expression)
-                except InvalidInputError as iie:
-                    self.message_handler.display_custom_message(
-                        str(iie))  # Catch and print the InvalidInput exception
-                else:
-                    try:
-                        string_preprocessor = StringPreprocessor(expression)
-                        string_preprocessor.preprocess()
-                        string_processor = StringProcessor(expression)
-                        expression = string_processor.process()
-                        tokenized_equation = self.tokenizer.tokenize(
-                            expression)
-                        processed_tokenized_equation = (
-                            self.token_processor.process(tokenized_equation))
-                        # print(self.token_processor.validate())
-                        equation_solver = EquationSolver(
-                            processed_tokenized_equation)
-                        solution = equation_solver.solve()
-                        if solution is not None:  # if solution is not None
-                            self.message_handler.display_custom_message(
-                                str(solution))
-                    except NonIntFactorialError as nife:
-                        self.message_handler.display_error_message(
-                            nife.__str__())
-                    except UnmatchedOpeningParenthesesError as uope:
-                        self.message_handler.display_error_message(
-                            uope.__str__())
-                    except UnmatchedClosingParenthesesError as ucpe:
-                        self.message_handler.display_error_message(
-                            ucpe.__str__())
-                    except EmptyParenthesesError as epe:
-                        self.message_handler.display_error_message(
-                            epe.__str__())  # TODO: change text displayed
-                    except SingleDotError as sde:
-                        self.message_handler.display_error_message(
-                            sde.__str__())
-                    except MultipleDotsError as mde:
-                        self.message_handler.display_error_message(
-                            mde.__str__())
-                    except MultipleDotsOperandError as mdoe:
-                        self.message_handler.display_error_message(
-                            mdoe.__str__())
-                    except UnaryError as ue:
-                        self.message_handler.display_error_message(
-                            ue.__str__())  # TODO: change text displayed
-                    except ZeroDivisionError as zde:
-                        self.message_handler.display_error_message(
-                            zde.__str__())
-                    except ZeroBaseNegExError as zbnee:
-                        self.message_handler.display_error_message(
-                            zbnee.__str__())
-                    except NegativeRootError as nre:
-                        self.message_handler.display_error_message(
-                            nre.__str__())
-                    except NegativeFactorialError as nfe:
-                        self.message_handler.display_error_message(
-                            nfe.__str__())
-                    except LargeFactorialError as lfe:
-                        self.message_handler.display_error_message(
-                            lfe.__str__())
-                    except NegativeSumError as nse:
-                        self.message_handler.display_error_message(
-                            nse.__str__())
-                    except LargeSumError as lse:
-                        self.message_handler.display_error_message(
-                            lse.__str__())
-                    except IndexError as ie:
-                        self.message_handler.display_error_message(
-                            ie.__str__())  # TODO: change text displayed
-                        # triggered by 6-
-                        # triggered by (((6)
-                    except OverflowError as oe:
-                        self.message_handler.display_error_message(
-                            f"Error! {oe.args[-1]}")
-                        # oe.args[-1] = error message
-                self.message_handler.display_input_message()
+                    string_preprocessor = StringPreprocessor(expression)
+                    string_preprocessor.preprocess()
+                    string_processor = StringProcessor(expression)
+                    expression = string_processor.process()
+                    tokenized_equation = self.tokenizer.tokenize(
+                        expression)
+                    processed_tokenized_equation = (
+                        self.token_processor.process(tokenized_equation))
+                    # print(self.token_processor.validate())
+                    equation_solver = EquationSolver(
+                        processed_tokenized_equation)
+                    solution = equation_solver.solve()
+                    if solution is not None:  # if solution is not None
+                        self.message_handler.display_custom_message(
+                            str(solution))
+                except NonIntFactorialError as nife:
+                    self.message_handler.display_error_message(
+                        nife.__str__())
+                except UnmatchedOpeningParenthesesError as uope:
+                    self.message_handler.display_error_message(
+                        uope.__str__())
+                except UnmatchedClosingParenthesesError as ucpe:
+                    self.message_handler.display_error_message(
+                        ucpe.__str__())
+                except EmptyParenthesesError as epe:
+                    self.message_handler.display_error_message(
+                        epe.__str__())  # TODO: change text displayed
+                except SingleDotError as sde:
+                    self.message_handler.display_error_message(
+                        sde.__str__())
+                except MultipleDotsError as mde:
+                    self.message_handler.display_error_message(
+                        mde.__str__())
+                except MultipleDotsOperandError as mdoe:
+                    self.message_handler.display_error_message(
+                        mdoe.__str__())
+                except UnaryError as ue:
+                    self.message_handler.display_error_message(
+                        ue.__str__())  # TODO: change text displayed
+                except DivisionByZeroError as dbze:
+                    self.message_handler.display_error_message(
+                        dbze.__str__())
+                except ZeroBaseNegExError as zbnee:
+                    self.message_handler.display_error_message(
+                        zbnee.__str__())
+                except NegativeRootError as nre:
+                    self.message_handler.display_error_message(
+                        nre.__str__())
+                except NegativeFactorialError as nfe:
+                    self.message_handler.display_error_message(
+                        nfe.__str__())
+                except LargeFactorialError as lfe:
+                    self.message_handler.display_error_message(
+                        lfe.__str__())
+                except NegativeSumError as nse:
+                    self.message_handler.display_error_message(
+                        nse.__str__())
+                except LargeSumError as lse:
+                    self.message_handler.display_error_message(
+                        lse.__str__())
+                except OperatorUsageError as oue:
+                    self.message_handler.display_error_message(
+                        oue.__str__())  # TODO: change text displayed
+                except IndexError as ie:
+                    self.message_handler.display_error_message(
+                        ie.__str__())  # TODO: change text displayed
+                    # triggered by 6-
+                    # triggered by (((6)
+                except OverflowError as oe:
+                    self.message_handler.display_error_message(
+                        f"Error! {oe.args[-1]}")
+                    # oe.args[-1] = error message
+            expression = self.get_input_loop()
+        self.message_handler.display_error_message(QUIT_MSG)
+
+    def get_input_loop(self):
+        """
+        Ensures correct input-looping without crashing.
+        :return: User's input
+        :rtype: str
+        """
+        while True:
+            self.message_handler.display_input_message()
+            try:
                 expression = self.input_handler.get_input()
-            self.message_handler.display_error_message(QUIT_MSG)
-        except KeyboardInterrupt as kie:
-            self.message_handler.display_error_message("\nProgram Ended")
+
+                return expression
+
+            except KeyboardInterrupt:
+                self.message_handler.display_error_message(
+                    f"\nKeyboard Interrupt detected. If you'd like to stop "
+                    f"program, please enter '{QUIT_STR}'.")
+
+            except EOFError:
+                self.message_handler.display_error_message(
+                    f"EOF detected. Exiting Program. If you'd like to stop "
+                    f"program, please enter '{QUIT_STR}'.")

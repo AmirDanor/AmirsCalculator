@@ -1,3 +1,4 @@
+from calculator.logic.exceptions import OperatorUsageError
 from calculator.utils import operator_utils, operand_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 from calculator.utils.operators import UnaryOperator
@@ -72,8 +73,8 @@ class EquationSolver:
                 while (stack and stack[-1]
                        != general_utils.OPEN_BRACKETS
                        and operand_utils.precedence(
-                        token) <= operand_utils.precedence(
-                        stack[-1])):  # add '-('
+                            token) <= operand_utils.precedence(
+                            stack[-1])):  # add '-('
                     postfix.append(stack.pop())
                 stack.append(token)
             index += 1
@@ -82,7 +83,6 @@ class EquationSolver:
             postfix.append(stack.pop())
 
         self._postfix_stack = postfix
-        # print(f"Postfix stack: {self._postfix_stack}")  # For testing
 
     def solve_postfix(self):
         """
@@ -101,20 +101,23 @@ class EquationSolver:
                 except ValueError as ve:
                     print(ve)
                     return None
-            else:
-                # try:
-                operand1 = stack.pop()
-                # except IndexError as ie:
-                #    print(ie)
-                #    return None
+            else:  # Operator
+                try:
+                    operand1 = stack.pop()
+                except IndexError:  # todo: maybe check in a separate func
+                    raise OperatorUsageError(token)
+                    return None
                 # Temp implementation.
-                # TODO: improve. avoid messy if-elif-else struct.
                 if token in UNARY_OPERATORS_DICT:
                     unary_result = UNARY_OPERATORS_DICT.get(token).solve(
                         operand1)
                     stack.append(unary_result)
                 elif token in BINARY_OPERATORS_DICT:
-                    operand2 = stack.pop()
+                    try:
+                        operand2 = stack.pop()
+                    except IndexError:  # todo: maybe check in a separate func
+                        raise OperatorUsageError(token)
+                        return None
                     binary_result = BINARY_OPERATORS_DICT.get(token).solve(
                         operand2, operand1)
                     stack.append(binary_result)

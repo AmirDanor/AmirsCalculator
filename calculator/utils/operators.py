@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import NegativeFactorialError, \
     NegativeSumError, LargeSumError, LargeFactorialError, \
-    NonIntFactorialError, NegativeRootError, ZeroBaseNegExError
+    NonIntFactorialError, NegativeRootError, ZeroBaseNegExError, \
+    DivisionByZeroError
 from calculator.utils import general_utils
 
 
@@ -83,7 +84,10 @@ class Div(BinaryOperator):
         return 2
 
     def solve(self, operand1, operand2):
-        return operand1 / operand2
+        try:
+            return operand1 / operand2
+        except ZeroDivisionError:
+            raise DivisionByZeroError(operand1)
 
 
 class Pow(BinaryOperator):  # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
@@ -184,7 +188,7 @@ class Sum(UnaryOperator):
               operand):  # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [equation_solver.py] (in final version)!
         if operand < 0:
             raise NegativeSumError(operand)
-        if operand > 9999999999999999:
+        if operand > 9999999999999999 or 'e' in str(operand):
             raise LargeSumError(operand)
         operand_as_str = str(operand).replace('.',
                                               '')  # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]

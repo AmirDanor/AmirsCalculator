@@ -21,6 +21,23 @@ class InvalidInputError(Exception):
                 f' characters: {forbidden_chars_from_string}')
 
 
+class DivisionByZeroError(Exception):
+    def __init__(self, operand: float):
+        """
+        :param operand: Operand which was attempted to be divided by 0
+        :type operand: float
+        """
+        self._operand = operand
+
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return (f"Error! Can't divide operand"
+                f" {self._operand} by zero")
+
+
 class NonIntFactorialError(Exception):
     def __init__(self, operand: float):
         """
@@ -145,6 +162,22 @@ class NegativeRootError(Exception):
             f"{general_utils.CLOSE_BRACKETS}"
             f"{operator_utils.POWER}{self._exponent}"
         )
+
+
+class OperatorUsageError(Exception):
+    def __init__(self, sign: str):
+        """
+        :param sign: Sign representation of operator which was used incorrectly
+        :type sign: str
+        """
+        self._sign = sign
+
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return f'Error! Wrong usage of operator: {self._sign}'
 
 
 class UnaryError(Exception):
