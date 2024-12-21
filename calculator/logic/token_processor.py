@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, \
     MultipleDotsError, MultipleDotsOperandError, \
-    SingleDotError
+    SingleDotError, EndMinusesError
 from calculator.utils import operand_utils, operator_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 
@@ -55,14 +55,19 @@ class ArithmeticTokenProcessor(TokenProcessor):
             self._tokens = tokens
         self._handle_dots()
         self._delete_extra_minuses()
+        self._validate_minuses_at_end()
         self._join_sign_minuses()
         self._replace_unary_minuses()
         self._validate()
+
         return self._tokens
 
     def _handle_dots(self):
         """
         Validates tokens which include dots, raises exceptions if needed.
+        :raises SingleDotError: when 'operand' is a single dot
+        :raises MultipleDotsError: when 'operand' is more than a single dot
+        :raises MultipleDotsOperandError: when 'operand' contains multiple dots
         """
 
         for token in self._tokens:
@@ -103,12 +108,26 @@ class ArithmeticTokenProcessor(TokenProcessor):
                     del self._tokens[index - 1]
                     index -= 1
 
+    def _validate_minuses_at_end(self):
+        """
+        Validates there are no minuses at end of equation
+        :raises EndMinusesError: if there are end minuses
+        """
+        if self._tokens and self._tokens[-1] == operator_utils.SUB_SYMBOL:
+            count = 0
+            index = len(self._tokens) - 1
+            while (index >= 0
+                   and self._tokens[index] == operator_utils.SUB_SYMBOL):
+                count += 1
+                index -= 1
+            raise EndMinusesError(count)
+
     def _join_sign_minuses(self):
         """
         Joins sign minuses directly to numbers.
         """
-
-        for index in range(1, len(self._tokens) - 1, 1):
+        index = 1
+        while index < len(self._tokens) - 1:
             if (self._tokens[index] == operator_utils.SUB_SYMBOL
                     and (self._prev_token_is_a_non_minus_valid_operand(index)
                          or self._prev_token_is_a_valid_minus_operand(index))):
@@ -121,6 +140,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                                                + self._tokens[index + 1])
                     del self._tokens[index]
                     index -= 1
+            index += 1
 
     def _prev_token_is_a_non_minus_valid_operand(self, index: int) -> bool:
         """
@@ -231,14 +251,12 @@ class ArithmeticTokenProcessor(TokenProcessor):
         if (index > 0  # Check token to the left
                 and self._tokens[index - 1] not in BINARY_OPERATORS_DICT
                 and self._tokens[index - 1] != general_utils.OPEN_BRACKETS):
-            print("left unary: LEFT")
-            raise UnaryError(token)
+            raise UnaryError(token,  True)
         if (index < len(self._tokens) - 1  # Check token to the right
                 and (not operand_utils.is_operand(self._tokens[index + 1])
                      and self._tokens[
                          index + 1] != general_utils.OPEN_BRACKETS)):
-            print("left unary: RIGHT")
-            raise UnaryError(token)
+            raise UnaryError(token,  False)
 
     def _validate_right_unary_operator(self, token, index):
         """
@@ -254,10 +272,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
                 and not operand_utils.is_operand(self._tokens[index - 1])
                 and self._tokens[index - 1] not in
                 operator_utils.ALLOWED_BEFORE_RIGHT_UNARY):
-            print("right unary: LEFT")
-            raise UnaryError(token)
+            raise UnaryError(token,  True)
         if (index < len(self._tokens) - 1  # Check token to the right
                 and self._tokens[index + 1]
                 not in operator_utils.ALLOWED_AFTER_RIGHT_UNARY):
-            print("right unaty: RIGHT")
-            raise UnaryError(token)
+            raise UnaryError(token,  False)

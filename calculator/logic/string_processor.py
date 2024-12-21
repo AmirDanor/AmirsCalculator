@@ -19,18 +19,18 @@ class StringProcessor:
         :return: Processed user's input (equation with fixed format)
         :rtype: str
         """
-        self.remove_white_spaces()
-        self.not_empty_validator()
+        self._remove_white_spaces()
+        self._not_empty_validator()
         return self._equation
 
-    def remove_white_spaces(self):
+    def _remove_white_spaces(self):
         """
         Removes white spaces from str equation.
         """
         self._equation = ''.join(c for c in self._equation if
                                  c not in general_utils.EMPTY_CHARACTERS)
 
-    def not_empty_validator(self):
+    def _not_empty_validator(self):
         """
         Validates that user's input is not empty after removal of white spaces
         :throws EmptyEquationError: if processed equation is empty

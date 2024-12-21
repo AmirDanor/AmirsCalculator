@@ -30,13 +30,11 @@ class EquationSolver:
         :return: Solution to equation
         :rtype: float
         """
-        self.infix_to_postfix()
-        self.solve_postfix()
-        # if self._result == -0.0:
-        #    self._result = 0.0
+        self._infix_to_postfix()
+        self._solve_postfix()
         return self._result
 
-    def infix_to_postfix(self):
+    def _infix_to_postfix(self):
         """
         Converts the tokenized infix equation to a postfix stack.
         """
@@ -48,11 +46,11 @@ class EquationSolver:
                 #  removed: or operator_utils.SIGN_MINUS_SYMBOL in token
                 postfix.append(token)
             elif token is UnaryOperator:
-                self.unary_operator_to_postfix(token, index, stack, postfix)
+                self._unary_operator_to_postfix(token, index, stack, postfix)
             elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
             elif token == general_utils.CLOSE_BRACKETS:
-                self.close_bracket_to_postfix(token, index, stack, postfix)
+                self._close_bracket_to_postfix(token, index, stack, postfix)
             else:  # Operator
                 while (stack and stack[-1]
                        != general_utils.OPEN_BRACKETS
@@ -68,8 +66,8 @@ class EquationSolver:
 
         self._postfix_stack = postfix
 
-    def unary_operator_to_postfix(self, token: str, index: int, stack: list,
-                                  postfix: list):
+    def _unary_operator_to_postfix(self, token: str, index: int, stack: list,
+                                   postfix: list):
         """
         handles unary operators when converting infix equation to postfix
         :param token: symbol of operator
@@ -92,8 +90,8 @@ class EquationSolver:
             else:
                 stack.append(token)
 
-    def close_bracket_to_postfix(self, token: str, index: int, stack: list,
-                                 postfix: list):
+    def _close_bracket_to_postfix(self, token: str, index: int, stack: list,
+                                  postfix: list):
         """
         handles closing brackets when converting infix equation to postfix
         :param token: symbol of closing bracket
@@ -112,8 +110,8 @@ class EquationSolver:
             postfix.append(stack.pop())
         stack.pop()
 
-    def operator_to_postfix(self, token: str, index: int, stack: list,
-                            postfix: list):
+    def _operator_to_postfix(self, token: str, index: int, stack: list,
+                             postfix: list):
         """
         handles operators when converting infix equation to postfix
         :param token: symbol of operator
@@ -134,7 +132,7 @@ class EquationSolver:
             postfix.append(stack.pop())
         stack.append(token)
 
-    def solve_postfix(self):
+    def _solve_postfix(self):
         """
         Solves the equation represented by postfix stack and updates the
         _result.

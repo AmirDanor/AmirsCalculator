@@ -1,5 +1,5 @@
 from calculator.logic.exceptions import UnmatchedOpeningParenthesesError, \
-    UnmatchedClosingParenthesesError, EmptyParenthesesError
+    UnmatchedClosingParenthesesError, EmptyParenthesesError, InvalidInputError
 from calculator.utils import general_utils
 
 
@@ -14,9 +14,25 @@ class StringPreprocessor:
         self._equation = equation
 
     def preprocess(self):
-        self.validate_parentheses()
+        self._validate_input()
+        self._validate_parentheses()
 
-    def validate_parentheses(self):
+    def _validate_input(self) -> bool:
+        """
+        Checks if there are forbidden chars in the user input
+
+        :param expression: Mathematical expression which needed to get
+            validated
+        :type expression: str
+        :return: Whether expression contains
+            forbidden chars or not
+        :rtype: bool
+        """
+        if not set(self._equation).issubset(
+                general_utils.VALID_INPUT_CHARACTERS):
+            raise InvalidInputError(self._equation)
+
+    def _validate_parentheses(self):
         """
         Validate parentheses are correctly matched and no empty parentheses
             exist

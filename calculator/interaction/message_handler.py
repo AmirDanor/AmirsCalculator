@@ -49,7 +49,7 @@ class ConsoleMessageHandler(MessageHandler):
         colorama.init()  # Used for colored console text
         self._quit = quit
 
-        self._MESSAGE_TO_DISPLAY = { # TODO: use something like colorama to color console text..
+        self._MESSAGE_TO_DISPLAY = {
     0: f'''         {Back.LIGHTWHITE_EX+Fore.RED}  Welcome to Amir's Advanced Calculator!  {Fore.LIGHTGREEN_EX+Back.RESET}
                         This program simulates an improved calculator, which means it supports a wide range of operations, including:{Fore.LIGHTCYAN_EX}
                             •  Basic arithmetic (includes unary minus): +, -, *, /.

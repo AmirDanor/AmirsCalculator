@@ -1,7 +1,6 @@
 # File contains prints for dev tests
 
 from calculator.interaction import input_handler, message_handler
-from calculator.logic import input_validator
 
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
@@ -41,7 +40,6 @@ class CalculatorCore:
         """
         self.message_handler = message_handler
         self.input_handler = input_handler
-        self.input_validator = input_validator.InputValidator()
         self.tokenizer = tokenizer
         self.token_processor = token_processor
 
@@ -55,94 +53,90 @@ class CalculatorCore:
 
         while expression != QUIT_STR:
             try:
-                if not self.input_validator.validate_input(expression):
-                    raise InvalidInputError(expression)
+                string_preprocessor = StringPreprocessor(expression)
+                string_preprocessor.preprocess()
+                string_processor = StringProcessor(expression)
+                expression = string_processor.process()
+                tokenized_equation = self.tokenizer.tokenize(
+                    expression)
+                processed_tokenized_equation = (
+                    self.token_processor.process(tokenized_equation))
+                # print(self.token_processor.validate())
+                equation_solver = EquationSolver(
+                    processed_tokenized_equation)
+                solution = equation_solver.solve()
+                if solution is not None:  # if solution is not None
+                    self.message_handler.display_custom_message(
+                        str(solution))
             except InvalidInputError as iie:
                 self.message_handler.display_custom_message(
-                    str(iie))  # Catch and print the InvalidInput exception
-            else:
-                try:
-                    string_preprocessor = StringPreprocessor(expression)
-                    string_preprocessor.preprocess()
-                    string_processor = StringProcessor(expression)
-                    expression = string_processor.process()
-                    tokenized_equation = self.tokenizer.tokenize(
-                        expression)
-                    processed_tokenized_equation = (
-                        self.token_processor.process(tokenized_equation))
-                    # print(self.token_processor.validate())
-                    equation_solver = EquationSolver(
-                        processed_tokenized_equation)
-                    solution = equation_solver.solve()
-                    if solution is not None:  # if solution is not None
-                        self.message_handler.display_custom_message(
-                            str(solution))
-                except EmptyEquationError as eee:
-                    self.message_handler.display_error_message(
-                        eee.__str__())
-                except NonIntFactorialError as nife:
-                    self.message_handler.display_error_message(
-                        nife.__str__())
-                except UnmatchedOpeningParenthesesError as uope:
-                    self.message_handler.display_error_message(
-                        uope.__str__())
-                except UnmatchedClosingParenthesesError as ucpe:
-                    self.message_handler.display_error_message(
-                        ucpe.__str__())
-                except EmptyParenthesesError as epe:
-                    self.message_handler.display_error_message(
-                        epe.__str__())  # TODO: change text displayed
-                except SingleDotError as sde:
-                    self.message_handler.display_error_message(
-                        sde.__str__())
-                except MultipleDotsError as mde:
-                    self.message_handler.display_error_message(
-                        mde.__str__())
-                except MultipleDotsOperandError as mdoe:
-                    self.message_handler.display_error_message(
-                        mdoe.__str__())
-                except UnaryError as ue:
-                    self.message_handler.display_error_message(
-                        ue.__str__())  # TODO: change text displayed
-                except DivisionByZeroError as dbze:
-                    self.message_handler.display_error_message(
-                        dbze.__str__())
-                except ModuloByZeroError as mbze:
-                    self.message_handler.display_error_message(
-                        mbze.__str__())
-                except ZeroBaseNegExError as zbnee:
-                    self.message_handler.display_error_message(
-                        zbnee.__str__())
-                except NegativeRootError as nre:
-                    self.message_handler.display_error_message(
-                        nre.__str__())
-                except NegativeFactorialError as nfe:
-                    self.message_handler.display_error_message(
-                        nfe.__str__())
-                except LargeFactorialError as lfe:
-                    self.message_handler.display_error_message(
-                        lfe.__str__())
-                except NegativeSumError as nse:
-                    self.message_handler.display_error_message(
-                        nse.__str__())
-                except LargeSumError as lse:
-                    self.message_handler.display_error_message(
-                        lse.__str__())
-                except OperatorUsageError as oue:
-                    self.message_handler.display_error_message(
-                        oue.__str__())  # TODO: change text displayed
-                except IndexError as ie:
-                    self.message_handler.display_error_message(
-                        ie.__str__())  # TODO: change text displayed
-                    # triggered by 6-
-                    # triggered by (((6)
-                except OverflowError as oe:
-                    self.message_handler.display_error_message(
-                        f"Error! {oe.args[-1]}")
-                    # oe.args[-1] = error message
-                except Exception as e:
-                    self.message_handler.display_error_message(
-                        e.__str__())
+                    str(iie))
+            except EmptyEquationError as eee:
+                self.message_handler.display_error_message(
+                    eee.__str__())
+            except NonIntFactorialError as nife:
+                self.message_handler.display_error_message(
+                    nife.__str__())
+            except UnmatchedOpeningParenthesesError as uope:
+                self.message_handler.display_error_message(
+                    uope.__str__())
+            except UnmatchedClosingParenthesesError as ucpe:
+                self.message_handler.display_error_message(
+                    ucpe.__str__())
+            except EmptyParenthesesError as epe:
+                self.message_handler.display_error_message(
+                    epe.__str__())  # TODO: change text displayed
+            except SingleDotError as sde:
+                self.message_handler.display_error_message(
+                    sde.__str__())
+            except MultipleDotsError as mde:
+                self.message_handler.display_error_message(
+                    mde.__str__())
+            except MultipleDotsOperandError as mdoe:
+                self.message_handler.display_error_message(
+                    mdoe.__str__())
+            except UnaryError as ue:
+                self.message_handler.display_error_message(
+                    ue.__str__())  # TODO: change text displayed
+            except DivisionByZeroError as dbze:
+                self.message_handler.display_error_message(
+                    dbze.__str__())
+            except ModuloByZeroError as mbze:
+                self.message_handler.display_error_message(
+                    mbze.__str__())
+            except ZeroBaseNegExError as zbnee:
+                self.message_handler.display_error_message(
+                    zbnee.__str__())
+            except NegativeRootError as nre:
+                self.message_handler.display_error_message(
+                    nre.__str__())
+            except NegativeFactorialError as nfe:
+                self.message_handler.display_error_message(
+                    nfe.__str__())
+            except LargeFactorialError as lfe:
+                self.message_handler.display_error_message(
+                    lfe.__str__())
+            except NegativeSumError as nse:
+                self.message_handler.display_error_message(
+                    nse.__str__())
+            except LargeSumError as lse:
+                self.message_handler.display_error_message(
+                    lse.__str__())
+            except OperatorUsageError as oue:
+                self.message_handler.display_error_message(
+                    oue.__str__())  # TODO: change text displayed
+            except IndexError as ie:
+                self.message_handler.display_error_message(
+                    ie.__str__())  # TODO: change text displayed
+                # triggered by 6-
+                # triggered by (((6)
+            except OverflowError as oe:
+                self.message_handler.display_error_message(
+                    f"Error! {oe.args[-1]}")
+                # oe.args[-1] = error message
+            except Exception as e:
+                self.message_handler.display_error_message(
+                    e.__str__())
             expression = self.get_input_loop()
         self.message_handler.display_error_message(QUIT_MSG)
 

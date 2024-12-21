@@ -7,7 +7,7 @@ class EmptyEquationError(Exception):
 
 
 class InvalidInputError(Exception):
-    def __init__(self, string):
+    def __init__(self, string: str):
         """
         :param string: User input which caused the exception
         :type string: str
@@ -24,6 +24,23 @@ class InvalidInputError(Exception):
                                        general_utils.VALID_INPUT_CHARACTERS}
         return (f'Error! Your input contains forbidden'
                 f' characters: {forbidden_chars_from_string}')
+
+
+class EndMinusesError(Exception):
+    def __init__(self, amount: int):
+        """
+        :param amount: amount of minuses at the end of equation
+        :type amount: int
+        """
+        self._amount = amount
+
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception
+        :rtype: str
+        """
+        return (f'Error! Equation ends with {self._amount} minuses with no '
+                f'operand after')
 
 
 class DivisionByZeroError(Exception):
@@ -207,7 +224,7 @@ class OperatorUsageError(Exception):
 
 
 class UnaryError(Exception):
-    def __init__(self, sign: str):
+    def __init__(self, sign: str, is_left_error: bool):
         """
         :param sign: Sign representation of invalid unary operator
         :type sign: str
@@ -215,13 +232,21 @@ class UnaryError(Exception):
         if sign == operator_utils.UNARY_MINUS_SYMBOL:
             sign = operator_utils.SUB_SYMBOL
         self._sign = sign
+        self._unary_side = 'right'
+        is_left_unary = sign in operator_utils.LEFT_UNARY_OPERATORS
+        if is_left_unary:
+            self._unary_side = 'left'
+        self._error_side = 'right'
+        if is_left_error:
+            self._error_side = 'left'
 
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f'Error! Wrong usage of unary operator: {self._sign}'
+        return (f'Error! Wrong parameter to the {self._error_side} of the '
+                f'{self._unary_side} unary operator: {self._sign}')
 
 
 class UnmatchedOpeningParenthesesError(Exception):

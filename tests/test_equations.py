@@ -2,7 +2,6 @@ import pytest
 
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import InvalidInputError, EmptyEquationError
-from calculator.logic.input_validator import InputValidator
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor
 from calculator.logic.tokenizer import ArithmeticTokenizer
@@ -17,11 +16,6 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
 def test_valid_expressions(expression, expected_result):
     tokenizer = ArithmeticTokenizer()
     token_processor = ArithmeticTokenProcessor()
-    input_validator = InputValidator()
-
-    # Validate and process the input
-    if not input_validator.validate_input(expression):
-        raise InvalidInputError(expression)
 
     string_formatter = StringProcessor(expression)
     formatted_expression = string_formatter.process()
@@ -43,7 +37,6 @@ def test_valid_expressions(expression, expected_result):
 def test_whitespaces(expression, expected_result):
     tokenizer = ArithmeticTokenizer()
     token_processor = ArithmeticTokenProcessor()
-    input_validator = InputValidator()
 
     # Check for EmptyEquationError when input is empty or contains only
     # whitespace
@@ -63,4 +56,3 @@ def test_whitespaces(expression, expected_result):
 
         # Assert that the solution matches the expected result
         assert solution == expected_result
-
