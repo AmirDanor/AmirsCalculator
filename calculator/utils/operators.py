@@ -91,7 +91,7 @@ class Div(BinaryOperator):
             raise DivisionByZeroError(operand1)
 
 
-class Pow(BinaryOperator):  # TODO: Make sure _result is not too large. Throw a relevant exception if needed. [make sure for all operators...]
+class Pow(BinaryOperator):
     def get_precedence(self):
         return 4
 

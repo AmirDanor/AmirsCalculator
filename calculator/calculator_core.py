@@ -10,7 +10,8 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     UnmatchedClosingParenthesesError, NegativeRootError, ZeroBaseNegExError, \
     MultipleDotsError, \
     MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
-    OperatorUsageError, ModuloByZeroError, EmptyEquationError
+    OperatorUsageError, ModuloByZeroError, EmptyEquationError, \
+    WrongParenthesesUsageError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
@@ -83,6 +84,9 @@ class CalculatorCore:
             except UnmatchedClosingParenthesesError as ucpe:
                 self.message_handler.display_error_message(
                     ucpe.__str__())
+            except WrongParenthesesUsageError as wpue:
+                self.message_handler.display_error_message(
+                    wpue.__str__())
             except EmptyParenthesesError as epe:
                 self.message_handler.display_error_message(
                     epe.__str__())  # TODO: change text displayed
@@ -131,8 +135,12 @@ class CalculatorCore:
                 # triggered by 6-
                 # triggered by (((6)
             except OverflowError as oe:
-                self.message_handler.display_error_message(
-                    f"Error! {oe.args[-1]}")
+                if oe.args[-1] == 'math range error':
+                    self.message_handler.display_error_message(
+                        f"Error! result is out of calculator's range")
+                else:
+                    self.message_handler.display_error_message(
+                        f"Error! {oe.args[-1]}")
                 # oe.args[-1] = error message
             except Exception as e:
                 self.message_handler.display_error_message(

@@ -249,6 +249,17 @@ class UnaryError(Exception):
                 f'{self._unary_side} unary operator: {self._sign}')
 
 
+class WrongParenthesesUsageError(Exception):
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception - Wrong
+            parentheses usage in equation
+        :rtype: str
+        """
+        return (f"Error! Equation conatins wrong parentheses usage."
+                f" make sure parentheses are treated like operands!")
+
+
 class UnmatchedOpeningParenthesesError(Exception):
     def __init__(self, index: int):
         """

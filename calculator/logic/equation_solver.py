@@ -1,4 +1,5 @@
-from calculator.logic.exceptions import OperatorUsageError
+from calculator.logic.exceptions import OperatorUsageError, \
+    WrongParenthesesUsageError
 from calculator.utils import operator_utils, operand_utils, general_utils
 from calculator.utils.operator_registry import OperatorRegistry
 from calculator.utils.operators import UnaryOperator
@@ -174,6 +175,6 @@ class EquationSolver:
                         operand2, operand1)
                     stack.append(binary_result)
         if len(stack) >= 2:
-            self._result = "Wrong usage of parentheses"  # todo: change str
+            raise WrongParenthesesUsageError()
         else:
             self._result = stack[0] if stack else "Nothing to calculate."
