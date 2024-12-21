@@ -136,7 +136,10 @@ class EquationSolver:
     def _solve_postfix(self):
         """
         Solves the equation represented by postfix stack and updates the
-        _result.
+            _result.
+        :raises OperatorUsageError: if misused operators exist
+        :raises WrongParenthesesUsageError: if equations contains wrong
+            parentheses usage.
         """
         stack = []
         for token in self._postfix_stack:
@@ -148,7 +151,6 @@ class EquationSolver:
                 try:
                     token_as_number = float(fixed_token)
                 except ValueError as ve:
-                    print("line 153 in equation_solver.py")
                     print(ve)
                     return None
                 stack.append(token_as_number)

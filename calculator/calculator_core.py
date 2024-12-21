@@ -128,7 +128,7 @@ class CalculatorCore:
                     lse.__str__())
             except OperatorUsageError as oue:
                 self.message_handler.display_error_message(
-                    oue.__str__())  # TODO: change text displayed
+                    oue.__str__())
             except IndexError as ie:
                 self.message_handler.display_error_message(
                     ie.__str__())  # TODO: change text displayed

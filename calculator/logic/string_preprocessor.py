@@ -21,12 +21,10 @@ class StringPreprocessor:
         """
         Checks if there are forbidden chars in the user input
 
-        :param expression: Mathematical expression which needed to get
-            validated
-        :type expression: str
-        :return: Whether expression contains
+        :return: Whether equation contains
             forbidden chars or not
         :rtype: bool
+        :raises InvalidInputError: if input contains forbidden chars
         """
         if not set(self._equation).issubset(
                 general_utils.VALID_INPUT_CHARACTERS):

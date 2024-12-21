@@ -33,7 +33,7 @@ class StringProcessor:
     def _not_empty_validator(self):
         """
         Validates that user's input is not empty after removal of white spaces
-        :throws EmptyEquationError: if processed equation is empty
+        :raises EmptyEquationError: if processed equation is empty
         """
         if self._equation == '':
             raise EmptyEquationError()

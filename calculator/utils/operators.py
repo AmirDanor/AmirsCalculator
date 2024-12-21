@@ -65,7 +65,11 @@ class Add(BinaryOperator):
 
 
 class Sub(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 1
 
     def solve(self, operand1, operand2):
@@ -73,7 +77,11 @@ class Sub(BinaryOperator):
 
 
 class Mul(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 2
 
     def solve(self, operand1, operand2):
@@ -81,10 +89,22 @@ class Mul(BinaryOperator):
 
 
 class Div(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 2
 
     def solve(self, operand1, operand2):
+        """
+        solves division between
+        :param operand1:
+        :type operand1:
+        :param operand2:
+        :type operand2:
+        :raises DivisionByZeroError: if
+        """
         try:
             return operand1 / operand2
         except ZeroDivisionError:
@@ -92,7 +112,11 @@ class Div(BinaryOperator):
 
 
 class Pow(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 4
 
     def solve(self, base, exponent):
@@ -104,7 +128,11 @@ class Pow(BinaryOperator):
 
 
 class Mod(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 5
 
     def solve(self, operand1, operand2):
@@ -115,7 +143,11 @@ class Mod(BinaryOperator):
 
 
 class Max(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 6
 
     def solve(self, operand1, operand2):
@@ -123,7 +155,11 @@ class Max(BinaryOperator):
 
 
 class Min(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 6
 
     def solve(self, operand1, operand2):
@@ -131,7 +167,11 @@ class Min(BinaryOperator):
 
 
 class Avg(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 6
 
     def solve(self, operand1, operand2):
@@ -139,36 +179,66 @@ class Avg(BinaryOperator):
 
 
 class UMin(UnaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 3
 
     def is_left(self):
+        """
+        :return: if unary operator is a left operator
+        :rtype: bool
+        """
         return True
 
     def solve(self, operand):
+        """
+        :param operand: operand
+        :type operand: float
+        :return: operand after unary minus operation
+        :rtype: float
+        """
         return -operand
 
 
 class Neg(UnaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 7
 
     def is_left(self):
+        """
+        :return: if unary operator is a left operator
+        :rtype: bool
+        """
         return True
 
     def solve(self, operand):
+
         return -operand
 
 
 class Fac(UnaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 7
 
     def is_left(self):
+        """
+        :return: if unary operator is a left operator
+        :rtype: bool
+        """
         return False
 
-    def solve(self,
-              operand):
+    def solve(self, operand):
         if operand < 0:
             raise NegativeFactorialError(operand)
         elif operand > general_utils.FACTORIAL_MAX_OPERAND:
@@ -182,14 +252,29 @@ class Fac(UnaryOperator):
 
 
 class Sum(UnaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: operator's precedence
+        :rtype: int
+        """
         return 7
 
     def is_left(self):
+        """
+        :return: if unary operator is a left operator
+        :rtype: bool
+        """
         return False
 
-    def solve(self,
-              operand):
+    def solve(self, operand):
+        """
+        :param operand: operand
+        :type operand: float
+        :return: operand after sum operation
+        :rtype: float
+        :raises NegativeSumError: if operand is negative
+        :raises LargeSumError: if operand is too large
+        """
         if operand < 0:
             raise NegativeSumError(operand)
         if 'e' in str(operand):

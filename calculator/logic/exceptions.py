@@ -256,7 +256,7 @@ class WrongParenthesesUsageError(Exception):
             parentheses usage in equation
         :rtype: str
         """
-        return (f"Error! Equation conatins wrong parentheses usage."
+        return (f"Error! Equation contains wrong parentheses usage."
                 f" make sure parentheses are treated like operands!")
 
 
