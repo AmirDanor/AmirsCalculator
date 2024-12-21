@@ -66,10 +66,10 @@ class CalculatorCore:
                     processed_tokenized_equation)
                 solution = equation_solver.solve()
                 if solution is not None:  # if solution is not None
-                    self.message_handler.display_custom_message(
+                    self.message_handler.display_result_message(
                         str(solution))
             except InvalidInputError as iie:
-                self.message_handler.display_custom_message(
+                self.message_handler.display_error_message(
                     str(iie))
             except EmptyEquationError as eee:
                 self.message_handler.display_error_message(
