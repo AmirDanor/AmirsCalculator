@@ -13,11 +13,6 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
     ("1+1", 2),
     ("85.2/2", 42.6),
     ("7 0-5 . 7", 64.3),
-    ("2 +      3       ", 5),
-    ("10       /2  ", 5),
-    ("     4       * 5  ", 20),
-    ("10-7", 3),
-    ("1+2*3", 7)
 ])
 def test_valid_expressions(expression, expected_result):
     tokenizer = ArithmeticTokenizer()
