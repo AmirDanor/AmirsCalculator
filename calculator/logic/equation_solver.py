@@ -1,15 +1,10 @@
 from calculator.logic.exceptions import OperatorUsageError, \
     WrongParenthesesUsageError
-from calculator.utils import operator_utils, operand_utils, general_utils
+from calculator.utils import operator_utils, operand_utils, general_utils, \
+    operators
 from calculator.utils.operator_registry import OperatorRegistry
-from calculator.utils.operators import UnaryOperator
-
 OPERATOR_REGISTRY = OperatorRegistry()
-UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
-BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
 # Merges both dictionaries into a single dictionary
-operators_dict = {**UNARY_OPERATORS_DICT,
-                  **BINARY_OPERATORS_DICT}
 
 
 class EquationSolver:
@@ -46,7 +41,7 @@ class EquationSolver:
             if operand_utils.is_operand(token):  # Operand
                 #  removed: or operator_utils.SIGN_MINUS_SYMBOL in token
                 postfix.append(token)
-            elif token is UnaryOperator:
+            elif token is operators.UnaryOperator:
                 self._unary_operator_to_postfix(token, index, stack, postfix)
             elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
@@ -81,7 +76,7 @@ class EquationSolver:
         :type postfix: list
         """
 
-        if OPERATOR_REGISTRY.is_left_unary_operator(token):
+        if token in operator_utils.LEFT_UNARY_OPERATORS:
             # Push left-sided unary operator
             stack.append(token)
         else:  # Right-sided unary operators
@@ -148,32 +143,27 @@ class EquationSolver:
                 # Operand
                 fixed_token = token.replace(operator_utils.SIGN_MINUS_SYMBOL,
                                             operator_utils.SUB_SYMBOL)
-                try:
-                    token_as_number = float(fixed_token)
-                except ValueError as ve:
-                    print(ve)
-                    return None
+                token_as_number = float(fixed_token)
                 stack.append(token_as_number)
             else:  # Operator
                 try:
                     operand1 = stack.pop()
                 except IndexError:  # todo: maybe check in a separate func
-                    if token in UNARY_OPERATORS_DICT:
+                    if token in operator_utils.ALL_UNARY_OPERATORS:
                         raise OperatorUsageError(token, "No operand")
                     else:
                         raise OperatorUsageError(token, "No operands")
                 # Temp implementation.
-                if token in UNARY_OPERATORS_DICT:
-                    unary_result = UNARY_OPERATORS_DICT.get(token).solve(
-                        operand1)
+                if token in operator_utils.ALL_UNARY_OPERATORS:
+                    unary_result = (OPERATOR_REGISTRY.get_unary_operators().get(token).solve(operand1))
                     stack.append(unary_result)
-                elif token in BINARY_OPERATORS_DICT:
+                elif token in operator_utils.BINARY_OPERATORS:
                     try:
                         operand2 = stack.pop()
                     except IndexError:  # todo: maybe check in a separate func
                         raise OperatorUsageError(token,
                                                  "Missing operand")
-                    binary_result = BINARY_OPERATORS_DICT.get(token).solve(
+                    binary_result = OPERATOR_REGISTRY.get_binary_operators().get(token).solve(
                         operand2, operand1)
                     stack.append(binary_result)
         if len(stack) >= 2:

@@ -4,16 +4,6 @@ from calculator.logic.exceptions import UnaryError, \
     MultipleDotsError, MultipleDotsOperandError, \
     SingleDotError, EndMinusesError
 from calculator.utils import operand_utils, operator_utils, general_utils
-from calculator.utils.operator_registry import OperatorRegistry
-
-OPERATOR_REGISTRY = OperatorRegistry()
-UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_unary_operators()
-BINARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_binary_operators()
-# Merges both dictionaries into a single dictionary
-OPERATORS_DICT = {**UNARY_OPERATORS_DICT,
-                  **BINARY_OPERATORS_DICT}
-RIGHT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_right_unary_operators()
-LEFT_UNARY_OPERATORS_DICT = OPERATOR_REGISTRY.get_left_unary_operators()
 
 
 class TokenProcessor(ABC):
@@ -98,9 +88,9 @@ class ArithmeticTokenProcessor(TokenProcessor):
                      self._tokens[
                          index + 1] == general_utils.OPEN_BRACKETS) and
                         (index - 2 < 0 or self._tokens[
-                            index - 2] in BINARY_OPERATORS_DICT or
+                            index - 2] in operator_utils.BINARY_OPERATORS or
                          self._tokens[
-                             index - 2] in LEFT_UNARY_OPERATORS_DICT or
+                             index - 2] in operator_utils.LEFT_UNARY_OPERATORS or
                          self._tokens[
                              index - 2] == general_utils.OPEN_BRACKETS)):
                     # Remove the two minuses
@@ -153,8 +143,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
 
         prev_token = self._tokens[index - 1]
-        return ((prev_token in BINARY_OPERATORS_DICT or
-                 prev_token in LEFT_UNARY_OPERATORS_DICT)
+        return ((prev_token in operator_utils.BINARY_OPERATORS or
+                 prev_token in operator_utils.LEFT_UNARY_OPERATORS)
                 and prev_token != operator_utils.SUB_SYMBOL)
 
     def _prev_token_is_a_valid_minus_operand(self, index: int) -> bool:
@@ -179,7 +169,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
                      or general_utils.CLOSE_BRACKETS ==
                      self._tokens[index - 2]
                      or self._tokens[index - 2]
-                     in RIGHT_UNARY_OPERATORS_DICT))
+                     in operator_utils.RIGHT_UNARY_OPERATORS))
 
     def _minus_brackets_handle(self, index: int):
         """
@@ -219,7 +209,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
         index = 0
         for token in self._tokens:
-            if token in UNARY_OPERATORS_DICT:
+            if token in operator_utils.ALL_UNARY_OPERATORS:
                 self._validate_unary_operator(token, index)
             index += 1
 
@@ -232,8 +222,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         :type index: int
         """
 
-        if OPERATOR_REGISTRY.is_left_unary_operator(
-                token):  # Left unary operator
+        if token in operator_utils.LEFT_UNARY_OPERATORS:  # Left unary operator
             self._validate_left_unary_operator(token, index)
         else:  # Right unary operator
             self._validate_right_unary_operator(token, index)
@@ -249,7 +238,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         """
 
         if (index > 0  # Check token to the left
-                and self._tokens[index - 1] not in BINARY_OPERATORS_DICT
+                and self._tokens[index - 1] not in operator_utils.BINARY_OPERATORS
                 and self._tokens[index - 1] != general_utils.OPEN_BRACKETS):
             raise UnaryError(token,  True)
         if (index < len(self._tokens) - 1  # Check token to the right

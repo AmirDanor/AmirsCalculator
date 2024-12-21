@@ -31,17 +31,6 @@ class OperatorRegistry:
             '@': Avg()
         }
 
-    def get_all_operator_symbols(self):
-        """
-        Get all operators str symbol representation as set
-
-        :return: all operator symbols
-        :rtype: set
-        """
-        return (set(self._left_unary_operators_funcs.keys())
-                .union(self._right_unary_operators_funcs.keys())
-                .union(self._binary_operators_funcs.keys()))
-
     def get_unary_operators(self):
         """
         Get all unary operators str symbol representation as set
@@ -118,17 +107,3 @@ class OperatorRegistry:
         :rtype: bool
         """
         return string.isdigit() or '.' in string or '_' in string
-
-
-'''
-    def precedence(operator):
-        """
-        Gets operand's precedence
-        :param operator: representation of operator
-        :type operator: str
-        :return: operator's precedence
-        :rtype: int
-        """
-        return OperatorRegistry().get_precedence_for_operator(
-            operator) 
-            '''
