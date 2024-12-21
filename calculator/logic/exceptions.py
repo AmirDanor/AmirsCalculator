@@ -188,19 +188,22 @@ class NegativeRootError(Exception):
 
 
 class OperatorUsageError(Exception):
-    def __init__(self, sign: str):
+    def __init__(self, sign: str, desc: str):
         """
         :param sign: Sign representation of operator which was used incorrectly
         :type sign: str
+        :param desc: Short description which specifies the wrong usage
+        :type desc: str
         """
         self._sign = sign
+        self._desc = desc
 
     def __str__(self):
         """
         :return: Message about the cause of the exception
         :rtype: str
         """
-        return f'Error! Wrong usage of operator: {self._sign}'
+        return f'Error! Wrong usage of operator: {self._sign}, {self._desc}'
 
 
 class UnaryError(Exception):
@@ -254,7 +257,7 @@ class UnmatchedClosingParenthesesError(Exception):
         :rtype: str
         """
         return (f"Error! Unmatched closing parenthesis for"
-                f"'{general_utils.CLOSE_BRACKETS}' at index {self._index}")
+                f" '{general_utils.CLOSE_BRACKETS}' at index {self._index}")
 
 
 class EmptyParenthesesError(Exception):

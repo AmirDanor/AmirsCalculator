@@ -141,23 +141,26 @@ class EquationSolver:
         """
         stack = []
         for token in self._postfix_stack:
-            if operand_utils.is_operand(
-                    token) or operator_utils.SIGN_MINUS_SYMBOL in token:
+            if (operand_utils.is_operand(token)
+                    or operator_utils.SIGN_MINUS_SYMBOL in token):
                 # Operand
                 fixed_token = token.replace(operator_utils.SIGN_MINUS_SYMBOL,
                                             operator_utils.SUB_SYMBOL)
                 try:
                     token_as_number = float(fixed_token)
-                    stack.append(token_as_number)
                 except ValueError as ve:
+                    print("line 153 in equation_solver.py")
                     print(ve)
                     return None
+                stack.append(token_as_number)
             else:  # Operator
                 try:
                     operand1 = stack.pop()
                 except IndexError:  # todo: maybe check in a separate func
-                    raise OperatorUsageError(token)
-                    return None
+                    if token in UNARY_OPERATORS_DICT:
+                        raise OperatorUsageError(token, "No operand")
+                    else:
+                        raise OperatorUsageError(token, "No operands")
                 # Temp implementation.
                 if token in UNARY_OPERATORS_DICT:
                     unary_result = UNARY_OPERATORS_DICT.get(token).solve(
@@ -167,8 +170,8 @@ class EquationSolver:
                     try:
                         operand2 = stack.pop()
                     except IndexError:  # todo: maybe check in a separate func
-                        raise OperatorUsageError(token)
-                        return None
+                        raise OperatorUsageError(token,
+                                                 "Missing operand")
                     binary_result = BINARY_OPERATORS_DICT.get(token).solve(
                         operand2, operand1)
                     stack.append(binary_result)

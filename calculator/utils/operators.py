@@ -168,7 +168,7 @@ class Fac(UnaryOperator):
         return False
 
     def solve(self,
-              operand):  # TODO: Make sure operand is a positive int. Throw a relevant exception if needed (different one for each case).
+              operand):
         if operand < 0:
             raise NegativeFactorialError(operand)
         elif operand > general_utils.FACTORIAL_MAX_OPERAND:
@@ -189,13 +189,13 @@ class Sum(UnaryOperator):
         return False
 
     def solve(self,
-              operand):  # TODO: check theres a maximum one . (dot) in operand before removal. Optimally check in tokenizer [equation_solver.py] (in final version)!
+              operand):
         if operand < 0:
             raise NegativeSumError(operand)
         if 'e' in str(operand):
             raise LargeSumError(operand)
         operand_as_str = str(operand).replace(general_utils.DOT,
-                                              general_utils.EMPTY_STR)  # TODO: change/delete this line after optimizing tokenizer [equation_solver.py]
+                                              general_utils.EMPTY_STR)
         result = 0.0
 
         for char in operand_as_str:

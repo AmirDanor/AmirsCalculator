@@ -140,6 +140,9 @@ class CalculatorCore:
                     self.message_handler.display_error_message(
                         f"Error! {oe.args[-1]}")
                     # oe.args[-1] = error message
+                except Exception as e:
+                    self.message_handler.display_error_message(
+                        e.__str__())
             expression = self.get_input_loop()
         self.message_handler.display_error_message(QUIT_MSG)
 
