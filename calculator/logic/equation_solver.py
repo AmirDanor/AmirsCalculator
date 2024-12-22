@@ -158,6 +158,8 @@ class EquationSolver:
                     token_as_number = float(fixed_token)
                 except ValueError:
                     raise ExpectedOperandError(fixed_token)
+                if token_as_number == -0:
+                    token_as_number = 0
                 stack.append(token_as_number)
             else:  # Operator
                 try:

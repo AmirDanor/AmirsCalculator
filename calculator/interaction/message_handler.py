@@ -51,6 +51,14 @@ class MessageHandler(ABC):
 
         pass
 
+    @abstractmethod
+    def display_quit_message(self):
+        """
+        Displays an exit message when user quits program.
+        """
+
+        pass
+
 
 class ConsoleMessageHandler(MessageHandler):
     """
@@ -135,3 +143,9 @@ class ConsoleMessageHandler(MessageHandler):
         """
 
         print(Fore.RED + error_message + Fore.RESET)
+
+    def display_quit_message(self):
+        """
+        Displays a console exit message when program ends.
+        """
+        print(Fore.MAGENTA + "Program Ended." + Fore.RESET)
