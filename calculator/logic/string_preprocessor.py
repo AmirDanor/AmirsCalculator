@@ -1,5 +1,5 @@
 """
-Module for preprocessing string into list.
+Module for preprocessing string.
 Contains an abstract base class and an arithmetic implementation.
 """
 
@@ -37,7 +37,7 @@ class StringPreprocessor(ABC):
 class ArithmeticStringPreprocessor(StringPreprocessor):
     """
     Class to make sure string is valid before start of procession.
-    Preprocess users' input (find error before processing)
+    Preprocess users' arithmetic input (find error before processing)
     Ensures that the user's input consists of valid characters only and
     contains only valid parentheses.
     """
@@ -58,6 +58,7 @@ class ArithmeticStringPreprocessor(StringPreprocessor):
         Determines the order of the pre-process logic.
         Validates the user's input by performing string-based tests:
         checks for invalid characters and parentheses.
+        Redefines equation.
         """
         self._equation = equation
         self._validate_input()

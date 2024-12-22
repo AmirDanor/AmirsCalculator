@@ -20,6 +20,7 @@ from calculator.calculator_core import QUIT_STR, CalculatorCore
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic.string_preprocessor import ArithmeticStringPreprocessor
+from calculator.logic.string_processor import ArithmeticStringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor
 from calculator.logic.tokenizer import ArithmeticTokenizer
 
@@ -28,6 +29,7 @@ if __name__ == "__main__":
         message_handler=ConsoleMessageHandler(QUIT_STR),
         input_handler=ConsoleInputHandler(),
         string_preprocessor=ArithmeticStringPreprocessor(),
+        string_processor=ArithmeticStringProcessor(),
         tokenizer=ArithmeticTokenizer(),
         token_processor=ArithmeticTokenProcessor()
     )

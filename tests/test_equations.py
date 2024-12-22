@@ -8,9 +8,8 @@ from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import InvalidInputError, \
     EmptyEquationError, OperatorUsageError, MultipleDotsOperandError, \
     UnmatchedOpeningParenthesesError, EmptyParenthesesError, UnaryError
-from calculator.logic.string_preprocessor import StringPreprocessor, \
-    ArithmeticStringPreprocessor
-from calculator.logic.string_processor import StringProcessor
+from calculator.logic.string_preprocessor import ArithmeticStringPreprocessor
+from calculator.logic.string_processor import ArithmeticStringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor
 from calculator.logic.tokenizer import ArithmeticTokenizer
 
@@ -25,20 +24,15 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
 ])
 def test_syntax_errors(expression, expected_exception):
     with pytest.raises(expected_exception):
-        # Initialize the concrete string preprocessor
         string_preprocessor = ArithmeticStringPreprocessor()
-        string_preprocessor.preprocess(expression)  # Preprocess the input
-
-        # Continue with the remaining processing steps
-        string_processor = StringProcessor(expression)
-        expression = string_processor.process()
+        string_preprocessor.preprocess(expression)
+        string_processor = ArithmeticStringProcessor()
+        processed_expression = string_processor.process(expression)
         tokenizer = ArithmeticTokenizer()
+        tokenized_equation = tokenizer.tokenize(processed_expression)
         token_processor = ArithmeticTokenProcessor()
-        formatted_expression = string_processor.process()
-        tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation
-        )
+            tokenized_equation)
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
@@ -53,20 +47,15 @@ def test_syntax_errors(expression, expected_exception):
 def test_gibberish(expression):
     # Expecting InvalidInputError to be raised
     with pytest.raises(InvalidInputError):
-        # Initialize the concrete string preprocessor
         string_preprocessor = ArithmeticStringPreprocessor()
-        string_preprocessor.preprocess(expression)  # Preprocess the input
-
-        # Continue with the remaining processing steps
-        string_processor = StringProcessor(expression)
-        expression = string_processor.process()
+        string_preprocessor.preprocess(expression)
+        string_processor = ArithmeticStringProcessor()
+        processed_expression = string_processor.process(expression)
         tokenizer = ArithmeticTokenizer()
+        tokenized_equation = tokenizer.tokenize(processed_expression)
         token_processor = ArithmeticTokenProcessor()
-        formatted_expression = string_processor.process()
-        tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation
-        )
+            tokenized_equation)
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
@@ -84,15 +73,13 @@ def test_whitespaces(expression):
     # Expect an EmptyEquationError to be raised
     with pytest.raises(EmptyEquationError):
         string_preprocessor.preprocess(expression)
-        string_processor = StringProcessor(expression)
-        expression = string_processor.process()
+        string_processor = ArithmeticStringProcessor(expression)
+        processed_expression = string_processor.process(expression)
         tokenizer = ArithmeticTokenizer()
+        tokenized_equation = tokenizer.tokenize(processed_expression)
         token_processor = ArithmeticTokenProcessor()
-        formatted_expression = string_processor.process()
-        tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation
-        )
+            tokenized_equation)
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
@@ -118,8 +105,8 @@ def test_whitespaces(expression):
 def test_simple_valid_expressions(expression, expected_result):
     string_preprocessor = ArithmeticStringPreprocessor()
     string_preprocessor.preprocess(expression)
-    string_processor = StringProcessor(expression)
-    processed_expression = string_processor.process()
+    string_processor = ArithmeticStringProcessor(expression)
+    processed_expression = string_processor.process(expression)
     tokenizer = ArithmeticTokenizer()
     tokenized_equation = tokenizer.tokenize(processed_expression)
     token_processor = ArithmeticTokenProcessor()
@@ -129,7 +116,7 @@ def test_simple_valid_expressions(expression, expected_result):
     assert solution == expected_result
 
 
-# 20 complex valid equations
+# complex valid equations
 @pytest.mark.parametrize("expression, expected_result", [
     ("007^(2+--3!)#*123-99.5", 709070423.5),
     ("(20%(12+54#!$(43@771&99)))", 20),
@@ -142,8 +129,8 @@ def test_simple_valid_expressions(expression, expected_result):
 def test_complex_valid_expressions(expression, expected_result):
     string_preprocessor = ArithmeticStringPreprocessor()
     string_preprocessor.preprocess(expression)
-    string_processor = StringProcessor(expression)
-    processed_expression = string_processor.process()
+    string_processor = ArithmeticStringProcessor(expression)
+    processed_expression = string_processor.process(expression)
     tokenizer = ArithmeticTokenizer()
     tokenized_equation = tokenizer.tokenize(processed_expression)
     token_processor = ArithmeticTokenProcessor()

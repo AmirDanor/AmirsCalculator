@@ -14,7 +14,6 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
     OperatorUsageError, ModuloByZeroError, EmptyEquationError, \
     WrongParenthesesUsageError, ExpectedOperandError
-from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
 from calculator.logic.string_preprocessor import StringPreprocessor
@@ -32,39 +31,41 @@ class CalculatorCore:
     def __init__(self, message_handler: message_handler.MessageHandler,
                  input_handler: input_handler.InputHandler,
                  string_preprocessor: StringPreprocessor,
+                 string_processor: StringProcessor,
                  tokenizer: Tokenizer, token_processor: TokenProcessor):
         """
         Initializes the calculator core with required components.
 
         :param message_handler: An instance of the MessageHandler class
             to display prompts and messages.
-        :type message_handler: message_handler
+        :type message_handler: MessageHandler
         :param input_handler: An instance of the InputHandler class
             to get user input.
-        :type input_handler: input_handler
+        :type input_handler: InputHandler
+        :param string_preprocessor: An instance of the StringPreprocessor class
+            to preprocess user's input
+        :type string_preprocessor: StringPreprocessor
+        :param string_processor: An instance of the StringProcessor class
+            to process user's input
+        :type string_processor: StringProcessor
+        :param tokenizer: An instance of the Tokenizer class to tokenize
+            user's input
+        :type tokenizer: Tokenizer
+        :param token_processor: An instance of the TokenProcessor class
+            to process tokenized user's input
+        :type token_processor: TokenProcessor
         """
 
         self.message_handler = message_handler
         self.input_handler = input_handler
         self.string_preprocessor = string_preprocessor
+        self.string_processor = string_processor
         self.tokenizer = tokenizer
         self.token_processor = token_processor
 
-    def handle_display_error(self, error):
-        """
-        Helper method to display error messages.
-
-        :param error: Error which should be displayed to user.
-        :type error: str or Exception
-        """
-
-        self.message_handler.display_error_message(str(error))
-
     def run(self):
         """
-        Runs the program as intended.
-
-        :raises InvalidInputError: If user's input contains forbidden chars.
+        Runs the program as intended, in correct order.
         """
         self.message_handler.display_input_message()
         try:
@@ -72,8 +73,7 @@ class CalculatorCore:
             while expression != QUIT_STR:
                 try:
                     self.string_preprocessor.preprocess(expression)
-                    string_processor = StringProcessor(expression)
-                    expression = string_processor.process()
+                    expression = self.string_processor.process(expression)
                     tokenized_equation = self.tokenizer.tokenize(
                         expression)
                     processed_tokenized_equation = (
@@ -145,6 +145,16 @@ class CalculatorCore:
             self.handle_display_error(f"\nKeyboard Interrupt detected. ")
 
         self.message_handler.display_quit_message()
+
+    def handle_display_error(self, error):
+        """
+        Helper method to display error messages.
+
+        :param error: Error which should be displayed to user.
+        :type error: str or Exception
+        """
+
+        self.message_handler.display_error_message(str(error))
 
     def get_input_loop(self):
         """
