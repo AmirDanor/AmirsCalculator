@@ -17,6 +17,7 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
+from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.tokenizer import Tokenizer
 
 QUIT_STR = 'quit'  # string which user has to enter to end program.
@@ -30,6 +31,7 @@ class CalculatorCore:
 
     def __init__(self, message_handler: message_handler.MessageHandler,
                  input_handler: input_handler.InputHandler,
+                 string_preprocessor: StringPreprocessor,
                  tokenizer: Tokenizer, token_processor: TokenProcessor):
         """
         Initializes the calculator core with required components.
@@ -44,6 +46,7 @@ class CalculatorCore:
 
         self.message_handler = message_handler
         self.input_handler = input_handler
+        self.string_preprocessor = string_preprocessor
         self.tokenizer = tokenizer
         self.token_processor = token_processor
 
@@ -68,8 +71,7 @@ class CalculatorCore:
             expression = self.get_input_loop()
             while expression != QUIT_STR:
                 try:
-                    string_preprocessor = StringPreprocessor(expression)
-                    string_preprocessor.preprocess()
+                    self.string_preprocessor.preprocess(expression)
                     string_processor = StringProcessor(expression)
                     expression = string_processor.process()
                     tokenized_equation = self.tokenizer.tokenize(

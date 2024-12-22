@@ -2,6 +2,7 @@
 Module for tokenizing string into list.
 Contains an abstract base class and an arithmetic implementation.
 """
+
 from abc import ABC, abstractmethod
 
 from calculator.utils import general_utils

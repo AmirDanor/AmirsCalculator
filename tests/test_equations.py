@@ -1,10 +1,15 @@
+"""
+Module for testing using pytest
+"""
+
 import pytest
 
 from calculator.logic.equation_solver import EquationSolver
 from calculator.logic.exceptions import InvalidInputError, \
     EmptyEquationError, OperatorUsageError, MultipleDotsOperandError, \
     UnmatchedOpeningParenthesesError, EmptyParenthesesError, UnaryError
-from calculator.logic.string_preprocessor import StringPreprocessor
+from calculator.logic.string_preprocessor import StringPreprocessor, \
+    ArithmeticStringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import ArithmeticTokenProcessor
 from calculator.logic.tokenizer import ArithmeticTokenizer
@@ -20,17 +25,20 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
 ])
 def test_syntax_errors(expression, expected_exception):
     with pytest.raises(expected_exception):
-        string_preprocessor = StringPreprocessor(expression)
-        string_preprocessor.preprocess()
+        # Initialize the concrete string preprocessor
+        string_preprocessor = ArithmeticStringPreprocessor()
+        string_preprocessor.preprocess(expression)  # Preprocess the input
+
+        # Continue with the remaining processing steps
         string_processor = StringProcessor(expression)
         expression = string_processor.process()
         tokenizer = ArithmeticTokenizer()
         token_processor = ArithmeticTokenProcessor()
-        string_formatter = StringProcessor(expression)
-        formatted_expression = string_formatter.process()
+        formatted_expression = string_processor.process()
         tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation)
+            tokenized_equation
+        )
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
@@ -45,45 +53,46 @@ def test_syntax_errors(expression, expected_exception):
 def test_gibberish(expression):
     # Expecting InvalidInputError to be raised
     with pytest.raises(InvalidInputError):
-        string_preprocessor = StringPreprocessor(expression)
-        string_preprocessor.preprocess()  # Expected to raise InvalidInputError
+        # Initialize the concrete string preprocessor
+        string_preprocessor = ArithmeticStringPreprocessor()
+        string_preprocessor.preprocess(expression)  # Preprocess the input
+
+        # Continue with the remaining processing steps
         string_processor = StringProcessor(expression)
         expression = string_processor.process()
         tokenizer = ArithmeticTokenizer()
         token_processor = ArithmeticTokenProcessor()
-        string_formatter = StringProcessor(expression)
-        formatted_expression = string_formatter.process()
+        formatted_expression = string_processor.process()
         tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation)
+            tokenized_equation
+        )
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
 
 # Empty str + Whitespaces
-@pytest.mark.parametrize("expression, expected_result", [
-    ("", "Nothing To Calculate!"),
-    (" ", "Nothing To Calculate!"),
-    ("  ", "Nothing To Calculate!"),
-    ("   ", "Nothing To Calculate!"),
-    ("                  ", "Nothing To Calculate!")
+@pytest.mark.parametrize("expression", [
+    "",
+    " ",
+    "  ",
+    "   ",
+    "                  "
 ])
-def test_whitespaces(expression, expected_result):
-    tokenizer = ArithmeticTokenizer()
-    token_processor = ArithmeticTokenProcessor()
-
+def test_whitespaces(expression):
+    string_preprocessor = ArithmeticStringPreprocessor()
+    # Expect an EmptyEquationError to be raised
     with pytest.raises(EmptyEquationError):
-        string_preprocessor = StringPreprocessor(expression)
-        string_preprocessor.preprocess()  # Expected to raise EmptyEquationError
+        string_preprocessor.preprocess(expression)
         string_processor = StringProcessor(expression)
         expression = string_processor.process()
         tokenizer = ArithmeticTokenizer()
         token_processor = ArithmeticTokenProcessor()
-        string_formatter = StringProcessor(expression)
-        formatted_expression = string_formatter.process()
+        formatted_expression = string_processor.process()
         tokenized_equation = tokenizer.tokenize(formatted_expression)
         processed_tokenized_equation = token_processor.process(
-            tokenized_equation)
+            tokenized_equation
+        )
         equation_solver = EquationSolver(processed_tokenized_equation)
         equation_solver.solve()
 
@@ -107,16 +116,16 @@ def test_whitespaces(expression, expected_result):
     ("-123.4#", -10)
 ])
 def test_simple_valid_expressions(expression, expected_result):
+    string_preprocessor = ArithmeticStringPreprocessor()
+    string_preprocessor.preprocess(expression)
+    string_processor = StringProcessor(expression)
+    processed_expression = string_processor.process()
     tokenizer = ArithmeticTokenizer()
+    tokenized_equation = tokenizer.tokenize(processed_expression)
     token_processor = ArithmeticTokenProcessor()
-
-    string_formatter = StringProcessor(expression)
-    formatted_expression = string_formatter.process()
-    tokenized_equation = tokenizer.tokenize(formatted_expression)
     processed_tokenized_equation = token_processor.process(tokenized_equation)
     equation_solver = EquationSolver(processed_tokenized_equation)
     solution = equation_solver.solve()
-
     assert solution == expected_result
 
 
@@ -129,17 +138,16 @@ def test_simple_valid_expressions(expression, expected_result):
     ("(1 + 2) * 2$ 12.34#-90.51+~17", -77.51),
     ("98+--2!^(--1@123)&-(12#)", 98.125),
     ("(1+2-3*4/2^2)&(-1234567890#)", -45),
-    # TODO: add more tests
 ])
-def test_simple_valid_expressions(expression, expected_result):
+def test_complex_valid_expressions(expression, expected_result):
+    string_preprocessor = ArithmeticStringPreprocessor()
+    string_preprocessor.preprocess(expression)
+    string_processor = StringProcessor(expression)
+    processed_expression = string_processor.process()
     tokenizer = ArithmeticTokenizer()
+    tokenized_equation = tokenizer.tokenize(processed_expression)
     token_processor = ArithmeticTokenProcessor()
-
-    string_formatter = StringProcessor(expression)
-    formatted_expression = string_formatter.process()
-    tokenized_equation = tokenizer.tokenize(formatted_expression)
     processed_tokenized_equation = token_processor.process(tokenized_equation)
     equation_solver = EquationSolver(processed_tokenized_equation)
     solution = equation_solver.solve()
-
     assert solution == expected_result

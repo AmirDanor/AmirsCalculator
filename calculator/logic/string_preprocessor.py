@@ -1,37 +1,65 @@
 """
-Module contains StringPreprocessor which ensures user's input
-consists of valid chars only, and contains only valid parentheses.
+Module for preprocessing string into list.
+Contains an abstract base class and an arithmetic implementation.
 """
 
 from calculator.logic.exceptions import UnmatchedOpeningParenthesesError, \
     UnmatchedClosingParenthesesError, EmptyParenthesesError, InvalidInputError
 from calculator.utils import general_utils
 
+from abc import ABC, abstractmethod
 
-class StringPreprocessor:
+
+class StringPreprocessor(ABC):
+    """
+    Abstract class for preprocessing a string.
+    """
+
+    @abstractmethod
+    def __init__(self, string: str):
+        """
+        Abstract init method for StringPreprocessor.
+
+        :param string: string which needs to be preprocessed.
+        :type string: str
+        """
+
+    @abstractmethod
+    def preprocess(self, string: str):
+        """
+        Abstract method for preprocessing a string.
+
+        :param string: String to preprocess.
+        :type string: str
+        """
+
+
+class ArithmeticStringPreprocessor(StringPreprocessor):
     """
     Class to make sure string is valid before start of procession.
+    Preprocess users' input (find error before processing)
     Ensures that the user's input consists of valid characters only and
     contains only valid parentheses.
     """
 
-    def __init__(self, equation: str):
+    def __init__(self, equation: str = None):
         """
-        Preprocess users' input (find error before processing)
+        Init method for ArithmeticStringPreprocessor.
 
-        :param equation: User's input (equation)
+        :param equation: The equation provided by the user.
+            If not provided, defaults to None.
         :type equation: str
         """
 
         self._equation = equation
 
-    def preprocess(self):
+    def preprocess(self, equation: str):
         """
         Determines the order of the pre-process logic.
         Validates the user's input by performing string-based tests:
         checks for invalid characters and parentheses.
         """
-
+        self._equation = equation
         self._validate_input()
         self._validate_parentheses()
 
