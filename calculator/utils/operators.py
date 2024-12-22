@@ -147,14 +147,14 @@ class Pow(BinaryOperator):
 
         return 4
 
-    def solve(self, base: float, exponent: float) -> float:
+    def solve(self, operand1: float, operand2: float) -> float:
         """
         Solves base to the power of exponent.
 
-        :param base: Power operation's base.
-        :type base: float
-        :param exponent: Power operation's exponent.
-        :type exponent: float
+        :param operand1: Power operation's base.
+        :type operand1: float
+        :param operand2: Power operation's exponent.
+        :type operand2: float
         :raises ZeroBaseNegExError: If base is zero and
             exponent is negative.
         :raises NegativeRootError: If base is negative and exponent
@@ -163,11 +163,11 @@ class Pow(BinaryOperator):
         :rtype: float
         """
 
-        if base == 0 and exponent < 0:
-            raise ZeroBaseNegExError(exponent)
-        elif base < 0 and not exponent.is_integer():
-            raise NegativeRootError(base, exponent)
-        return math.pow(base, exponent)
+        if operand1 == 0 and operand2 < 0:
+            raise ZeroBaseNegExError(operand2)
+        if operand1 < 0 and not operand2.is_integer():
+            raise NegativeRootError(operand1, operand2)
+        return math.pow(operand1, operand2)
 
 
 class Mod(BinaryOperator):
@@ -333,9 +333,9 @@ class Fac(UnaryOperator):
 
         if operand < 0:
             raise NegativeFactorialError(operand)
-        elif operand > operator_utils.FACTORIAL_MAX_OPERAND:
+        if operand > operator_utils.FACTORIAL_MAX_OPERAND:
             raise LargeFactorialError(operand)
-        elif not operand.is_integer():
+        if not operand.is_integer():
             raise NonIntFactorialError(operand)
         result = 1
         for index in range(1, int(operand) + 1):

@@ -3,11 +3,11 @@ Module for preprocessing string.
 Contains an abstract base class and an arithmetic implementation.
 """
 
+from abc import ABC, abstractmethod
+
 from calculator.logic.exceptions import UnmatchedOpeningParenthesesError, \
     UnmatchedClosingParenthesesError, EmptyParenthesesError, InvalidInputError
 from calculator.utils import general_utils
-
-from abc import ABC, abstractmethod
 
 
 class StringPreprocessor(ABC):
@@ -42,7 +42,7 @@ class ArithmeticStringPreprocessor(StringPreprocessor):
     contains only valid parentheses.
     """
 
-    def __init__(self, equation: str = None):
+    def __init__(self, string: str = None):
         """
         Init method for ArithmeticStringPreprocessor.
 
@@ -51,16 +51,16 @@ class ArithmeticStringPreprocessor(StringPreprocessor):
         :type equation: str
         """
 
-        self._equation = equation
+        self._equation = string
 
-    def preprocess(self, equation: str):
+    def preprocess(self, string: str):
         """
         Determines the order of the pre-process logic.
         Validates the user's input by performing string-based tests:
         checks for invalid characters and parentheses.
         Redefines equation.
         """
-        self._equation = equation
+        self._equation = string
         self._validate_input()
         self._validate_parentheses()
 

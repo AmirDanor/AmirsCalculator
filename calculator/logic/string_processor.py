@@ -2,6 +2,7 @@
 Module for processing string.
 Contains an abstract base class and an arithmetic implementation.
 """
+
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import EmptyEquationError
@@ -40,18 +41,18 @@ class ArithmeticStringProcessor(StringProcessor):
     Validates and removes whitespace, and checks for empty input.
     """
 
-    def __init__(self, equation: str = None):
+    def __init__(self, string: str = None):
         """
         Process (reformat) users' input.
 
-        :param equation: The equation provided by the user.
+        :param string: The equation provided by the user.
             If not provided, defaults to None.
-        :type equation: str
+        :type string: str
         """
 
-        self._equation = equation
+        self._equation = string
 
-    def process(self, equation: str) -> str:
+    def process(self, string: str) -> str:
         """
         Determines the order of the process logic.
         Processes (fixes format) of user's input.
@@ -60,7 +61,7 @@ class ArithmeticStringProcessor(StringProcessor):
         :return: Processed user's input (equation with fixed format).
         :rtype: str
         """
-        self._equation = equation
+        self._equation = string
         self._remove_white_spaces()
         self._not_empty_validator()
         return self._equation

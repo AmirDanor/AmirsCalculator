@@ -2,6 +2,7 @@
 Module for token procession.
 Contains an abstract base class and an arithmetic-specific implementation.
 """
+
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, \
@@ -173,11 +174,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
         return (self._tokens[index - 1] ==
                 operator_utils.SUB_SYMBOL
                 and index - 2 >= 0
-                and (self._tokens[index - 2].isdigit()
-                     or general_utils.DOT in self._tokens[
-                         index - 2]
-                     or operator_utils.SIGN_MINUS_SYMBOL in
-                     self._tokens[index - 2]
+                and (operand_utils.is_operand(self._tokens[index - 2])
                      or general_utils.CLOSE_BRACKETS ==
                      self._tokens[index - 2]
                      or self._tokens[index - 2]

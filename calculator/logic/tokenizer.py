@@ -25,19 +25,19 @@ class ArithmeticTokenizer(Tokenizer):
     Class for string arithmetic equation tokenization.
     """
 
-    def tokenize(self, equation: str) -> list:
+    def tokenize(self, string: str) -> list:
         """
-        Tokenizes basic arithmetic equations into a list of _tokens.
+        Tokenizes basic arithmetic string into a list of _tokens.
 
-        :param equation: arithmetic equation.
-        :type equation: str
+        :param string: arithmetic equation.
+        :type string: str
         :return: tokenized arithmetic equation.
         :rtype: list
         """
 
         tokens: [str] = []
         number = general_utils.EMPTY_STR
-        for char in equation:
+        for char in string:
             if char.isdigit() or char == general_utils.DOT:
                 number += char
             else:

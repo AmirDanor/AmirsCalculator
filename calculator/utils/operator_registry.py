@@ -108,6 +108,6 @@ class OperatorRegistry:
         if operator in self._right_unary_operators_funcs:
             return self._right_unary_operators_funcs.get(
                 operator).get_precedence()
-        elif operator in self._binary_operators_funcs:
+        if operator in self._binary_operators_funcs:
             return self._binary_operators_funcs.get(operator).get_precedence()
         return None
