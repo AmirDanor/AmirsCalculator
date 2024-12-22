@@ -509,5 +509,6 @@ class ExpectedOperandError(Exception):
         :return: Message about the cause of the exception.
         :rtype: str
         """
-
+        if self._token == '--':
+            return f'Error! Expected an operator after {self._token}'
         return f'Error! Expected an operator instead of {self._token}'
