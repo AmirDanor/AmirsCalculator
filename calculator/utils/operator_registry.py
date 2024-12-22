@@ -39,47 +39,60 @@ class OperatorRegistry:
             '@': Avg()
         }
 
-    def get_unary_operators(self):
+    def get_unary_operators(self) -> dict:
         """
-        Get all unary operators str symbol representation as set.
+        Get unary operators dict which maps str symbol to class.
 
-        :return: all unary operator symbols.
+        :return: Unary operators dict which maps str symbol to class.
         :rtype: dict
         """
 
-        merged_unaries_dict = {**self._left_unary_operators_funcs,
-                               **self._right_unary_operators_funcs}
-        return merged_unaries_dict
+        merged_unary_dict = {**self._left_unary_operators_funcs,
+                             **self._right_unary_operators_funcs}
+        return merged_unary_dict
 
-    def get_left_unary_operators(self):
+    def get_left_unary_operators(self) -> dict:
         """
-        Get all left unary operators str symbol representation as set.
+        Get left unary operators dict which maps str symbol to class.
 
-        :return: all left unary operator symbols.
+        :return: Left unary operators dict which maps str symbol to class.
         :rtype: dict
         """
 
         return self._left_unary_operators_funcs
 
-    def get_right_unary_operators(self):
+    def get_right_unary_operators(self) -> dict:
         """
-        Get all right unary operators str symbol representation as set.
+        Get right unary operators dict which maps str symbol to class.
 
-        :return: all right unary operator symbols.
+        :return: Right unary operators dict which maps str symbol to class.
         :rtype: dict
         """
 
         return self._right_unary_operators_funcs
 
-    def get_binary_operators(self):
+    def get_binary_operators(self) -> dict:
         """
-        Get all binary operators str symbol representation as set.
+        Get binary operators dict which maps str symbol to class.
 
-        :return: all binary operator symbols.
+        :return: Binary operators dict which maps str symbol to class.
         :rtype: dict
         """
 
         return self._binary_operators_funcs
+
+    def get_all_operators(self) -> dict:
+        """
+        Get all operators dict which maps str symbol to class.
+
+        :return: All operators dict which maps str symbol to class.
+        :rtype: dict
+        """
+
+        all_operators_dict = {**self._left_unary_operators_funcs,
+                              **self._right_unary_operators_funcs,
+                              **self._binary_operators_funcs}
+        return all_operators_dict
 
     def get_precedence(self, operator):
         """
@@ -98,4 +111,3 @@ class OperatorRegistry:
         elif operator in self._binary_operators_funcs:
             return self._binary_operators_funcs.get(operator).get_precedence()
         return None
-

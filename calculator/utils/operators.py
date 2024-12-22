@@ -5,6 +5,7 @@ Each operator has precedence, and a solve method.
 Unary operators only got is_left method which returns bool True if
 the operand is left-sided, False otherwise
 """
+
 import math
 from abc import ABC, abstractmethod
 
@@ -21,7 +22,7 @@ class Operator(ABC):
     """
 
     @abstractmethod
-    def get_precedence(self):
+    def get_precedence(self) -> int:
         """
         Method returns operator's precedence.
         """
@@ -35,7 +36,7 @@ class UnaryOperator(Operator):
     """
 
     @abstractmethod
-    def solve(self, operand):
+    def solve(self, operand: float):
         """
         Method to solve the mathematical unary expression.
         """
@@ -59,7 +60,7 @@ class BinaryOperator(Operator):
     """
 
     @abstractmethod
-    def solve(self, operand1, operand2):
+    def solve(self, operand1: float, operand2: float) -> float:
         """
         Method to solve the mathematical binary expression.
         """
@@ -68,10 +69,16 @@ class BinaryOperator(Operator):
 
 
 class Add(BinaryOperator):
-    def get_precedence(self):
+    def get_precedence(self) -> int:
+        """
+        :return: Operator's precedence.
+        :rtype: int
+        """
+
         return 1
 
-    def solve(self, operand1, operand2):  # self-explanatory
+    def solve(self, operand1: float, operand2: float) -> float:
+        # self-explanatory
         return operand1 + operand2
 
 
@@ -84,7 +91,8 @@ class Sub(BinaryOperator):
 
         return 1
 
-    def solve(self, operand1, operand2):  # self-explanatory
+    def solve(self, operand1: float, operand2: float) -> float:
+        # self-explanatory
         return operand1 - operand2
 
 
@@ -97,7 +105,8 @@ class Mul(BinaryOperator):
 
         return 2
 
-    def solve(self, operand1, operand2):  # self-explanatory
+    def solve(self, operand1: float, operand2: float) -> float:
+        # self-explanatory
         return operand1 * operand2
 
 
@@ -110,7 +119,7 @@ class Div(BinaryOperator):
 
         return 2
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1: float, operand2: float) -> float:
         """
         Solves division between operand1 and operand2.
 
@@ -119,6 +128,8 @@ class Div(BinaryOperator):
         :param operand2: Divisor.
         :type operand2: float
         :raises DivisionByZeroError: If operand2 is zero.
+        :return: Result of dividend divided by divisor (quotient).
+        :rtype: float
         """
 
         try:
@@ -136,7 +147,22 @@ class Pow(BinaryOperator):
 
         return 4
 
-    def solve(self, base, exponent):
+    def solve(self, base: float, exponent: float) -> float:
+        """
+        Solves base to the power of exponent.
+
+        :param base: Power operation's base.
+        :type base: float
+        :param exponent: Power operation's exponent.
+        :type exponent: float
+        :raises ZeroBaseNegExError: If base is zero and
+            exponent is negative.
+        :raises NegativeRootError: If base is negative and exponent
+            is fraction.
+        :return: Result of base to the power of exponent.
+        :rtype: float
+        """
+
         if base == 0 and exponent < 0:
             raise ZeroBaseNegExError(exponent)
         elif base < 0 and not exponent.is_integer():
@@ -153,7 +179,19 @@ class Mod(BinaryOperator):
 
         return 5
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1: float, operand2: float) -> float:
+        """
+        Solves modulo between operand1 and operand2.
+
+        :param operand1: Operand1.
+        :type operand1: float
+        :param operand2: Operand2.
+        :type operand2: float
+        :raises ModuloByZeroError: If operand2 is zero.
+        :return: Result of Operand1 modulo Operand2.
+        :rtype: float
+        """
+
         try:
             return operand1 % operand2
         except ZeroDivisionError:
@@ -169,7 +207,8 @@ class Max(BinaryOperator):
 
         return 6
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1: float, operand2: float) -> float:
+        # self-explanatory
         return max(operand1, operand2)
 
 
@@ -182,7 +221,8 @@ class Min(BinaryOperator):
 
         return 6
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1: float, operand2: float) -> float:
+        # self-explanatory
         return min(operand1, operand2)
 
 
@@ -195,7 +235,7 @@ class Avg(BinaryOperator):
 
         return 6
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1, operand2):  # self-explanatory
         return (operand1 + operand2) / 2
 
 
@@ -208,7 +248,7 @@ class UMin(UnaryOperator):
 
         return 3
 
-    def is_left(self):
+    def is_left(self) -> bool:
         """
         :return: if unary operator is a left operator
         :rtype: bool
@@ -216,7 +256,7 @@ class UMin(UnaryOperator):
 
         return True
 
-    def solve(self, operand):
+    def solve(self, operand: float) -> float:
         """
         Returns operand after using unary minus on it.
 
@@ -238,7 +278,7 @@ class Neg(UnaryOperator):
 
         return 7
 
-    def is_left(self):
+    def is_left(self) -> bool:
         """
         :return: If unary operator is a left operator.
         :rtype: bool
@@ -246,7 +286,7 @@ class Neg(UnaryOperator):
 
         return True
 
-    def solve(self, operand):
+    def solve(self, operand: float) -> float:
         """
         Returns negative value of operand.
 
@@ -268,7 +308,7 @@ class Fac(UnaryOperator):
 
         return 7
 
-    def is_left(self):
+    def is_left(self) -> bool:
         """
         :return: If unary operator is a left operator.
         :rtype: bool
@@ -276,7 +316,21 @@ class Fac(UnaryOperator):
 
         return False
 
-    def solve(self, operand):
+    def solve(self, operand: float) -> float:
+        """
+        Solves factorial for operand
+
+        :param operand: Operand.
+        :type operand: float
+        :raises NegativeFactorialError: If factorial's operand is negative.
+        :raises LargeFactorialError: If factorial's operand is larger
+            than allowed.
+        :raises NonIntFactorialError: If factorial's operand is not
+            an integer.
+        :return: Result of factorial operation on operand.
+        :rtype: float
+        """
+
         if operand < 0:
             raise NegativeFactorialError(operand)
         elif operand > general_utils.FACTORIAL_MAX_OPERAND:
@@ -298,7 +352,7 @@ class Sum(UnaryOperator):
 
         return 7
 
-    def is_left(self):
+    def is_left(self) -> bool:
         """
         :return: If unary operator is a left operator.
         :rtype: bool
@@ -306,7 +360,7 @@ class Sum(UnaryOperator):
 
         return False
 
-    def solve(self, operand):
+    def solve(self, operand: float) -> float:
         """
         Calculate and return the sum of all digit-numbers in number.
 

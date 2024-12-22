@@ -5,7 +5,7 @@ across the calculator.
 
 # Constants
 
-FACTORIAL_MAX_OPERAND = 200
+FACTORIAL_MAX_OPERAND = 170
 
 OPEN_BRACKETS = '('
 

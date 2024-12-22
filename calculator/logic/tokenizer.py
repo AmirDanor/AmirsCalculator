@@ -1,3 +1,7 @@
+"""
+Module for tokenizing string into list.
+Contains an abstract base class and an arithmetic implementation.
+"""
 from abc import ABC, abstractmethod
 
 from calculator.utils import general_utils
@@ -17,7 +21,7 @@ class Tokenizer(ABC):
 
 class ArithmeticTokenizer(Tokenizer):
     """
-    Class for arithmetic equations tokenization.
+    Class for string arithmetic equation tokenization.
     """
 
     def tokenize(self, equation: str) -> list:
