@@ -18,6 +18,7 @@ class Operator(ABC):
         """
         Method returns operator's precedence.
         """
+
         pass
 
 
@@ -31,6 +32,7 @@ class UnaryOperator(Operator):
         """
         Method to solve the mathematical unary expression.
         """
+
         pass
 
     @abstractmethod
@@ -40,6 +42,7 @@ class UnaryOperator(Operator):
             operand (True) / to the right (False)
         :rtype: bool
         """
+
         pass
 
 
@@ -53,6 +56,7 @@ class BinaryOperator(Operator):
         """
         Method to solve the mathematical binary expression.
         """
+
         pass
 
 
@@ -60,7 +64,7 @@ class Add(BinaryOperator):
     def get_precedence(self):
         return 1
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1, operand2):  # self-explanatory
         return operand1 + operand2
 
 
@@ -70,9 +74,10 @@ class Sub(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 1
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1, operand2):  # self-explanatory
         return operand1 - operand2
 
 
@@ -82,9 +87,10 @@ class Mul(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 2
 
-    def solve(self, operand1, operand2):
+    def solve(self, operand1, operand2):  # self-explanatory
         return operand1 * operand2
 
 
@@ -94,17 +100,20 @@ class Div(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 2
 
     def solve(self, operand1, operand2):
         """
-        solves division between
-        :param operand1:
-        :type operand1:
-        :param operand2:
-        :type operand2:
-        :raises DivisionByZeroError: if
+        Solves division between operand1 and operand2.
+
+        :param operand1: Dividend
+        :type operand1: float
+        :param operand2: Divisor
+        :type operand2: float
+        :raises DivisionByZeroError: If operand2 is zero.
         """
+
         try:
             return operand1 / operand2
         except ZeroDivisionError:
@@ -117,6 +126,7 @@ class Pow(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 4
 
     def solve(self, base, exponent):
@@ -133,6 +143,7 @@ class Mod(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 5
 
     def solve(self, operand1, operand2):
@@ -148,6 +159,7 @@ class Max(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 6
 
     def solve(self, operand1, operand2):
@@ -160,6 +172,7 @@ class Min(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 6
 
     def solve(self, operand1, operand2):
@@ -172,6 +185,7 @@ class Avg(BinaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 6
 
     def solve(self, operand1, operand2):
@@ -184,6 +198,7 @@ class UMin(UnaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 3
 
     def is_left(self):
@@ -191,15 +206,19 @@ class UMin(UnaryOperator):
         :return: if unary operator is a left operator
         :rtype: bool
         """
+
         return True
 
     def solve(self, operand):
         """
-        :param operand: operand
+        Returns operand after using unary minus on it.
+
+        :param operand: Operand
         :type operand: float
-        :return: operand after unary minus operation
+        :return: Operand after unary minus operation
         :rtype: float
         """
+
         return -operand
 
 
@@ -209,6 +228,7 @@ class Neg(UnaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 7
 
     def is_left(self):
@@ -216,9 +236,18 @@ class Neg(UnaryOperator):
         :return: if unary operator is a left operator
         :rtype: bool
         """
+
         return True
 
     def solve(self, operand):
+        """
+        Returns negative value of operand.
+
+        :param operand: operand
+        :type operand: float
+        :return: negative value of operand
+        :rtype: float
+        """
 
         return -operand
 
@@ -229,6 +258,7 @@ class Fac(UnaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 7
 
     def is_left(self):
@@ -236,6 +266,7 @@ class Fac(UnaryOperator):
         :return: if unary operator is a left operator
         :rtype: bool
         """
+
         return False
 
     def solve(self, operand):
@@ -257,6 +288,7 @@ class Sum(UnaryOperator):
         :return: operator's precedence
         :rtype: int
         """
+
         return 7
 
     def is_left(self):
@@ -264,10 +296,13 @@ class Sum(UnaryOperator):
         :return: if unary operator is a left operator
         :rtype: bool
         """
+
         return False
 
     def solve(self, operand):
         """
+        Calculate and return the sum of all digit-numbers in number.
+
         :param operand: operand
         :type operand: float
         :return: operand after sum operation
@@ -275,6 +310,7 @@ class Sum(UnaryOperator):
         :raises NegativeSumError: if operand is negative
         :raises LargeSumError: if operand is too large
         """
+
         if operand < 0:
             raise NegativeSumError(operand)
         if 'e' in str(operand):

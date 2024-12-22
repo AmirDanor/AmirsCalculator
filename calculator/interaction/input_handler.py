@@ -1,9 +1,14 @@
+"""
+Module for user input handling.
+Contains an abstract base class and a console-specific implementation.
+"""
+
 from abc import ABC, abstractmethod
 
 
 class InputHandler(ABC):
     """
-    Abstract class for getting input from user
+    Abstract base class for obtaining input from user
     """
 
     @abstractmethod
@@ -11,17 +16,20 @@ class InputHandler(ABC):
         """
         Method to get input from the user.
         """
+
         pass
 
 
 class ConsoleInputHandler(InputHandler):
     """
-    Class responsible for getting input from user through console.
+    Concrete class responsible for obtaining input from user through console.
     """
 
     def get_input(self):
         """
         Get input from user through console
         :return: user input
+        :rtype: str
         """
+
         return input()

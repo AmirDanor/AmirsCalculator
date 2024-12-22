@@ -9,8 +9,11 @@ class OperatorRegistry:
     """
 
     def __init__(self):
-        """Initialize the operator dictionaries (separated by unary /
-        binary) with default binary and unary operators."""
+        """
+        Initialize the operator dictionaries (separated by unary /
+        binary) with default binary and unary operators.
+        """
+
         self._left_unary_operators_funcs = {
             ';': UMin(),
             '~': Neg()
@@ -38,6 +41,7 @@ class OperatorRegistry:
         :return: all unary operator symbols
         :rtype: dict
         """
+
         merged_unaries_dict = {**self._left_unary_operators_funcs,
                                **self._right_unary_operators_funcs}
         return merged_unaries_dict
@@ -49,6 +53,7 @@ class OperatorRegistry:
         :return: all left unary operator symbols
         :rtype: dict
         """
+
         return self._left_unary_operators_funcs
 
     def get_right_unary_operators(self):
@@ -58,6 +63,7 @@ class OperatorRegistry:
         :return: all right unary operator symbols
         :rtype: dict
         """
+
         return self._right_unary_operators_funcs
 
     def get_binary_operators(self):
@@ -67,6 +73,7 @@ class OperatorRegistry:
         :return: all binary operator symbols
         :rtype: dict
         """
+
         return self._binary_operators_funcs
 
     def get_precedence(self, operator):
@@ -76,6 +83,7 @@ class OperatorRegistry:
         :return: precedence of operator
         :rtype: int | None #TODO review rtype..
         """
+
         if operator in self._left_unary_operators_funcs:
             return self._left_unary_operators_funcs.get(
                 operator).get_precedence()
@@ -96,6 +104,7 @@ class OperatorRegistry:
         :return: True if operator is a left unary operator, otherwise False.
         :rtype: bool
         """
+
         return operator in self._left_unary_operators_funcs
 
     def is_operand(string: str) -> bool:
@@ -106,4 +115,5 @@ class OperatorRegistry:
         :return: True if string is operand, else return False
         :rtype: bool
         """
+
         return string.isdigit() or '.' in string or '_' in string

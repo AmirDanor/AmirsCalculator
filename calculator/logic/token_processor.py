@@ -14,7 +14,7 @@ class TokenProcessor(ABC):
     @abstractmethod
     def __init__(self, tokens: list):
         """
-        Abstract init method.
+        Abstract init method for TokenProcessor
         :param tokens: tokens which needs to be processed
         :type tokens: list
         """
@@ -36,6 +36,12 @@ class ArithmeticTokenProcessor(TokenProcessor):
     """
 
     def __init__(self, tokens: list = None):
+        """
+        Init method for ArithmeticTokenProcessor
+        :param tokens: list of tokens.
+            if not provided, defaults to an empty list.
+        :type tokens: list
+        """
         if tokens is None:
             tokens = []  # Default to an empty list if no tokens are provided
         self._tokens = tokens

@@ -1,3 +1,8 @@
+"""
+Module for displaying messages to the user.
+Contains an abstract base class and a console-specific implementation.
+"""
+
 from abc import ABC, abstractmethod
 import colorama
 from colorama import Fore, Back
@@ -13,6 +18,7 @@ class MessageHandler(ABC):
         """
         Displays a message before user enters input.
         """
+
         pass
 
     @abstractmethod
@@ -22,6 +28,7 @@ class MessageHandler(ABC):
         :param message: Custom message to display
         :type message: str
         """
+
         pass
 
     @abstractmethod
@@ -31,6 +38,7 @@ class MessageHandler(ABC):
         :param result_message: Result message to display
         :type result_message: str
         """
+
         pass
 
     @abstractmethod
@@ -40,6 +48,7 @@ class MessageHandler(ABC):
         :param error_message: Error message to display
         :type error_message: str
         """
+
         pass
 
 
@@ -53,9 +62,11 @@ class ConsoleMessageHandler(MessageHandler):
         """
         Initialize the first message when creating a new instance of
         MessageHandler class.
+
         :param quit: User's input to stop input loop.
         :type quit: str
         """
+
         colorama.init()  # Used for colored console text
         self._quit = quit
 
@@ -90,6 +101,7 @@ class ConsoleMessageHandler(MessageHandler):
         (changes the text after the creation of the class
         which means - for the first time, the output is different).
         """
+
         print(self._prompt)
         if self._prompt != self._MESSAGE_TO_DISPLAY[1]:
             self._prompt = self._MESSAGE_TO_DISPLAY[1]
@@ -97,23 +109,29 @@ class ConsoleMessageHandler(MessageHandler):
     def display_custom_message(self, message: str):
         """
         Displays a custom message in console.
+
         :param message: Custom message to display
         :type message: str
         """
+
         print(message)
 
     def display_result_message(self, result_message: str):
         """
         Displays an equation result message in console.
-        :param result_message: Result message to display
+
+        :param result_message: Result message to display.
         :type result_message: str
         """
+
         print(Fore.LIGHTGREEN_EX + result_message + Fore.RESET)
 
     def display_error_message(self, error_message: str):
         """
         Displays an error message in console.
-        :param error_message: Error message to display
+
+        :param error_message: Error message to display.
         :type error_message: str
         """
+
         print(Fore.RED + error_message + Fore.RESET)

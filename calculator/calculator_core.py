@@ -1,4 +1,6 @@
-# File contains prints for dev tests
+"""
+Module contains CalculatorCore class which ensures correct calcultor workflow.
+"""
 
 from calculator.interaction import input_handler, message_handler
 
@@ -26,19 +28,23 @@ QUIT_MSG = 'Program Ended.'
 class CalculatorCore:
     """
     Class responsible for calling other functions from other classes.
+    Contains core logic for handling the calculator workflow.
     """
 
     def __init__(self, message_handler: message_handler.MessageHandler,
                  input_handler: input_handler.InputHandler,
                  tokenizer: Tokenizer, token_processor: TokenProcessor):
         """
+        Initializes the calculator core with required components.
+
         :param message_handler: An instance of the MessageHandler class
-            to display prompts and messages
+            to display prompts and messages.
         :type message_handler: message_handler
         :param input_handler: An instance of the InputHandler class
-            to get user input
+            to get user input.
         :type input_handler: input_handler
         """
+
         self.message_handler = message_handler
         self.input_handler = input_handler
         self.tokenizer = tokenizer
@@ -47,6 +53,7 @@ class CalculatorCore:
     def run(self):
         """
         Runs the program as intended.
+
         :raises InvalidInputError: If user's input contains forbidden chars.
         """
 
@@ -70,90 +77,68 @@ class CalculatorCore:
                     self.message_handler.display_result_message(
                         str(solution))
             except InvalidInputError as iie:
-                self.message_handler.display_error_message(
-                    str(iie))
+                self.handle_display_error(iie)
             except EmptyEquationError as eee:
-                self.message_handler.display_error_message(
-                    eee.__str__())
+                self.handle_display_error(eee)
             except NonIntFactorialError as nife:
-                self.message_handler.display_error_message(
-                    nife.__str__())
+                self.handle_display_error(nife)
             except UnmatchedOpeningParenthesesError as uope:
-                self.message_handler.display_error_message(
-                    uope.__str__())
+                self.handle_display_error(uope)
             except UnmatchedClosingParenthesesError as ucpe:
-                self.message_handler.display_error_message(
-                    ucpe.__str__())
+                self.handle_display_error(ucpe)
             except WrongParenthesesUsageError as wpue:
-                self.message_handler.display_error_message(
-                    wpue.__str__())
+                self.handle_display_error(wpue)
             except EmptyParenthesesError as epe:
-                self.message_handler.display_error_message(
-                    epe.__str__())  # TODO: change text displayed
+                self.handle_display_error(epe)  # TODO: change text displayed
             except SingleDotError as sde:
-                self.message_handler.display_error_message(
-                    sde.__str__())
+                self.handle_display_error(sde)
             except MultipleDotsError as mde:
-                self.message_handler.display_error_message(
-                    mde.__str__())
+                self.handle_display_error(mde)
             except MultipleDotsOperandError as mdoe:
-                self.message_handler.display_error_message(
-                    mdoe.__str__())
+                self.handle_display_error(mdoe)
             except UnaryError as ue:
-                self.message_handler.display_error_message(
-                    ue.__str__())  # TODO: change text displayed
+                self.handle_display_error(ue)  # TODO: change text displayed
             except DivisionByZeroError as dbze:
-                self.message_handler.display_error_message(
-                    dbze.__str__())
+                self.handle_display_error(dbze)
             except ModuloByZeroError as mbze:
-                self.message_handler.display_error_message(
-                    mbze.__str__())
+                self.handle_display_error(mbze)
             except ZeroBaseNegExError as zbnee:
-                self.message_handler.display_error_message(
-                    zbnee.__str__())
+                self.handle_display_error(zbnee)
             except NegativeRootError as nre:
-                self.message_handler.display_error_message(
-                    nre.__str__())
+                self.handle_display_error(nre)
             except NegativeFactorialError as nfe:
-                self.message_handler.display_error_message(
-                    nfe.__str__())
+                self.handle_display_error(nfe)
             except LargeFactorialError as lfe:
-                self.message_handler.display_error_message(
-                    lfe.__str__())
+                self.handle_display_error(lfe)
             except NegativeSumError as nse:
-                self.message_handler.display_error_message(
-                    nse.__str__())
+                self.handle_display_error(nse)
             except LargeSumError as lse:
-                self.message_handler.display_error_message(
-                    lse.__str__())
+                self.handle_display_error(lse)
             except OperatorUsageError as oue:
-                self.message_handler.display_error_message(
-                    oue.__str__())
+                self.handle_display_error(oue)
             except IndexError as ie:
-                self.message_handler.display_error_message(
-                    ie.__str__())  # TODO: change text displayed
-                # triggered by 6-
-                # triggered by (((6)
+                self.handle_display_error(ie)  # TODO: change text displayed
             except OverflowError as oe:
+                # oe.args[-1] = error message
                 if oe.args[-1] == 'math range error':
-                    self.message_handler.display_error_message(
+                    self.handle_display_error(
                         f"Error! result is out of calculator's range")
                 else:
-                    self.message_handler.display_error_message(
+                    self.handle_display_error(
                         f"Error! {oe.args[-1]}")
-                # oe.args[-1] = error message
             except Exception as e:
-                self.message_handler.display_error_message(
-                    e.__str__())
+                self.handle_display_error(e)
             expression = self.get_input_loop()
-        self.message_handler.display_error_message(QUIT_MSG)
+        self.handle_display_error(QUIT_MSG)
 
     def get_input_loop(self):
         """
         Ensures correct input-looping without crashing.
+
         :return: User's input
         :rtype: str
         """
+
         while True:
             self.message_handler.display_input_message()
             try:
@@ -162,11 +147,21 @@ class CalculatorCore:
                 return expression
 
             except KeyboardInterrupt:
-                self.message_handler.display_error_message(
+                self.handle_display_error(
                     f"\nKeyboard Interrupt detected. If you'd like to stop "
                     f"program, please enter '{QUIT_STR}'.")
 
             except EOFError:
-                self.message_handler.display_error_message(
+                self.handle_display_error(
                     f"EOF detected. Exiting Program. If you'd like to stop "
                     f"program, please enter '{QUIT_STR}'.")
+
+    def handle_display_error(self, error):
+        """
+        Helper method to display error messages.
+
+        :param error: Error which should be displayed to user.
+        :type error: str or Exception
+        """
+
+        self.message_handler.display_error_message(str(error))

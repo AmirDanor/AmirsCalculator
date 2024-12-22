@@ -1,3 +1,8 @@
+"""
+Module consists of custom exceptions.
+Used to validate proper calculator functionality.
+"""
+
 from calculator.utils import operator_utils, general_utils
 
 

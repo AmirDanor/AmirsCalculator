@@ -3,6 +3,9 @@ from calculator.utils import general_utils
 
 
 class StringProcessor:
+    """
+    Class for user input processing
+    """
     def __init__(self, equation: str):
         """
         Process (reformat) users' input.

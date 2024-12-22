@@ -1,3 +1,6 @@
+"""
+Module purpose is to store class which is responsible for equation-solving.
+"""
 from calculator.logic.exceptions import OperatorUsageError, \
     WrongParenthesesUsageError
 from calculator.utils import operator_utils, operand_utils, general_utils, \
@@ -8,11 +11,16 @@ OPERATOR_REGISTRY = OperatorRegistry()
 
 
 class EquationSolver:
+    """
+    Class responsible for solving math equation.
+    It uses a postfix-notation approach to solve the equation.
+    Converts an infix equation to postfix, then evaluates the result.
+    """
     def __init__(self, equation: list):
         """
-        Solves the equation.
+        Initializes a tokenized equation.
 
-        :param equation: User's input.
+        :param equation: A list of tokens representing a mathematical equation.
         :type equation: list
         """
         self._tokens = equation
@@ -46,13 +54,13 @@ class EquationSolver:
             elif token == general_utils.OPEN_BRACKETS:
                 stack.append(token)
             elif token == general_utils.CLOSE_BRACKETS:
-                self._close_bracket_to_postfix(token, index, stack, postfix)
+                self._close_bracket_to_postfix(index, stack, postfix)
             else:  # Operator
                 while (stack and stack[-1]
                        != general_utils.OPEN_BRACKETS
                        and OPERATOR_REGISTRY.get_precedence(
                             token) <= OPERATOR_REGISTRY.get_precedence(
-                            stack[-1])):  # add '-('
+                            stack[-1])):
                     postfix.append(stack.pop())
                 stack.append(token)
             index += 1
@@ -65,14 +73,15 @@ class EquationSolver:
     def _unary_operator_to_postfix(self, token: str, index: int, stack: list,
                                    postfix: list):
         """
-        handles unary operators when converting infix equation to postfix
+        Handles unary operators when converting infix equation to postfix.
+
         :param token: symbol of operator
         :type token: str
         :param index: index of current token in self._tokens
         :type index: int
-        :param stack: stack for equation convertion
+        :param stack: The stack used for infix-to-postfix equation convertion.
         :type stack: list
-        :param postfix: postfix representation of equation
+        :param postfix: Postfix representation of equation.
         :type postfix: list
         """
 
@@ -86,17 +95,16 @@ class EquationSolver:
             else:
                 stack.append(token)
 
-    def _close_bracket_to_postfix(self, token: str, index: int, stack: list,
+    def _close_bracket_to_postfix(self, index: int, stack: list,
                                   postfix: list):
         """
-        handles closing brackets when converting infix equation to postfix
-        :param token: symbol of closing bracket
-        :type token: str
-        :param index: index of current token in self._tokens
+        Handles closing brackets when converting infix equation to postfix.
+
+        :param index: The index of current token in the equation.
         :type index: int
-        :param stack: stack for equation convertion
+        :param stack: The stack used for infix-to-postfix equation convertion.
         :type stack: list
-        :param postfix: postfix representation of equation
+        :param postfix: Postfix representation of equation.
         :type postfix: list
         """
 
@@ -109,14 +117,15 @@ class EquationSolver:
     def _operator_to_postfix(self, token: str, index: int, stack: list,
                              postfix: list):
         """
-        handles operators when converting infix equation to postfix
-        :param token: symbol of operator
+        Handles operators when converting infix equation to postfix.
+
+        :param token: The symbol of operator to handle.
         :type token: str
-        :param index: index of current token in self._tokens
+        :param index: The index of current token in the equation.
         :type index: int
-        :param stack: stack for equation convertion
+        :param stack: The stack used for infix-to-postfix equation convertion.
         :type stack: list
-        :param postfix: postfix representation of equation
+        :param postfix: Postfix representation of equation.
         :type postfix: list
         """
 
@@ -124,7 +133,7 @@ class EquationSolver:
                != general_utils.OPEN_BRACKETS
                and OPERATOR_REGISTRY.get_precedence(
                     token) <= OPERATOR_REGISTRY.get_precedence(
-                    stack[-1])):  # add '-('
+                    stack[-1])):
             postfix.append(stack.pop())
         stack.append(token)
 
@@ -132,10 +141,12 @@ class EquationSolver:
         """
         Solves the equation represented by postfix stack and updates the
             _result.
-        :raises OperatorUsageError: if misused operators exist
+
+        :raises OperatorUsageError: If misused operators exist.
         :raises WrongParenthesesUsageError: if equations contains wrong
             parentheses usage.
         """
+
         stack = []
         for token in self._postfix_stack:
             if (operand_utils.is_operand(token)
@@ -155,7 +166,8 @@ class EquationSolver:
                         raise OperatorUsageError(token, "No operands")
                 # Temp implementation.
                 if token in operator_utils.ALL_UNARY_OPERATORS:
-                    unary_result = (OPERATOR_REGISTRY.get_unary_operators().get(token).solve(operand1))
+                    unary_result = (OPERATOR_REGISTRY.get_unary_operators()
+                                    .get(token).solve(operand1))
                     stack.append(unary_result)
                 elif token in operator_utils.BINARY_OPERATORS:
                     try:
@@ -163,8 +175,8 @@ class EquationSolver:
                     except IndexError:  # todo: maybe check in a separate func
                         raise OperatorUsageError(token,
                                                  "Missing operand")
-                    binary_result = OPERATOR_REGISTRY.get_binary_operators().get(token).solve(
-                        operand2, operand1)
+                    binary_result = (OPERATOR_REGISTRY.get_binary_operators()
+                                     .get(token).solve(operand2, operand1))
                     stack.append(binary_result)
         if len(stack) >= 2:
             raise WrongParenthesesUsageError()
