@@ -13,7 +13,7 @@ from calculator.logic.exceptions import EmptyParenthesesError, UnaryError, \
     MultipleDotsError, \
     MultipleDotsOperandError, SingleDotError, DivisionByZeroError, \
     OperatorUsageError, ModuloByZeroError, EmptyEquationError, \
-    WrongParenthesesUsageError
+    WrongParenthesesUsageError, ExpectedOperandError
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
@@ -69,11 +69,10 @@ class CalculatorCore:
                     expression)
                 processed_tokenized_equation = (
                     self.token_processor.process(tokenized_equation))
-                # print(self.token_processor.validate())
                 equation_solver = EquationSolver(
                     processed_tokenized_equation)
                 solution = equation_solver.solve()
-                if solution is not None:  # if solution is not None
+                if solution is not None:
                     self.message_handler.display_result_message(
                         str(solution))
             except InvalidInputError as iie:
@@ -116,6 +115,8 @@ class CalculatorCore:
                 self.handle_display_error(lse)
             except OperatorUsageError as oue:
                 self.handle_display_error(oue)
+            except ExpectedOperandError as eoe:
+                self.handle_display_error(eoe)
             except IndexError as ie:
                 self.handle_display_error(ie)  # TODO: change text displayed
             except OverflowError as oe:

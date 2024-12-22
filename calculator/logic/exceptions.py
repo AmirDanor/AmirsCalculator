@@ -67,6 +67,7 @@ class DivisionByZeroError(Exception):
     """
     Exception for trying to perform division operation with zero as divisor.
     """
+
     def __init__(self, operand: float):
         """
         :param operand: Operand which was attempted to be divided by 0.
@@ -250,6 +251,7 @@ class NegativeRootError(Exception):
     """
     Exception for trying to calculate a negative root.
     """
+
     def __init__(self, base: float, exponent: float):
         """
         :param base: Base which raised the exception.
@@ -486,3 +488,26 @@ class MultipleDotsOperandError(Exception):
 
         return (f'Error! Could not refer to {self._token} as operand since it '
                 f'contains {self._dot_amount} dots')
+
+
+class ExpectedOperandError(Exception):
+    """
+    Exception for non-operand usage in equation where operand is expected.
+    """
+
+    def __init__(self, token: str):
+        """
+        :param token: Invalid token which appears instead of expected
+            operand.
+        :type token: str
+        """
+
+        self._token = token
+
+    def __str__(self):
+        """
+        :return: Message about the cause of the exception.
+        :rtype: str
+        """
+
+        return f'Error! Expected an operator instead of {self._token}'

@@ -2,7 +2,7 @@
 Module purpose is to store class which is responsible for equation-solving.
 """
 from calculator.logic.exceptions import OperatorUsageError, \
-    WrongParenthesesUsageError
+    WrongParenthesesUsageError, ExpectedOperandError
 from calculator.utils import operator_utils, operand_utils, general_utils, \
     operators
 from calculator.utils.operator_registry import OperatorRegistry
@@ -154,7 +154,10 @@ class EquationSolver:
                 # Operand
                 fixed_token = token.replace(operator_utils.SIGN_MINUS_SYMBOL,
                                             operator_utils.SUB_SYMBOL)
-                token_as_number = float(fixed_token)
+                try:
+                    token_as_number = float(fixed_token)
+                except ValueError:
+                    raise ExpectedOperandError(fixed_token)
                 stack.append(token_as_number)
             else:  # Operator
                 try:
