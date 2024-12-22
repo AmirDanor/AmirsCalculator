@@ -166,12 +166,11 @@ class EquationSolver:
             else:  # Operator
                 try:
                     operand1 = stack.pop()
-                except IndexError:  # todo: maybe check in a separate func
+                except IndexError:
                     if token in operator_utils.ALL_UNARY_OPERATORS:
                         raise OperatorUsageError(token, "No operand")
                     else:
                         raise OperatorUsageError(token, "No operands")
-                # Temp implementation.
                 if token in operator_utils.ALL_UNARY_OPERATORS:
                     unary_result = (OPERATOR_REGISTRY.get_unary_operators()
                                     .get(token).solve(operand1))
@@ -179,7 +178,7 @@ class EquationSolver:
                 elif token in operator_utils.BINARY_OPERATORS:
                     try:
                         operand2 = stack.pop()
-                    except IndexError:  # todo: maybe check in a separate func
+                    except IndexError:
                         raise OperatorUsageError(token,
                                                  "Missing operand")
                     binary_result = (OPERATOR_REGISTRY.get_binary_operators()

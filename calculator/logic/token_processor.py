@@ -68,7 +68,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
         Validates tokens which include dots, raises exceptions if needed.
         :raises SingleDotError: when 'operand' is a single dot.
         :raises MultipleDotsError: when 'operand' is more than a single dot.
-        :raises MultipleDotsOperandError: when 'operand' contains multiple dots.
+        :raises MultipleDotsOperandError: when 'operand' contains
+            multiple dots.
         """
 
         for token in self._tokens:

@@ -13,3 +13,15 @@ The goal is to implement a calculator from scratch that supports not only basic 
  - **SOLID Principles**
  - **Object-Oriented Design**
  - **Interpreter-Like Behavior**
+
+## Notes
+-  **0^0 = 1**
+-  **Numbers starting with a decimal point are implicitly preceded by a zero (e.g., .12 = 0.12)**
+-  **Numbers ending with a decimal point are implicitly followed by a zero. (e.g., 31. = 31.0)**
+-  **Keyboard Interrupts are meant to stop the program's execution**
+
+## Run From CMD:
+ -  **Navigate to ...\Saved_Location\AmirsCalculator\ in cmd.**
+ -  **Type: python -m calculator.main**
+ -  **Hit Enter**
+ - ***Done!***

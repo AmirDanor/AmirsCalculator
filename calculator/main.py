@@ -16,7 +16,7 @@ Modules initialized:
 The main function is executed when the module is run as the main program.
 """
 
-from calculator.calculator_core import QUIT_STR, CalculatorCore
+from calculator.calculator_core import CalculatorCore
 from calculator.interaction.input_handler import ConsoleInputHandler
 from calculator.interaction.message_handler import ConsoleMessageHandler
 from calculator.logic.string_preprocessor import ArithmeticStringPreprocessor
@@ -26,7 +26,7 @@ from calculator.logic.tokenizer import ArithmeticTokenizer
 
 if __name__ == "__main__":
     calculator_core = CalculatorCore(
-        message_handler=ConsoleMessageHandler(QUIT_STR),
+        message_handler=ConsoleMessageHandler(),
         input_handler=ConsoleInputHandler(),
         string_preprocessor=ArithmeticStringPreprocessor(),
         string_processor=ArithmeticStringProcessor(),

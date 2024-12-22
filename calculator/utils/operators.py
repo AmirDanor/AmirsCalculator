@@ -183,9 +183,9 @@ class Mod(BinaryOperator):
         """
         Solves modulo between operand1 and operand2.
 
-        :param operand1: Operand1.
+        :param operand1: Operand1 (to the left of modulo).
         :type operand1: float
-        :param operand2: Operand2.
+        :param operand2: Operand2 (to the right of modulo).
         :type operand2: float
         :raises ModuloByZeroError: If operand2 is zero.
         :return: Result of Operand1 modulo Operand2.
@@ -258,7 +258,7 @@ class UMin(UnaryOperator):
 
     def solve(self, operand: float) -> float:
         """
-        Returns operand after using unary minus on it.
+        Returns operand after unary minus operation.
 
         :param operand: Operand.
         :type operand: float

@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 class InputHandler(ABC):
     """
-    Abstract base class for obtaining input from user
+    Abstract base class for obtaining input from user.
     """
 
     @abstractmethod
@@ -25,9 +25,10 @@ class ConsoleInputHandler(InputHandler):
     Concrete class responsible for obtaining input from user through console.
     """
 
-    def get_input(self):
+    def get_input(self) -> str:
         """
-        Get input from user through console
+        Get input from user through console.
+
         :return: user input
         :rtype: str
         """

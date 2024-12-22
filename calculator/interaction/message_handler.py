@@ -4,8 +4,11 @@ Contains an abstract base class and a console-specific implementation.
 """
 
 from abc import ABC, abstractmethod
+
 import colorama
 from colorama import Fore, Back
+
+from calculator.utils import general_utils
 
 
 class MessageHandler(ABC):
@@ -66,17 +69,14 @@ class ConsoleMessageHandler(MessageHandler):
     entering an input.
     """
 
-    def __init__(self, quit: str):
+    def __init__(self):
         """
         Initialize the first message when creating a new instance of
         MessageHandler class.
-
-        :param quit: User's input to stop input loop.
-        :type quit: str
         """
 
         colorama.init()  # Used for colored console text
-        self._quit = quit
+        self._quit = general_utils.QUIT_STR
 
         self._message_to_display = {
             0: f'''         {Back.LIGHTWHITE_EX + Fore.RED}  Welcome to Amir's Advanced Calculator!  {Fore.LIGHTGREEN_EX + Back.RESET}
@@ -94,7 +94,7 @@ class ConsoleMessageHandler(MessageHandler):
                                 between two operands.{Fore.LIGHTGREEN_EX}
                         Make sure to follow the rules when inserting mathematical expressions:{Fore.LIGHTCYAN_EX}
                             •  The only valid form of brackets is () (Parentheses / Round Brackets).
-                            •  Use negation correctly by placing ~ (Tilda) directly before a number.{Fore.RED}
+                            •  Use negation correctly by placing ~ (Tilde) directly before a number.{Fore.RED}
                         To stop the program from running, simply type "{self._quit}".{Fore.LIGHTMAGENTA_EX}
                         Start calculating by typing a mathematical expression below,
                         then press enter to send input to program.{Fore.LIGHTYELLOW_EX}

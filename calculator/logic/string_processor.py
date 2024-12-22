@@ -61,6 +61,7 @@ class ArithmeticStringProcessor(StringProcessor):
         :return: Processed user's input (equation with fixed format).
         :rtype: str
         """
+
         self._equation = string
         self._remove_white_spaces()
         self._not_empty_validator()

@@ -46,9 +46,9 @@ class ArithmeticStringPreprocessor(StringPreprocessor):
         """
         Init method for ArithmeticStringPreprocessor.
 
-        :param equation: The equation provided by the user.
+        :param string: The equation provided by the user.
             If not provided, defaults to None.
-        :type equation: str
+        :type string: str
         """
 
         self._equation = string

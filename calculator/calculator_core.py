@@ -18,8 +18,7 @@ from calculator.logic.string_processor import StringProcessor
 from calculator.logic.token_processor import TokenProcessor
 from calculator.logic.string_preprocessor import StringPreprocessor
 from calculator.logic.tokenizer import Tokenizer
-
-QUIT_STR = 'quit'  # string which user has to enter to end program.
+from calculator.utils import general_utils
 
 
 class CalculatorCore:
@@ -70,7 +69,7 @@ class CalculatorCore:
         self.message_handler.display_input_message()
         try:
             expression = self.get_input_loop()
-            while expression != QUIT_STR:
+            while expression != general_utils.QUIT_STR:
                 try:
                     self.string_preprocessor.preprocess(expression)
                     expression = self.string_processor.process(expression)
@@ -173,5 +172,5 @@ class CalculatorCore:
             except EOFError:
                 self.handle_display_error(
                     f"EOF detected. If you'd like to stop "
-                    f"program, please enter '{QUIT_STR}'.")
+                    f"program, please enter '{general_utils.QUIT_STR}'.")
                 self.message_handler.display_input_message()
