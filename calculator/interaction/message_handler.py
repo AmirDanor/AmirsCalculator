@@ -78,7 +78,7 @@ class ConsoleMessageHandler(MessageHandler):
         colorama.init()  # Used for colored console text
         self._quit = quit
 
-        self._MESSAGE_TO_DISPLAY = {
+        self._message_to_display = {
             0: f'''         {Back.LIGHTWHITE_EX + Fore.RED}  Welcome to Amir's Advanced Calculator!  {Fore.LIGHTGREEN_EX + Back.RESET}
                         This program simulates an improved calculator, which
                         means it supports a wide range of operations, including:{Fore.LIGHTCYAN_EX}
@@ -101,7 +101,7 @@ class ConsoleMessageHandler(MessageHandler):
                         Enjoy! :){Fore.RESET}''',
             1: 'Please enter an input:'
         }
-        self._prompt = self._MESSAGE_TO_DISPLAY[0]
+        self._prompt = self._message_to_display[0]
 
     def display_input_message(self):
         """
@@ -111,8 +111,8 @@ class ConsoleMessageHandler(MessageHandler):
         """
 
         print(self._prompt)
-        if self._prompt != self._MESSAGE_TO_DISPLAY[1]:
-            self._prompt = self._MESSAGE_TO_DISPLAY[1]
+        if self._prompt != self._message_to_display[1]:
+            self._prompt = self._message_to_display[1]
 
     def display_custom_message(self, message: str):
         """

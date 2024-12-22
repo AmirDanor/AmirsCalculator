@@ -5,7 +5,7 @@ across the calculator.
 
 # Constants
 
-FACTORIAL_MAX_OPERAND = 170
+QUIT_STR = 'quit'  # string which user has to enter to end program.
 
 OPEN_BRACKETS = '('
 

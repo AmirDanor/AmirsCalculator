@@ -13,7 +13,7 @@ from calculator.logic.exceptions import NegativeFactorialError, \
     NegativeSumError, LargeSumError, LargeFactorialError, \
     NonIntFactorialError, NegativeRootError, ZeroBaseNegExError, \
     DivisionByZeroError, ModuloByZeroError
-from calculator.utils import general_utils
+from calculator.utils import general_utils, operator_utils
 
 
 class Operator(ABC):
@@ -333,7 +333,7 @@ class Fac(UnaryOperator):
 
         if operand < 0:
             raise NegativeFactorialError(operand)
-        elif operand > general_utils.FACTORIAL_MAX_OPERAND:
+        elif operand > operator_utils.FACTORIAL_MAX_OPERAND:
             raise LargeFactorialError(operand)
         elif not operand.is_integer():
             raise NonIntFactorialError(operand)

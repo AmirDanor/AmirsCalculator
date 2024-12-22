@@ -1,13 +1,15 @@
 """
 Module purpose is to store class which is responsible for equation-solving.
 """
+
 from calculator.logic.exceptions import OperatorUsageError, \
     WrongParenthesesUsageError, ExpectedOperandError
 from calculator.utils import operator_utils, operand_utils, general_utils, \
     operators
 from calculator.utils.operator_registry import OperatorRegistry
-OPERATOR_REGISTRY = OperatorRegistry()
+
 # Merges both dictionaries into a single dictionary
+OPERATOR_REGISTRY = OperatorRegistry()
 
 
 class EquationSolver:
