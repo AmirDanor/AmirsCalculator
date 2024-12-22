@@ -1,3 +1,8 @@
+"""
+Module which maintains a dictionary which maps each operand symbol
+to its class.
+contains methods to ease the usage of the classes.
+"""
 from calculator.utils.operators import Add, Sub, Mul, Div, UMin, Pow, Mod, \
     Max, Min, Avg, Neg, Fac, Sum
 
@@ -36,9 +41,9 @@ class OperatorRegistry:
 
     def get_unary_operators(self):
         """
-        Get all unary operators str symbol representation as set
+        Get all unary operators str symbol representation as set.
 
-        :return: all unary operator symbols
+        :return: all unary operator symbols.
         :rtype: dict
         """
 
@@ -48,9 +53,9 @@ class OperatorRegistry:
 
     def get_left_unary_operators(self):
         """
-        Get all left unary operators str symbol representation as set
+        Get all left unary operators str symbol representation as set.
 
-        :return: all left unary operator symbols
+        :return: all left unary operator symbols.
         :rtype: dict
         """
 
@@ -58,9 +63,9 @@ class OperatorRegistry:
 
     def get_right_unary_operators(self):
         """
-        Get all right unary operators str symbol representation as set
+        Get all right unary operators str symbol representation as set.
 
-        :return: all right unary operator symbols
+        :return: all right unary operator symbols.
         :rtype: dict
         """
 
@@ -68,9 +73,9 @@ class OperatorRegistry:
 
     def get_binary_operators(self):
         """
-        Get all binary operators str symbol representation as set
+        Get all binary operators str symbol representation as set.
 
-        :return: all binary operator symbols
+        :return: all binary operator symbols.
         :rtype: dict
         """
 
@@ -78,10 +83,10 @@ class OperatorRegistry:
 
     def get_precedence(self, operator):
         """
-        :param operator: a valid operator
+        :param operator: a valid operator.
         :type operator: str
-        :return: precedence of operator
-        :rtype: int | None #TODO review rtype..
+        :return: precedence of operator.
+        :rtype: int or None
         """
 
         if operator in self._left_unary_operators_funcs:
@@ -94,26 +99,3 @@ class OperatorRegistry:
             return self._binary_operators_funcs.get(operator).get_precedence()
         return None
 
-    def is_left_unary_operator(self,
-                               operator: str) -> bool:
-        """
-        Check if the given operator is a left unary operator.
-
-        :param operator: a mathematical operator
-        :type operator: str
-        :return: True if operator is a left unary operator, otherwise False.
-        :rtype: bool
-        """
-
-        return operator in self._left_unary_operators_funcs
-
-    def is_operand(string: str) -> bool:
-        """
-        Checks if string is operand
-        :param string: string to check
-        :type string: str
-        :return: True if string is operand, else return False
-        :rtype: bool
-        """
-
-        return string.isdigit() or '.' in string or '_' in string

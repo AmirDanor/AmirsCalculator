@@ -1,3 +1,7 @@
+"""
+Operator utils module which contains operator-related constants used across the
+calculator.
+"""
 # Constants
 
 SIGN_MINUS_SYMBOL = '_'

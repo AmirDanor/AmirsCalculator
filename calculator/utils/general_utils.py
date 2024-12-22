@@ -1,3 +1,8 @@
+"""
+General utils module which contains general constants used
+across the calculator.
+"""
+
 # Constants
 
 FACTORIAL_MAX_OPERAND = 200

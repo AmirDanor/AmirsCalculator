@@ -1,3 +1,7 @@
+"""
+Module for token procession.
+Contains an abstract base class and an arithmetic-specific implementation.
+"""
 from abc import ABC, abstractmethod
 
 from calculator.logic.exceptions import UnaryError, \
@@ -8,14 +12,14 @@ from calculator.utils import operand_utils, operator_utils, general_utils
 
 class TokenProcessor(ABC):
     """
-    Abstract class for tokenized list processor.
+    Abstract class for processing tokenized lists.
     """
 
     @abstractmethod
     def __init__(self, tokens: list):
         """
-        Abstract init method for TokenProcessor
-        :param tokens: tokens which needs to be processed
+        Abstract init method for TokenProcessor.
+        :param tokens: tokens which needs to be processed.
         :type tokens: list
         """
 
@@ -23,9 +27,9 @@ class TokenProcessor(ABC):
     def process(self, tokens: list) -> list:
         """
         Abstract method for processing a list of tokens.
-        :param tokens: tokenized sequence
+        :param tokens: tokenized sequence.
         :type tokens: list
-        :return: processed list of tokens
+        :return: processed list of tokens.
         :rtype: list
         """
 
@@ -37,7 +41,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def __init__(self, tokens: list = None):
         """
-        Init method for ArithmeticTokenProcessor
+        Init method for ArithmeticTokenProcessor.
         :param tokens: list of tokens.
             if not provided, defaults to an empty list.
         :type tokens: list
@@ -61,9 +65,9 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def _handle_dots(self):
         """
         Validates tokens which include dots, raises exceptions if needed.
-        :raises SingleDotError: when 'operand' is a single dot
-        :raises MultipleDotsError: when 'operand' is more than a single dot
-        :raises MultipleDotsOperandError: when 'operand' contains multiple dots
+        :raises SingleDotError: when 'operand' is a single dot.
+        :raises MultipleDotsError: when 'operand' is more than a single dot.
+        :raises MultipleDotsOperandError: when 'operand' contains multiple dots.
         """
 
         for token in self._tokens:
@@ -93,10 +97,10 @@ class ArithmeticTokenProcessor(TokenProcessor):
                 if ((operand_utils.is_operand(self._tokens[index + 1]) or
                      self._tokens[
                          index + 1] == general_utils.OPEN_BRACKETS) and
-                        (index - 2 < 0 or self._tokens[
-                            index - 2] in operator_utils.BINARY_OPERATORS or
-                         self._tokens[
-                             index - 2] in operator_utils.LEFT_UNARY_OPERATORS or
+                        (index - 2 < 0 or self._tokens[index - 2]
+                         in operator_utils.BINARY_OPERATORS or
+                         self._tokens[index - 2]
+                         in operator_utils.LEFT_UNARY_OPERATORS or
                          self._tokens[
                              index - 2] == general_utils.OPEN_BRACKETS)):
                     # Remove the two minuses
@@ -106,8 +110,8 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _validate_minuses_at_end(self):
         """
-        Validates there are no minuses at end of equation
-        :raises EndMinusesError: if there are end minuses
+        Validates there are no minuses at end of equation.
+        :raises EndMinusesError: if there are end minuses.
         """
         if self._tokens and self._tokens[-1] == operator_utils.SUB_SYMBOL:
             count = 0
@@ -141,10 +145,11 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def _prev_token_is_a_non_minus_valid_operand(self, index: int) -> bool:
         """
         checks if previous token is valid to appear before a sign minus
-        (other than a minus)
-        :param index: index of relevant token in tokens list
+        (other than a minus).
+
+        :param index: index of relevant token in tokens list.
         :type index: str
-        :return: if previous token is a valid to appear before a sign minus
+        :return: if previous token is a valid to appear before a sign minus.
         :rtype: bool
         """
 
@@ -156,11 +161,12 @@ class ArithmeticTokenProcessor(TokenProcessor):
     def _prev_token_is_a_valid_minus_operand(self, index: int) -> bool:
         """
         checks if previous token is a minus, and if the token before that,
-        makes the token in current index a sign minus
-        :param index: index of relevant token in tokens list
+        makes the token in current index a sign minus.
+
+        :param index: index of relevant token in tokens list.
         :type index: str
         :return: if previous token is a minus, and if the token before that,
-            makes the token in current index a sign minus
+            makes the token in current index a sign minus.
         :rtype: bool
         """
 
@@ -179,7 +185,11 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _minus_brackets_handle(self, index: int):
         """
-        :param index: index of minus in self._tokens
+        Handle brackets with unary minus before them correctly
+        by adding a new set of brackets (before and after current ones -
+        including the unary minus).
+
+        :param index: index of minus in self._tokens.
         :type index: int
         """
 
@@ -199,7 +209,7 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _replace_unary_minuses(self):
         """
-        Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';']
+        Replaces all appearances of unary minuses with SIGN_UNARY_MINUS [';'].
         """
 
         for index in range(0, len(self._tokens) - 1, 1):
@@ -221,10 +231,11 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _validate_unary_operator(self, token: str, index: int):
         """
-        Validates unary operator as part of equation
-        :param token: unary operator's symbol
+        Validates unary operator as part of equation.
+
+        :param token: unary operator's symbol.
         :type token: str
-        :param index: index of current token in tokens list
+        :param index: index of current token in tokens list.
         :type index: int
         """
 
@@ -235,16 +246,18 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _validate_left_unary_operator(self, token, index):
         """
-        Validates left unary operator as part of equation
-        :param token: left unary operator's symbol
+        Validates left unary operator as part of equation.
+
+        :param token: left unary operator's symbol.
         :type token: str
-        :param index: index of current token in tokens list
+        :param index: index of current token in tokens list.
         :type index: int
-        :raises UnaryError: if operator's usage is not valid
+        :raises UnaryError: if operator's usage is not valid.
         """
 
         if (index > 0  # Check token to the left
-                and self._tokens[index - 1] not in operator_utils.BINARY_OPERATORS
+                and self._tokens[index - 1]
+                not in operator_utils.BINARY_OPERATORS
                 and self._tokens[index - 1] != general_utils.OPEN_BRACKETS):
             raise UnaryError(token,  True)
         if (index < len(self._tokens) - 1  # Check token to the right
@@ -255,12 +268,13 @@ class ArithmeticTokenProcessor(TokenProcessor):
 
     def _validate_right_unary_operator(self, token, index):
         """
-        Validates right unary operator as part of equation
-        :param token: right unary operator's symbol
+        Validates right unary operator as part of equation.
+
+        :param token: Right unary operator's symbol.
         :type token: str
-        :param index: index of current token in tokens list
+        :param index: Index of current token in tokens list.
         :type index: int
-        :raises UnaryError:if operator's usage is not valid
+        :raises UnaryError: If operator's usage is not valid.
         """
 
         if (index > 0  # Check token to the left

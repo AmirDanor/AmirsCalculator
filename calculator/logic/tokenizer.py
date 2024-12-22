@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from calculator.utils import general_utils
+
 
 class Tokenizer(ABC):
     """
@@ -15,28 +17,28 @@ class Tokenizer(ABC):
 
 class ArithmeticTokenizer(Tokenizer):
     """
-    Class for arithmetic equations tokenization
+    Class for arithmetic equations tokenization.
     """
 
     def tokenize(self, equation: str) -> list:
         """
         Tokenizes basic arithmetic equations into a list of _tokens.
 
-        :param equation: arithmetic equation
+        :param equation: arithmetic equation.
         :type equation: str
-        :return: tokenized arithmetic equation
+        :return: tokenized arithmetic equation.
         :rtype: list
         """
 
         tokens: [str] = []
-        number = ''
+        number = general_utils.EMPTY_STR
         for char in equation:
-            if char.isdigit() or char == '.':
+            if char.isdigit() or char == general_utils.DOT:
                 number += char
             else:
                 if number:
                     tokens.append(number)
-                    number = ''
+                    number = general_utils.EMPTY_STR
                 if char.strip():  # Ignore whitespace
                     tokens.append(char)
         if number:

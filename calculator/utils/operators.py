@@ -1,3 +1,10 @@
+"""
+Module contains classes abstract classes and actual classes for all
+relevant operators.
+Each operator has precedence, and a solve method.
+Unary operators only got is_left method which returns bool True if
+the operand is left-sided, False otherwise
+"""
 import math
 from abc import ABC, abstractmethod
 
@@ -71,7 +78,7 @@ class Add(BinaryOperator):
 class Sub(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -84,7 +91,7 @@ class Sub(BinaryOperator):
 class Mul(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -97,7 +104,7 @@ class Mul(BinaryOperator):
 class Div(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -107,9 +114,9 @@ class Div(BinaryOperator):
         """
         Solves division between operand1 and operand2.
 
-        :param operand1: Dividend
+        :param operand1: Dividend.
         :type operand1: float
-        :param operand2: Divisor
+        :param operand2: Divisor.
         :type operand2: float
         :raises DivisionByZeroError: If operand2 is zero.
         """
@@ -123,7 +130,7 @@ class Div(BinaryOperator):
 class Pow(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -140,7 +147,7 @@ class Pow(BinaryOperator):
 class Mod(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -156,7 +163,7 @@ class Mod(BinaryOperator):
 class Max(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -169,7 +176,7 @@ class Max(BinaryOperator):
 class Min(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -182,7 +189,7 @@ class Min(BinaryOperator):
 class Avg(BinaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -195,7 +202,7 @@ class Avg(BinaryOperator):
 class UMin(UnaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -213,9 +220,9 @@ class UMin(UnaryOperator):
         """
         Returns operand after using unary minus on it.
 
-        :param operand: Operand
+        :param operand: Operand.
         :type operand: float
-        :return: Operand after unary minus operation
+        :return: Operand after unary minus operation.
         :rtype: float
         """
 
@@ -225,7 +232,7 @@ class UMin(UnaryOperator):
 class Neg(UnaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -233,7 +240,7 @@ class Neg(UnaryOperator):
 
     def is_left(self):
         """
-        :return: if unary operator is a left operator
+        :return: If unary operator is a left operator.
         :rtype: bool
         """
 
@@ -243,9 +250,9 @@ class Neg(UnaryOperator):
         """
         Returns negative value of operand.
 
-        :param operand: operand
+        :param operand: operand.
         :type operand: float
-        :return: negative value of operand
+        :return: negative value of operand.
         :rtype: float
         """
 
@@ -255,7 +262,7 @@ class Neg(UnaryOperator):
 class Fac(UnaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -263,7 +270,7 @@ class Fac(UnaryOperator):
 
     def is_left(self):
         """
-        :return: if unary operator is a left operator
+        :return: If unary operator is a left operator.
         :rtype: bool
         """
 
@@ -285,7 +292,7 @@ class Fac(UnaryOperator):
 class Sum(UnaryOperator):
     def get_precedence(self) -> int:
         """
-        :return: operator's precedence
+        :return: Operator's precedence.
         :rtype: int
         """
 
@@ -293,7 +300,7 @@ class Sum(UnaryOperator):
 
     def is_left(self):
         """
-        :return: if unary operator is a left operator
+        :return: If unary operator is a left operator.
         :rtype: bool
         """
 
@@ -303,12 +310,12 @@ class Sum(UnaryOperator):
         """
         Calculate and return the sum of all digit-numbers in number.
 
-        :param operand: operand
+        :param operand: operand.
         :type operand: float
-        :return: operand after sum operation
+        :return: operand after sum operation.
         :rtype: float
-        :raises NegativeSumError: if operand is negative
-        :raises LargeSumError: if operand is too large
+        :raises NegativeSumError: if operand is negative.
+        :raises LargeSumError: if operand is too large.
         """
 
         if operand < 0:
